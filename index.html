@@ -2,394 +2,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171313">
+<title>MINISNAP | Photo Booth</title>
 
-  <meta name="theme-color" content="#171717">
-  <title>MINISNAP | Photo Booth</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      background: #171717;
-      color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
-      display: flex;
-      justify-content: center;
-      padding: 25px 16px;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 480px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .logo {
-      font-size: 25px;
-      font-weight: 900;
-      letter-spacing: 2px;
-    }
-
-    .logo span {
-      color: #ff9eae;
-    }
-
-    .version {
-      color: #aaa;
-      font-size: 11px;
-      letter-spacing: 1px;
-    }
-
-    .intro {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .intro h1 {
-      font-size: 28px;
-      margin-bottom: 9px;
-    }
-
-    .intro p {
-      color: #aaa;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .camera-box {
-      width: 100%;
-      aspect-ratio: 4 / 5;
-      background: #292929;
-      border: 2px solid #393939;
-      border-radius: 22px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-
-    .placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .camera-icon {
-      font-size: 55px;
-      margin-bottom: 18px;
-    }
-
-    .placeholder h2 {
-      font-size: 19px;
-      margin-bottom: 8px;
-    }
-
-    .placeholder p {
-      font-size: 13px;
-      color: #aaa;
-      line-height: 1.5;
-    }
-
-    .status {
-      margin-top: 17px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: #aaa;
-      font-size: 12px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #888;
-    }
-
-    .dot.active {
-      background: #55d88a;
-      box-shadow: 0 0 9px #55d88a;
-    }
-
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    button {
-      border: none;
-      border-radius: 13px;
-      padding: 16px 10px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    .start {
-      background: #ff9eae;
-      color: #171717;
-    }
-
-    .switch {
-      background: #333;
-      color: white;
-      border: 1px solid #555;
-    }
-
-    .message {
-      margin-top: 17px;
-      min-height: 42px;
-      text-align: center;
-      color: #ffb7c3;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .privacy {
-      text-align: center;
-      margin-top: 25px;
-      font-size: 11px;
-      color: #777;
-      line-height: 1.6;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 35px;
-      font-size: 10px;
-      color: #666;
-      letter-spacing: 2px;
-    }
-  </style>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --bg:#171313;
+ --panel:#251e20;
+ --pink:#ff9eae;
+ --muted:#b9aeb0;
+ --white:#fff8f8;
+}
+body{
+ background:var(--bg);
+ color:var(--white);
+ font-family:Arial,sans-serif;
+ min-height:100vh;
+ padding:22px 16px 40px;
+}
+.app{max-width:480px;margin:auto}
+header{
+ display:flex;justify-content:space-between;
+ align-items:center;margin-bottom:32px;
+}
+.logo{font-size:25px;font-weight:900;letter-spacing:2px}
+.logo span{color:var(--pink)}
+.tag{font-size:10px;color:var(--muted);letter-spacing:1px}
+h1{font-size:29px;line-height:1.2;margin-bottom:10px}
+p{color:var(--muted);font-size:14px;line-height:1.6}
+.center{text-align:center}
+.screen{display:none}
+.screen.active{display:block}
+.intro{margin:24px 0}
+.panel{
+ background:var(--panel);border:1px solid #45383b;
+ border-radius:20px;padding:20px;margin:18px 0;
+}
+button{
+ border:0;border-radius:13px;padding:15px 18px;
+ font-weight:800;font-size:13px;cursor:pointer;
+}
+button:disabled{opacity:.4;cursor:not-allowed}
+.primary{background:var(--pink);color:#211619;width:100%}
+.secondary{background:#3b3033;color:white;width:100%}
+.small{padding:11px 14px}
+.camera-box{
+ width:100%;aspect-ratio:4/5;
+ background:#0d0c0c;border-radius:20px;
+ overflow:hidden;position:relative;
+}
+video{width:100%;height:100%;object-fit:cover;display:none}
+.camera-placeholder{
+ position:absolute;inset:0;display:flex;
+ align-items:center;justify-content:center;
+ flex-direction:column;gap:12px;color:#aaa;
+}
+#countdown{
+ position:absolute;inset:0;display:none;
+ align-items:center;justify-content:center;
+ background:#0005;font-size:100px;
+ font-weight:900;color:white;
+ text-shadow:0 3px 25px #000;
+}
+#flash{
+ position:absolute;inset:0;background:white;
+ opacity:0;pointer-events:none;
+}
+.options{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.option{
+ background:#3b3033;color:white;
+ border:1px solid #59484c;padding:12px 13px;
+}
+.option.selected{
+ background:var(--pink);color:#251719;
+ border-color:var(--pink);
+}
+.status{font-size:12px;color:var(--muted);margin:13px 0}
+.grid{
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:10px;margin:16px 0;
+}
+.grid img{
+ width:100%;aspect-ratio:4/5;object-fit:cover;
+ border-radius:12px;background:#352c2e;
+}
+.progress{
+ height:6px;background:#403638;
+ border-radius:10px;overflow:hidden;margin:15px 0;
+}
+#progressBar{
+ height:100%;width:0;background:var(--pink);
+ transition:width .3s;
+}
+.result-image{
+ width:100%;border-radius:12px;
+ border:1px solid #58474b;display:block;
+}
+.actions{display:grid;gap:10px;margin-top:15px}
+.note{font-size:11px;color:#96898c;margin-top:18px}
+footer{text-align:center;margin-top:32px;color:#817477;font-size:10px;letter-spacing:2px}
+</style>
 </head>
 
 <body>
-  <main class="app">
+<main class="app">
 
-    <header>
-      <div class="logo">MINI<span>SNAP</span></div>
-      <div class="version">PHOTO BOOTH · V1.0</div>
-    </header>
+<header>
+ <div class="logo">MINI<span>SNAP</span></div>
+ <div class="tag">PHOTO BOOTH · 2.0</div>
+</header>
 
-    <section class="intro">
-      <h1>Make a memory.</h1>
-      <p>Your little corner of memories.<br>
-         Get ready for your photo session!</p>
-    </section>
+<!-- WELCOME SCREEN -->
+<section class="screen active center" id="home">
+ <div class="intro">
+  <div style="font-size:55px;margin-bottom:15px">📸</div>
+  <h1>A little moment.<br>A lasting memory.</h1>
+  <p>Welcome to MiniSnap!<br>
+  Let's make something worth keeping.</p>
+ </div>
 
-    <section class="camera-box">
+ <div class="panel">
+  <h3>YOUR PHOTO SESSION</h3>
+  <p style="margin-top:10px">
+   4 photographs · 1 beautiful photo strip
+  </p>
+  <p style="margin-top:7px">Choose your favourite style and pose!</p>
+ </div>
 
-      <video id="video"
-             autoplay
-             muted
-             playsinline></video>
+ <button class="primary" onclick="showScreen('setup')">
+  START YOUR SESSION →
+ </button>
+ <p class="note">Please allow camera access when requested.</p>
+</section>
 
-      <div class="placeholder" id="placeholder">
-        <div class="camera-icon">📸</div>
-        <h2>Your camera is waiting</h2>
-        <p>Press the button below to activate
-           your camera and start your session.</p>
-      </div>
+<!-- SETUP SCREEN -->
+<section class="screen" id="setup">
+ <h1>Set your vibe.</h1>
+ <p>Choose a filter and a photo-strip theme.</p>
 
-    </section>
+ <div class="panel">
+  <h3>01 / PHOTO FILTER</h3>
+  <div class="options">
+   <button class="option selected" data-filter="none">Original</button>
+   <button class="option" data-filter="bw">B&W</button>
+   <button class="option" data-filter="vintage">Vintage</button>
+   <button class="option" data-filter="warm">Warm</button>
+  </div>
 
-    <div class="status">
-      <span class="dot" id="dot"></span>
-      <span id="statusText">CAMERA NOT CONNECTED</span>
-    </div>
+  <h3 style="margin-top:20px">02 / PHOTO STRIP</h3>
+  <div class="options">
+   <button class="option selected" data-theme="pink">Pink</button>
+   <button class="option" data-theme="cream">Cream</button>
+   <button class="option" data-theme="dark">Classic</button>
+  </div>
+ </div>
 
-    <section class="controls">
+ <button class="primary" onclick="openCamera()">
+  OPEN CAMERA →
+ </button>
+ <button class="secondary" style="margin-top:10px"
+ onclick="showScreen('home')">GO BACK</button>
+</section>
 
-      <button class="start" id="startBtn">
-        ACTIVATE CAMERA
-      </button>
+<!-- CAMERA SCREEN -->
+<section class="screen" id="cameraScreen">
+ <div class="center" style="margin-bottom:15px">
+  <h1>Strike a pose!</h1>
+  <p id="cameraInstruction">Get ready for your first picture.</p>
+ </div>
 
-      <button class="switch" id="switchBtn" disabled>
-        ↻ SWITCH CAMERA
-      </button>
+ <div class="camera-box">
+  <video id="video" autoplay muted playsinline></video>
+  <div class="camera-placeholder" id="placeholder">
+   <span style="font-size:45px">📷</span>
+   <p>Waiting for camera...</p>
+  </div>
+  <div id="countdown">5</div>
+  <div id="flash"></div>
+ </div>
 
-    </section>
+ <div class="center">
+  <div class="status" id="cameraStatus">Connecting to camera...</div>
+  <div class="progress"><div id="progressBar"></div></div>
+  <p id="captureCount">0 / 4 photographs</p>
+ </div>
 
-    <div class="message" id="message" role="status"
-         aria-live="polite">
-      Your photos stay on this device.
-    </div>
+ <div class="grid" id="miniGrid" style="display:none"></div>
 
-    <div class="privacy">
-      CAMERA ACCESS IS ONLY USED WHEN YOU ACTIVATE IT.
-      <br>
-      NO PHOTOS ARE UPLOADED BY THIS VERSION.
-    </div>
+ <div class="actions">
+  <button class="primary" id="captureBtn" onclick="startSession()" disabled>
+   START PHOTO SESSION
+  </button>
+  <button class="secondary" onclick="switchCamera()" id="switchBtn" disabled>
+   ↻ SWITCH CAMERA
+  </button>
+  <button class="secondary" onclick="goHome()">CANCEL SESSION</button>
+ </div>
+</section>
 
-    <footer>
-      MADE WITH ♥ AT MINISNAP
-    </footer>
+<!-- RESULT SCREEN -->
+<section class="screen" id="resultScreen">
+ <div class="center">
+  <h1>Your memories, captured.</h1>
+  <p>Here's your MiniSnap photo strip!</p>
+ </div>
 
-  </main>
+ <div class="panel">
+  <img id="resultImage" class="result-image" alt="Your finished photo strip">
+  <div class="actions">
+   <button class="primary" onclick="downloadStrip()">
+    ↓ DOWNLOAD PHOTO STRIP
+   </button>
+   <button class="secondary" onclick="printStrip()">
+    PRINT PHOTO STRIP
+   </button>
+   <button class="secondary" onclick="retake()">
+    ↻ RETAKE PHOTOS
+   </button>
+   <button class="secondary" onclick="goHome()">
+    FINISH SESSION
+   </button>
+  </div>
+ </div>
+ <p class="note center">
+  Your photographs are processed locally on this device.
+ </p>
+</section>
 
-  <script>
-    const video = document.getElementById("video");
-    const startBtn = document.getElementById("startBtn");
-    const switchBtn = document.getElementById("switchBtn");
-    const placeholder = document.getElementById("placeholder");
-    const statusText = document.getElementById("statusText");
-    const dot = document.getElementById("dot");
-    const message = document.getElementById("message");
+<footer>MADE WITH ♥ AT MINISNAP</footer>
+</main>
 
-    let stream = null;
-    let facingMode = "user";
-    let busy = false;
+<script>
+const video=document.getElementById("video");
+const countdown=document.getElementById("countdown");
+const flash=document.getElementById("flash");
 
-    async function startCamera() {
-      if (busy) return;
+let stream=null;
+let facing="user";
+let photos=[];
+let filter="none";
+let theme="pink";
+let busy=false;
+let stripData=null;
 
-      busy = true;
-      startBtn.disabled = true;
-      switchBtn.disabled = true;
+const filters={
+ none:"none",
+ bw:"grayscale(1)",
+ vintage:"sepia(.65) contrast(1.08)",
+ warm:"sepia(.25) saturate(1.3)"
+};
 
-      message.textContent = "Connecting to your camera...";
+const themes={
+ pink:{bg:"#f8dce3",ink:"#53333c",accent:"#d47791"},
+ cream:{bg:"#f0e5d1",ink:"#514331",accent:"#a78a5b"},
+ dark:{bg:"#262126",ink:"#fff5f5",accent:"#d9a8b6"}
+};
 
-      try {
-        if (!navigator.mediaDevices ||
-            !navigator.mediaDevices.getUserMedia) {
-          throw new Error("UNSUPPORTED");
-        }
+function showScreen(id){
+ document.querySelectorAll(".screen").forEach(s=>{
+  s.classList.remove("active");
+ });
+ document.getElementById(id).classList.add("active");
+}
 
-        // Stop any previous camera stream.
-        if (stream) {
-          stream.getTracks().forEach(track => track.stop());
-          stream = null;
-        }
+document.querySelectorAll("[data-filter]").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  filter=btn.dataset.filter;
+  document.querySelectorAll("[data-filter]").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+ });
+});
 
-        // Request the selected camera.
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: false,
-          video: {
-            facingMode: { ideal: facingMode },
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          }
-        });
+document.querySelectorAll("[data-theme]").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  theme=btn.dataset.theme;
+  document.querySelectorAll("[data-theme]").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+ });
+});
 
-        video.srcObject = stream;
+async function openCamera(){
+ showScreen("cameraScreen");
+ document.getElementById("cameraStatus").textContent="Requesting camera permission...";
+ document.getElementById("captureBtn").disabled=true;
+ document.getElementById("switchBtn").disabled=true;
 
-        // Wait for the camera preview to become ready.
-        await video.play();
+ try{
+  await startCamera();
+ }catch(e){
+  document.getElementById("cameraStatus").textContent=
+   "Camera unavailable. Check browser permissions and HTTPS.";
+ }
+}
 
-        video.style.display = "block";
-        placeholder.style.display = "none";
+async function startCamera(){
+ if(!navigator.mediaDevices?.getUserMedia){
+  throw new Error("Camera requires HTTPS.");
+ }
 
-        dot.classList.add("active");
-        statusText.textContent = "CAMERA CONNECTED";
+ if(stream){
+  stream.getTracks().forEach(t=>t.stop());
+  stream=null;
+ }
 
-        message.textContent =
-          "Looking good! Your camera is ready.";
+ stream=await navigator.mediaDevices.getUserMedia({
+  audio:false,
+  video:{
+   facingMode:{ideal:facing},
+   width:{ideal:1280},
+   height:{ideal:1600}
+  }
+ });
 
-        startBtn.textContent = "RESTART CAMERA";
-        switchBtn.disabled = false;
+ video.srcObject=stream;
+ await video.play();
 
-      } catch (error) {
+ video.style.display="block";
+ document.getElementById("placeholder").style.display="none";
+ video.style.filter=filters[filter];
 
-        console.error(error);
+ document.getElementById("cameraStatus").textContent="● CAMERA READY";
+ document.getElementById("captureBtn").disabled=false;
+ document.getElementById("switchBtn").disabled=false;
+ document.getElementById("captureBtn").textContent="START PHOTO SESSION";
+}
 
-        if (error.message === "UNSUPPORTED") {
-          message.textContent =
-            "Camera requires HTTPS. Open the secure website.";
-        } else if (error.name === "NotAllowedError" ||
-                   error.name === "PermissionDeniedError") {
-          message.textContent =
-            "Camera permission denied. Allow camera access in iPhone Settings.";
-        } else if (error.name === "NotFoundError") {
-          message.textContent =
-            "No available camera was found.";
-        } else if (error.name === "NotReadableError") {
-          message.textContent =
-            "Camera is busy. Close other apps using the camera and retry.";
-        } else {
-          message.textContent =
-            "Could not start camera. Check permissions and try again.";
-        }
+async function switchCamera(){
+ if(busy)return;
+ facing=facing==="user"?"environment":"user";
+ document.getElementById("cameraStatus").textContent="Switching camera...";
+ try{
+  await startCamera();
+ }catch(e){
+  facing=facing==="user"?"environment":"user";
+  document.getElementById("cameraStatus").textContent="Could not switch camera.";
+ }
+}
 
-        statusText.textContent = "CAMERA NOT CONNECTED";
-        dot.classList.remove("active");
+function delay(ms){
+ return new Promise(resolve=>setTimeout(resolve,ms));
+}
 
-      } finally {
-        busy = false;
-        startBtn.disabled = false;
-      }
-    }
+async function startSession(){
+ if(busy||!stream)return;
 
-    async function switchCamera() {
-      if (busy) return;
+ busy=true;
+ photos=[];
+ const btn=document.getElementById("captureBtn");
+ btn.disabled=true;
+ document.getElementById("switchBtn").disabled=true;
+ document.getElementById("miniGrid").style.display="grid";
+ document.getElementById("miniGrid").innerHTML="";
+ document.getElementById("progressBar").style.width="0%";
 
-      facingMode =
-        facingMode === "user" ? "environment" : "user";
+ for(let i=0;i<4;i++){
+  document.getElementById("cameraInstruction").textContent=
+   "Get ready for picture "+(i+1)+" of 4!";
 
-      await startCamera();
-    }
+  for(let n=5;n>=1;n--){
+   countdown.style.display="flex";
+   countdown.textContent=n;
+   await delay(1000);
+  }
 
-    function stopCamera() {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        stream = null;
-      }
+  countdown.style.display="none";
+  takePhoto();
+  await delay(900);
+  document.getElementById("captureCount").textContent=
+   photos.length+" / 4 photographs";
+  document.getElementById("progressBar").style.width=
+   (photos.length*25)+"%";
+ }
 
-      video.srcObject = null;
-      video.style.display = "none";
-      placeholder.style.display = "flex";
+ document.getElementById("cameraInstruction").textContent=
+  "All four pictures captured!";
 
-      dot.classList.remove("active");
-      statusText.textContent = "CAMERA NOT CONNECTED";
+ await delay(500);
+ busy=false;
+ generateStrip();
+ stopCamera();
+ showScreen("resultScreen");
+}
 
-      startBtn.textContent = "ACTIVATE CAMERA";
-      switchBtn.disabled = true;
+function takePhoto(){
+ const canvas=document.createElement("canvas");
+ canvas.width=720;
+ canvas.height=900;
+ const ctx=canvas.getContext("2d");
 
-      message.textContent = "Camera stopped.";
-    }
+ if(facing==="user"){
+  ctx.translate(canvas.width,0);
+  ctx.scale(-1,1);
+ }
 
-    startBtn.addEventListener("click", startCamera);
-    switchBtn.addEventListener("click", switchCamera);
+ ctx.filter=filters[filter];
+ ctx.drawImage(video,0,0,canvas.width,canvas.height);
+ ctx.filter="none";
 
-    // Release the camera when the page is closed or hidden.
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden && stream) {
-        stopCamera();
-      }
-    });
+ const data=canvas.toDataURL("image/jpeg",.9);
+ photos.push(data);
 
-  </script>
+ const img=document.createElement("img");
+ img.src=data;
+ document.getElementById("miniGrid").appendChild(img);
 
+ flash.style.opacity="1";
+ setTimeout(()=>flash.style.opacity="0",130);
+}
+
+function stopCamera(){
+ if(stream){
+  stream.getTracks().forEach(t=>t.stop());
+  stream=null;
+ }
+ video.srcObject=null;
+ video.style.display="none";
+ document.getElementById("placeholder").style.display="flex";
+}
+
+function drawCover(ctx,img,x,y,w,h){
+ const scale=Math.max(w/img.width,h/img.height);
+ const sw=w/scale,sh=h/scale;
+ const sx=(img.width-sw)/2;
+ const sy=(img.height-sh)/2;
+ ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);
+}
+
+function loadImage(src){
+ return new Promise((resolve,reject)=>{
+  const img=new Image();
+  img.onload=()=>resolve(img);
+  img.onerror=reject;
+  img.src=src;
+ });
+}
+
+async function generateStrip(){
+ const t=themes[theme];
+ const canvas=document.createElement("canvas");
+ canvas.width=720;
+ canvas.height=2180;
+ const ctx=canvas.getContext("2d");
+
+ ctx.fillStyle=t.bg;
+ ctx.fillRect(0,0,720,2180);
+
+ ctx.textAlign="center";
+ ctx.fillStyle=t.ink;
+ ctx.font="bold 52px Arial";
+ ctx.fillText("MINISNAP",360,95);
+
+ ctx.font="18px Arial";
+ ctx.fillText("A LITTLE MOMENT, A LASTING MEMORY",360,135);
+
+ for(let i=0;i<4;i++){
+  const img=await loadImage(photos[i]);
+  const x=40,y=180+i*430;
+  ctx.fillStyle="#ffffff";
+  ctx.fillRect(x-7,y-7,654,414);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x,y,640,400);
+  ctx.clip();
+  drawCover(ctx,img,x,y,640,400);
+  ctx.restore();
+ }
+
+ ctx.fillStyle=t.accent;
+ ctx.fillRect(40,1900,640,4);
+
+ ctx.fillStyle=t.ink;
+ ctx.font="bold 25px Arial";
+ ctx.fillText("YOUR EXHIBITION MEMORY",360,1970);
+
+ ctx.font="19px Arial";
+ ctx.fillText(new Date().toLocaleDateString("en-IN"),360,2010);
+
+ ctx.font="16px Arial";
+ ctx.fillText("MADE WITH LOVE AT MINISNAP",360,2080);
+
+ stripData=canvas.toDataURL("image/jpeg",.95);
+ document.getElementById("resultImage").src=stripData;
+}
+
+function downloadStrip(){
+ if(!stripData)return;
+ const a=document.createElement("a");
+ a.href=stripData;
+ a.download="MiniSnap-Photo-Strip.jpg";
+ a.click();
+}
+
+function printStrip(){
+ if(!stripData)return;
+
+ const img=document.getElementById("resultImage");
+ const old=document.getElementById("printArea");
+ if(old)old.remove();
+
+ const area=document.createElement("div");
+ area.id="printArea";
+ const copy=img.cloneNode();
+ copy.style.width="100%";
+ copy.style.maxWidth="65mm";
+ area.appendChild(copy);
+ document.body.appendChild(area);
+
+ const style=document.createElement("style");
+ style.id="printStyle";
+ style.textContent=`
+ @media print{
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block!important;text-align:center}
+  #printArea img{width:65mm!important;height:auto!important}
+  @page{size:A4 portrait;margin:15mm}
+ }
+ `;
+ document.head.appendChild(style);
+ window.print();
+ style.remove();
+ area.remove();
+}
+
+function retake(){
+ photos=[];
+ stripData=null;
+ facing="user";
+ document.getElementById("captureCount").textContent="0 / 4 photographs";
+ document.getElementById("miniGrid").innerHTML="";
+ document.getElementById("miniGrid").style.display="none";
+ openCamera();
+}
+
+function goHome(){
+ busy=false;
+ stopCamera();
+ photos=[];
+ stripData=null;
+ showScreen("home");
+}
+
+window.addEventListener("pagehide",stopCamera);
+</script>
 </body>
 </html>
+
