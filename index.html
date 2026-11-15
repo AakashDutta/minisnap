@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#171717">
+  <title>MINISNAP | Photo Booth</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #171717;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 25px 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: #ff9eae;
+    }
+
+    .version {
+      color: #aaa;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .intro h1 {
+      font-size: 28px;
+      margin-bottom: 9px;
+    }
+
+    .intro p {
+      color: #aaa;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .camera-box {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      background: #292929;
+      border: 2px solid #393939;
+      border-radius: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .camera-icon {
+      font-size: 55px;
+      margin-bottom: 18px;
+    }
+
+    .placeholder h2 {
+      font-size: 19px;
+      margin-bottom: 8px;
+    }
+
+    .placeholder p {
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.5;
+    }
+
+    .status {
+      margin-top: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #888;
+    }
+
+    .dot.active {
+      background: #55d88a;
+      box-shadow: 0 0 9px #55d88a;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    button {
+      border: none;
+      border-radius: 13px;
+      padding: 16px 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .start {
+      background: #ff9eae;
+      color: #171717;
+    }
+
+    .switch {
+      background: #333;
+      color: white;
+      border: 1px solid #555;
+    }
+
+    .message {
+      margin-top: 17px;
+      min-height: 42px;
+      text-align: center;
+      color: #ffb7c3;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .privacy {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 11px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 35px;
+      font-size: 10px;
+      color: #666;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <header>
+      <div class="logo">MINI<span>SNAP</span></div>
+      <div class="version">PHOTO BOOTH · V1.0</div>
+    </header>
+
+    <section class="intro">
+      <h1>Make a memory.</h1>
+      <p>Your little corner of memories.<br>
+         Get ready for your photo session!</p>
+    </section>
+
+    <section class="camera-box">
+
+      <video id="video"
+             autoplay
+             muted
+             playsinline></video>
+
+      <div class="placeholder" id="placeholder">
+        <div class="camera-icon">📸</div>
+        <h2>Your camera is waiting</h2>
+        <p>Press the button below to activate
+           your camera and start your session.</p>
+      </div>
+
+    </section>
+
+    <div class="status">
+      <span class="dot" id="dot"></span>
+      <span id="statusText">CAMERA NOT CONNECTED</span>
+    </div>
+
+    <section class="controls">
+
+      <button class="start" id="startBtn">
+        ACTIVATE CAMERA
+      </button>
+
+      <button class="switch" id="switchBtn" disabled>
+        ↻ SWITCH CAMERA
+      </button>
+
+    </section>
+
+    <div class="message" id="message" role="status"
+         aria-live="polite">
+      Your photos stay on this device.
+    </div>
+
+    <div class="privacy">
+      CAMERA ACCESS IS ONLY USED WHEN YOU ACTIVATE IT.
+      <br>
+      NO PHOTOS ARE UPLOADED BY THIS VERSION.
+    </div>
+
+    <footer>
+      MADE WITH ♥ AT MINISNAP
+    </footer>
+
+  </main>
+
+  <script>
+    const video = document.getElementById("video");
+    const startBtn = document.getElementById("startBtn");
+    const switchBtn = document.getElementById("switchBtn");
+    const placeholder = document.getElementById("placeholder");
+    const statusText = document.getElementById("statusText");
+    const dot = document.getElementById("dot");
+    const message = document.getElementById("message");
+
+    let stream = null;
+    let facingMode = "user";
+    let busy = false;
+
+    async function startCamera() {
+      if (busy) return;
+
+      busy = true;
+      startBtn.disabled = true;
+      switchBtn.disabled = true;
+
+      message.textContent = "Connecting to your camera...";
+
+      try {
+        if (!navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia) {
+          throw new Error("UNSUPPORTED");
+        }
+
+        // Stop any previous camera stream.
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+          stream = null;
+        }
+
+        // Request the selected camera.
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: {
+            facingMode: { ideal: facingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+
+        video.srcObject = stream;
+
+        // Wait for the camera preview to become ready.
+        await video.play();
+
+        video.style.display = "block";
+        placeholder.style.display = "none";
+
+        dot.classList.add("active");
+        statusText.textContent = "CAMERA CONNECTED";
+
+        message.textContent =
+          "Looking good! Your camera is ready.";
+
+        startBtn.textContent = "RESTART CAMERA";
+        switchBtn.disabled = false;
+
+      } catch (error) {
+
+        console.error(error);
+
+        if (error.message === "UNSUPPORTED") {
+          message.textContent =
+            "Camera requires HTTPS. Open the secure website.";
+        } else if (error.name === "NotAllowedError" ||
+                   error.name === "PermissionDeniedError") {
+          message.textContent =
+            "Camera permission denied. Allow camera access in iPhone Settings.";
+        } else if (error.name === "NotFoundError") {
+          message.textContent =
+            "No available camera was found.";
+        } else if (error.name === "NotReadableError") {
+          message.textContent =
+            "Camera is busy. Close other apps using the camera and retry.";
+        } else {
+          message.textContent =
+            "Could not start camera. Check permissions and try again.";
+        }
+
+        statusText.textContent = "CAMERA NOT CONNECTED";
+        dot.classList.remove("active");
+
+      } finally {
+        busy = false;
+        startBtn.disabled = false;
+      }
+    }
+
+    async function switchCamera() {
+      if (busy) return;
+
+      facingMode =
+        facingMode === "user" ? "environment" : "user";
+
+      await startCamera();
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+
+      video.srcObject = null;
+      video.style.display = "none";
+      placeholder.style.display = "flex";
+
+      dot.classList.remove("active");
+      statusText.textContent = "CAMERA NOT CONNECTED";
+
+      startBtn.textContent = "ACTIVATE CAMERA";
+      switchBtn.disabled = true;
+
+      message.textContent = "Camera stopped.";
+    }
+
+    startBtn.addEventListener("click", startCamera);
+    switchBtn.addEventListener("click", switchCamera);
+
+    // Release the camera when the page is closed or hidden.
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && stream) {
+        stopCamera();
+      }
+    });
+
+  </script>
+
+</body>
+</html>
