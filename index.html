@@ -3,107 +3,415 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#171313">
-<title>MINISNAP | Photo Booth</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f2ed">
+<title>MINISNAP — A little moment.</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
- --bg:#171313;
- --panel:#251e20;
- --pink:#ff9eae;
- --muted:#b9aeb0;
- --white:#fff8f8;
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+ --bg:#f7f2ed;
+ --paper:#fffdf9;
+ --ink:#302a29;
+ --muted:#89807c;
+ --pink:#d98c99;
+ --line:#e9dfd8;
+ --rose:#f3e2e2;
 }
-body{
+
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
  background:var(--bg);
- color:var(--white);
- font-family:Arial,sans-serif;
+ color:var(--ink);
+ font-family:'DM Sans',sans-serif;
  min-height:100vh;
- padding:22px 16px 40px;
+ padding:20px 16px 45px;
 }
-.app{max-width:480px;margin:auto}
-header{
- display:flex;justify-content:space-between;
- align-items:center;margin-bottom:32px;
+
+button { font:inherit; cursor:pointer; }
+
+.app { max-width:480px; margin:auto; }
+
+header {
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:8px 2px 22px;
+ border-bottom:1px solid var(--line);
 }
-.logo{font-size:25px;font-weight:900;letter-spacing:2px}
-.logo span{color:var(--pink)}
-.tag{font-size:10px;color:var(--muted);letter-spacing:1px}
-h1{font-size:29px;line-height:1.2;margin-bottom:10px}
-p{color:var(--muted);font-size:14px;line-height:1.6}
-.center{text-align:center}
-.screen{display:none}
-.screen.active{display:block}
-.intro{margin:24px 0}
-.panel{
- background:var(--panel);border:1px solid #45383b;
- border-radius:20px;padding:20px;margin:18px 0;
+
+.logo {
+ font-size:21px;
+ font-weight:800;
+ letter-spacing:2.5px;
 }
-button{
- border:0;border-radius:13px;padding:15px 18px;
- font-weight:800;font-size:13px;cursor:pointer;
+
+.logo span { color:var(--pink); }
+
+.header-tag {
+ color:var(--muted);
+ font-size:9px;
+ letter-spacing:2px;
 }
-button:disabled{opacity:.4;cursor:not-allowed}
-.primary{background:var(--pink);color:#211619;width:100%}
-.secondary{background:#3b3033;color:white;width:100%}
-.small{padding:11px 14px}
-.camera-box{
- width:100%;aspect-ratio:4/5;
- background:#0d0c0c;border-radius:20px;
- overflow:hidden;position:relative;
+
+.screen { display:none; }
+.screen.active {
+ display:block;
+ animation:enter .55s cubic-bezier(.2,.8,.2,1) both;
 }
-video{width:100%;height:100%;object-fit:cover;display:none}
-.camera-placeholder{
- position:absolute;inset:0;display:flex;
- align-items:center;justify-content:center;
- flex-direction:column;gap:12px;color:#aaa;
+
+@keyframes enter {
+ from { opacity:0; transform:translateY(13px); }
+ to { opacity:1; transform:translateY(0); }
 }
-#countdown{
- position:absolute;inset:0;display:none;
- align-items:center;justify-content:center;
- background:#0005;font-size:100px;
- font-weight:900;color:white;
- text-shadow:0 3px 25px #000;
+
+@keyframes float {
+ 0%,100% { transform:translateY(0); }
+ 50% { transform:translateY(-8px); }
 }
-#flash{
- position:absolute;inset:0;background:white;
- opacity:0;pointer-events:none;
+
+@keyframes pulse {
+ 0% { transform:scale(.7); opacity:0; }
+ 25% { opacity:1; }
+ 100% { transform:scale(1.1); opacity:0; }
 }
-.options{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
-.option{
- background:#3b3033;color:white;
- border:1px solid #59484c;padding:12px 13px;
+
+@keyframes flash {
+ 0% { opacity:0; }
+ 15% { opacity:1; }
+ 100% { opacity:0; }
 }
-.option.selected{
- background:var(--pink);color:#251719;
- border-color:var(--pink);
+
+@keyframes shimmer {
+ 0% { background-position:200% 0; }
+ 100% { background-position:-200% 0; }
 }
-.status{font-size:12px;color:var(--muted);margin:13px 0}
-.grid{
- display:grid;grid-template-columns:1fr 1fr;
- gap:10px;margin:16px 0;
+
+.intro {
+ text-align:center;
+ padding:48px 10px 25px;
 }
-.grid img{
- width:100%;aspect-ratio:4/5;object-fit:cover;
- border-radius:12px;background:#352c2e;
+
+.eyebrow {
+ font-size:10px;
+ letter-spacing:3px;
+ color:var(--pink);
+ font-weight:700;
+ margin-bottom:15px;
 }
-.progress{
- height:6px;background:#403638;
- border-radius:10px;overflow:hidden;margin:15px 0;
+
+h1 {
+ font-family:'Playfair Display',serif;
+ font-size:37px;
+ line-height:1.18;
+ font-weight:600;
 }
-#progressBar{
- height:100%;width:0;background:var(--pink);
- transition:width .3s;
+
+.subtitle {
+ font-size:13px;
+ line-height:1.8;
+ color:var(--muted);
+ margin-top:13px;
 }
-.result-image{
- width:100%;border-radius:12px;
- border:1px solid #58474b;display:block;
+
+.hero-icon {
+ font-size:38px;
+ margin-bottom:19px;
+ display:inline-block;
+ animation:float 3s ease-in-out infinite;
 }
-.actions{display:grid;gap:10px;margin-top:15px}
-.note{font-size:11px;color:#96898c;margin-top:18px}
-footer{text-align:center;margin-top:32px;color:#817477;font-size:10px;letter-spacing:2px}
+
+.card {
+ background:var(--paper);
+ border:1px solid var(--line);
+ border-radius:19px;
+ padding:20px;
+ margin:18px 0;
+ box-shadow:0 8px 30px #44332b08;
+}
+
+.card-title {
+ font-size:11px;
+ font-weight:800;
+ letter-spacing:2px;
+ margin-bottom:12px;
+}
+
+.card-copy {
+ font-size:12px;
+ color:var(--muted);
+ line-height:1.8;
+}
+
+.primary {
+ background:var(--ink);
+ color:white;
+ border:0;
+ border-radius:13px;
+ width:100%;
+ padding:17px;
+ font-weight:700;
+ font-size:12px;
+ letter-spacing:1.5px;
+ transition:transform .2s,background .2s,box-shadow .2s;
+ box-shadow:0 7px 17px #302a2920;
+}
+
+.primary:hover {
+ background:#574341;
+ transform:translateY(-2px);
+ box-shadow:0 10px 22px #302a2925;
+}
+
+.primary:active { transform:scale(.98); }
+
+.secondary {
+ background:var(--paper);
+ border:1px solid var(--line);
+ color:var(--ink);
+ border-radius:12px;
+ width:100%;
+ padding:14px;
+ font-size:11px;
+ font-weight:700;
+ letter-spacing:1px;
+ transition:background .2s;
+}
+
+.secondary:hover { background:var(--rose); }
+
+button:disabled { opacity:.4; cursor:not-allowed; }
+
+.actions { display:grid; gap:10px; margin-top:17px; }
+
+.section-heading { padding:35px 3px 12px; }
+
+.section-heading h1 { font-size:32px; }
+
+.section-heading p {
+ font-size:13px;
+ color:var(--muted);
+ margin-top:9px;
+ line-height:1.7;
+}
+
+.options {
+ display:flex;
+ flex-wrap:wrap;
+ gap:9px;
+ margin:13px 0 23px;
+}
+
+.option {
+ background:var(--bg);
+ border:1px solid var(--line);
+ color:var(--ink);
+ border-radius:30px;
+ padding:11px 16px;
+ font-size:11px;
+ font-weight:600;
+ transition:all .2s;
+}
+
+.option.selected {
+ background:var(--ink);
+ border-color:var(--ink);
+ color:white;
+ transform:translateY(-2px);
+}
+
+.camera-box {
+ width:100%;
+ aspect-ratio:4/5;
+ border-radius:20px;
+ background:#ddd4cf;
+ overflow:hidden;
+ position:relative;
+ box-shadow:0 12px 30px #302a291c;
+}
+
+video {
+ width:100%;
+ height:100%;
+ display:none;
+ object-fit:cover;
+ transition:filter .2s;
+}
+
+/* Mirror only the front camera preview */
+video.mirrored {
+ transform:scaleX(-1);
+}
+
+.camera-placeholder {
+ position:absolute;
+ inset:0;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ color:#766c68;
+ gap:12px;
+}
+
+.camera-placeholder span { font-size:44px; }
+
+.camera-placeholder p {
+ font-size:12px;
+ line-height:1.7;
+}
+
+.camera-overlay {
+ position:absolute;
+ inset:12px;
+ border:1px solid #ffffff90;
+ border-radius:12px;
+ pointer-events:none;
+}
+
+.camera-overlay:before,
+.camera-overlay:after {
+ content:"";
+ position:absolute;
+ width:20px;
+ height:20px;
+ border-color:white;
+ border-style:solid;
+}
+
+.camera-overlay:before {
+ top:0;left:0;
+ border-width:2px 0 0 2px;
+}
+
+.camera-overlay:after {
+ bottom:0;right:0;
+ border-width:0 2px 2px 0;
+}
+
+#countdown {
+ position:absolute;
+ inset:0;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ color:white;
+ font-size:105px;
+ font-weight:800;
+ text-shadow:0 5px 30px #0008;
+ background:#0002;
+}
+
+#flash {
+ position:absolute;
+ inset:0;
+ background:white;
+ opacity:0;
+ pointer-events:none;
+}
+
+#flash.fire { animation:flash .4s ease-out; }
+
+.status {
+ text-align:center;
+ color:var(--muted);
+ font-size:10px;
+ letter-spacing:1.5px;
+ margin:17px 0;
+}
+
+.progress {
+ height:5px;
+ background:var(--line);
+ border-radius:20px;
+ overflow:hidden;
+ margin:14px 0;
+}
+
+#progressBar {
+ height:100%;
+ width:0;
+ background:var(--pink);
+ border-radius:20px;
+ transition:width .5s ease;
+}
+
+.preview-grid {
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ margin-top:15px;
+}
+
+.preview-grid img {
+ display:block;
+ width:100%;
+ aspect-ratio:4/5;
+ object-fit:cover;
+ border-radius:10px;
+ background:#eee;
+}
+
+.result-heading {
+ text-align:center;
+ padding:34px 0 20px;
+}
+
+.result-heading h1 { font-size:31px; }
+
+.result-heading p {
+ color:var(--muted);
+ font-size:12px;
+ margin-top:8px;
+}
+
+.result-card {
+ background:var(--paper);
+ border:1px solid var(--line);
+ border-radius:19px;
+ padding:15px;
+ margin-top:15px;
+ box-shadow:0 12px 35px #302a2910;
+}
+
+.result-image {
+ display:block;
+ width:100%;
+ height:auto;
+ border-radius:5px;
+ background:var(--rose);
+}
+
+.note {
+ font-size:10px;
+ color:var(--muted);
+ text-align:center;
+ line-height:1.8;
+ margin-top:17px;
+}
+
+footer {
+ text-align:center;
+ color:#a39a94;
+ font-size:9px;
+ letter-spacing:3px;
+ margin-top:35px;
+}
+
+@media(max-width:360px) {
+ h1 {font-size:31px}
+ .header-tag {font-size:8px}
+}
+
+@media(prefers-reduced-motion:reduce) {
+ *,*::before,*::after {
+  animation-duration:.01ms!important;
+  transition-duration:.01ms!important;
+ }
+}
 </style>
 </head>
 
@@ -111,128 +419,133 @@ footer{text-align:center;margin-top:32px;color:#817477;font-size:10px;letter-spa
 <main class="app">
 
 <header>
- <div class="logo">MINI<span>SNAP</span></div>
- <div class="tag">PHOTO BOOTH · 2.0</div>
+ <div class="logo">MINI<span>SNAP.</span></div>
+ <div class="header-tag">THE PHOTO EXPERIENCE</div>
 </header>
 
-<!-- WELCOME SCREEN -->
-<section class="screen active center" id="home">
+<!-- HOME -->
+<section class="screen active" id="home">
  <div class="intro">
-  <div style="font-size:55px;margin-bottom:15px">📸</div>
-  <h1>A little moment.<br>A lasting memory.</h1>
-  <p>Welcome to MiniSnap!<br>
-  Let's make something worth keeping.</p>
+  <div class="hero-icon">✳</div>
+  <div class="eyebrow">A LITTLE MOMENT, FOREVER</div>
+  <h1>Let's make<br>some memories.</h1>
+  <p class="subtitle">
+   Four photographs. One beautiful strip.<br>
+   A memory to take home.
+  </p>
  </div>
 
- <div class="panel">
-  <h3>YOUR PHOTO SESSION</h3>
-  <p style="margin-top:10px">
-   4 photographs · 1 beautiful photo strip
+ <div class="card">
+  <div class="card-title">YOUR MINISNAP SESSION</div>
+  <p class="card-copy">
+   Get your favourite poses ready.<br>
+   Choose a look, strike a pose and let us capture the moment.
   </p>
-  <p style="margin-top:7px">Choose your favourite style and pose!</p>
  </div>
 
  <button class="primary" onclick="showScreen('setup')">
-  START YOUR SESSION →
+  BEGIN YOUR SESSION &nbsp; →
  </button>
- <p class="note">Please allow camera access when requested.</p>
+
+ <p class="note">PLEASE ALLOW CAMERA ACCESS TO CONTINUE</p>
 </section>
 
-<!-- SETUP SCREEN -->
+<!-- SETUP -->
 <section class="screen" id="setup">
- <h1>Set your vibe.</h1>
- <p>Choose a filter and a photo-strip theme.</p>
+ <div class="section-heading">
+  <div class="eyebrow">01 / PERSONALISE</div>
+  <h1>Set your mood.</h1>
+  <p>A little detail makes every memory special.</p>
+ </div>
 
- <div class="panel">
-  <h3>01 / PHOTO FILTER</h3>
+ <div class="card">
+  <div class="card-title">CHOOSE YOUR FILTER</div>
   <div class="options">
-   <button class="option selected" data-filter="none">Original</button>
-   <button class="option" data-filter="bw">B&W</button>
+   <button class="option selected" data-filter="none">Natural</button>
+   <button class="option" data-filter="bw">Monochrome</button>
    <button class="option" data-filter="vintage">Vintage</button>
    <button class="option" data-filter="warm">Warm</button>
   </div>
 
-  <h3 style="margin-top:20px">02 / PHOTO STRIP</h3>
+  <div class="card-title">CHOOSE YOUR STRIP</div>
   <div class="options">
-   <button class="option selected" data-theme="pink">Pink</button>
-   <button class="option" data-theme="cream">Cream</button>
-   <button class="option" data-theme="dark">Classic</button>
+   <button class="option selected" data-theme="pink">Blush</button>
+   <button class="option" data-theme="cream">Vanilla</button>
+   <button class="option" data-theme="dark">Midnight</button>
   </div>
  </div>
 
- <button class="primary" onclick="openCamera()">
-  OPEN CAMERA →
- </button>
- <button class="secondary" style="margin-top:10px"
- onclick="showScreen('home')">GO BACK</button>
+ <button class="primary" onclick="openCamera()">CONTINUE TO CAMERA →</button>
+ <div style="margin-top:10px">
+  <button class="secondary" onclick="showScreen('home')">GO BACK</button>
+ </div>
 </section>
 
-<!-- CAMERA SCREEN -->
+<!-- CAMERA -->
 <section class="screen" id="cameraScreen">
- <div class="center" style="margin-bottom:15px">
-  <h1>Strike a pose!</h1>
-  <p id="cameraInstruction">Get ready for your first picture.</p>
+ <div class="section-heading">
+  <div class="eyebrow">02 / THE PHOTO SESSION</div>
+  <h1>Look your best.</h1>
+  <p id="instruction">Find your pose. Your first picture is coming up.</p>
  </div>
 
  <div class="camera-box">
   <video id="video" autoplay muted playsinline></video>
+
   <div class="camera-placeholder" id="placeholder">
-   <span style="font-size:45px">📷</span>
-   <p>Waiting for camera...</p>
+   <span>◎</span>
+   <p>Waiting for camera access...</p>
   </div>
-  <div id="countdown">5</div>
+
+  <div class="camera-overlay"></div>
+  <div id="countdown"></div>
   <div id="flash"></div>
  </div>
 
- <div class="center">
-  <div class="status" id="cameraStatus">Connecting to camera...</div>
-  <div class="progress"><div id="progressBar"></div></div>
-  <p id="captureCount">0 / 4 photographs</p>
+ <div class="status" id="status">CONNECTING TO CAMERA</div>
+
+ <div class="progress">
+  <div id="progressBar"></div>
  </div>
 
- <div class="grid" id="miniGrid" style="display:none"></div>
+ <p class="status" id="captureCount">0 OF 4 PHOTOGRAPHS</p>
+
+ <div class="preview-grid" id="miniGrid" style="display:none"></div>
 
  <div class="actions">
   <button class="primary" id="captureBtn" onclick="startSession()" disabled>
    START PHOTO SESSION
   </button>
-  <button class="secondary" onclick="switchCamera()" id="switchBtn" disabled>
-   ↻ SWITCH CAMERA
+  <button class="secondary" id="switchBtn" onclick="switchCamera()" disabled>
+   ↻ &nbsp; SWITCH CAMERA
   </button>
   <button class="secondary" onclick="goHome()">CANCEL SESSION</button>
  </div>
 </section>
 
-<!-- RESULT SCREEN -->
+<!-- RESULTS -->
 <section class="screen" id="resultScreen">
- <div class="center">
-  <h1>Your memories, captured.</h1>
-  <p>Here's your MiniSnap photo strip!</p>
+ <div class="result-heading">
+  <div class="eyebrow">03 / YOUR MEMORIES</div>
+  <h1>Made to remember.</h1>
+  <p>Your MiniSnap strip is ready.</p>
  </div>
 
- <div class="panel">
-  <img id="resultImage" class="result-image" alt="Your finished photo strip">
+ <div class="result-card">
+  <img id="resultImage" class="result-image" alt="Your MiniSnap photo strip">
+
   <div class="actions">
-   <button class="primary" onclick="downloadStrip()">
-    ↓ DOWNLOAD PHOTO STRIP
-   </button>
-   <button class="secondary" onclick="printStrip()">
-    PRINT PHOTO STRIP
-   </button>
-   <button class="secondary" onclick="retake()">
-    ↻ RETAKE PHOTOS
-   </button>
-   <button class="secondary" onclick="goHome()">
-    FINISH SESSION
-   </button>
+   <button class="primary" onclick="downloadStrip()">DOWNLOAD YOUR STRIP ↓</button>
+   <button class="secondary" onclick="printStrip()">PRINT YOUR MEMORY</button>
+   <button class="secondary" onclick="retake()">↻ RETAKE PHOTOGRAPHS</button>
+   <button class="secondary" onclick="goHome()">FINISH SESSION</button>
   </div>
  </div>
- <p class="note center">
-  Your photographs are processed locally on this device.
- </p>
+
+ <p class="note">YOUR PHOTOGRAPHS STAY ON THIS DEVICE.</p>
 </section>
 
-<footer>MADE WITH ♥ AT MINISNAP</footer>
+<footer>MADE WITH LOVE · MINISNAP</footer>
 </main>
 
 <script>
@@ -251,14 +564,14 @@ let stripData=null;
 const filters={
  none:"none",
  bw:"grayscale(1)",
- vintage:"sepia(.65) contrast(1.08)",
- warm:"sepia(.25) saturate(1.3)"
+ vintage:"sepia(.65) contrast(1.06)",
+ warm:"sepia(.22) saturate(1.2)"
 };
 
 const themes={
- pink:{bg:"#f8dce3",ink:"#53333c",accent:"#d47791"},
- cream:{bg:"#f0e5d1",ink:"#514331",accent:"#a78a5b"},
- dark:{bg:"#262126",ink:"#fff5f5",accent:"#d9a8b6"}
+ pink:{bg:"#f8e9e9",ink:"#493437",accent:"#c77f8d"},
+ cream:{bg:"#f2eadd",ink:"#504334",accent:"#b39468"},
+ dark:{bg:"#29252a",ink:"#fff6f1",accent:"#d5a2ac"}
 };
 
 function showScreen(id){
@@ -266,6 +579,7 @@ function showScreen(id){
   s.classList.remove("active");
  });
  document.getElementById(id).classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 
 document.querySelectorAll("[data-filter]").forEach(btn=>{
@@ -273,6 +587,7 @@ document.querySelectorAll("[data-filter]").forEach(btn=>{
   filter=btn.dataset.filter;
   document.querySelectorAll("[data-filter]").forEach(b=>b.classList.remove("selected"));
   btn.classList.add("selected");
+  video.style.filter=filters[filter];
  });
 });
 
@@ -286,21 +601,22 @@ document.querySelectorAll("[data-theme]").forEach(btn=>{
 
 async function openCamera(){
  showScreen("cameraScreen");
- document.getElementById("cameraStatus").textContent="Requesting camera permission...";
+ document.getElementById("status").textContent="REQUESTING CAMERA ACCESS";
  document.getElementById("captureBtn").disabled=true;
  document.getElementById("switchBtn").disabled=true;
 
  try{
   await startCamera();
  }catch(e){
-  document.getElementById("cameraStatus").textContent=
-   "Camera unavailable. Check browser permissions and HTTPS.";
+  console.error(e);
+  document.getElementById("status").textContent=
+   "CAMERA UNAVAILABLE — CHECK PERMISSIONS AND HTTPS";
  }
 }
 
 async function startCamera(){
  if(!navigator.mediaDevices?.getUserMedia){
-  throw new Error("Camera requires HTTPS.");
+  throw new Error("Secure HTTPS connection required.");
  }
 
  if(stream){
@@ -312,33 +628,35 @@ async function startCamera(){
   audio:false,
   video:{
    facingMode:{ideal:facing},
-   width:{ideal:1280},
-   height:{ideal:1600}
+   width:{ideal:1920},
+   height:{ideal:1080}
   }
  });
 
  video.srcObject=stream;
  await video.play();
 
- video.style.display="block";
- document.getElementById("placeholder").style.display="none";
+ // The preview and final front-camera image use the same orientation.
+ video.classList.toggle("mirrored",facing==="user");
  video.style.filter=filters[filter];
+ video.style.display="block";
 
- document.getElementById("cameraStatus").textContent="● CAMERA READY";
+ document.getElementById("placeholder").style.display="none";
+ document.getElementById("status").textContent="● CAMERA READY";
  document.getElementById("captureBtn").disabled=false;
  document.getElementById("switchBtn").disabled=false;
- document.getElementById("captureBtn").textContent="START PHOTO SESSION";
 }
 
 async function switchCamera(){
  if(busy)return;
- facing=facing==="user"?"environment":"user";
- document.getElementById("cameraStatus").textContent="Switching camera...";
+ const previous=facing;
+ facing=previous==="user"?"environment":"user";
+
  try{
   await startCamera();
  }catch(e){
-  facing=facing==="user"?"environment":"user";
-  document.getElementById("cameraStatus").textContent="Could not switch camera.";
+  facing=previous;
+  document.getElementById("status").textContent="COULD NOT SWITCH CAMERA";
  }
 }
 
@@ -347,70 +665,120 @@ function delay(ms){
 }
 
 async function startSession(){
- if(busy||!stream)return;
+ if(busy||!stream||!video.videoWidth)return;
 
  busy=true;
  photos=[];
+
  const btn=document.getElementById("captureBtn");
  btn.disabled=true;
  document.getElementById("switchBtn").disabled=true;
- document.getElementById("miniGrid").style.display="grid";
- document.getElementById("miniGrid").innerHTML="";
+
+ const grid=document.getElementById("miniGrid");
+ grid.innerHTML="";
+ grid.style.display="grid";
+
  document.getElementById("progressBar").style.width="0%";
+ document.getElementById("captureCount").textContent="0 OF 4 PHOTOGRAPHS";
 
- for(let i=0;i<4;i++){
-  document.getElementById("cameraInstruction").textContent=
-   "Get ready for picture "+(i+1)+" of 4!";
+ try{
+  for(let i=0;i<4;i++){
+   document.getElementById("instruction").textContent=
+    "Photograph "+(i+1)+" of 4. Find your pose!";
 
-  for(let n=5;n>=1;n--){
-   countdown.style.display="flex";
-   countdown.textContent=n;
-   await delay(1000);
+   for(let n=5;n>=1;n--){
+    countdown.style.display="flex";
+    countdown.textContent=n;
+    await delay(1000);
+   }
+
+   countdown.style.display="none";
+
+   // A short settling pause reduces movement from tapping.
+   await delay(450);
+   takePhoto();
+   await delay(600);
+
+   document.getElementById("captureCount").textContent=
+    photos.length+" OF 4 PHOTOGRAPHS";
+
+   document.getElementById("progressBar").style.width=
+    (photos.length*25)+"%";
   }
 
-  countdown.style.display="none";
-  takePhoto();
-  await delay(900);
-  document.getElementById("captureCount").textContent=
-   photos.length+" / 4 photographs";
-  document.getElementById("progressBar").style.width=
-   (photos.length*25)+"%";
+  document.getElementById("instruction").textContent="Your memories are ready!";
+  await delay(400);
+  await generateStrip();
+
+  stopCamera();
+  showScreen("resultScreen");
+
+ }catch(e){
+  console.error(e);
+  document.getElementById("status").textContent="CAPTURE ERROR. PLEASE TRY AGAIN.";
+  busy=false;
+  btn.disabled=false;
+  document.getElementById("switchBtn").disabled=false;
+  return;
  }
 
- document.getElementById("cameraInstruction").textContent=
-  "All four pictures captured!";
-
- await delay(500);
  busy=false;
- generateStrip();
- stopCamera();
- showScreen("resultScreen");
 }
 
 function takePhoto(){
  const canvas=document.createElement("canvas");
- canvas.width=720;
- canvas.height=900;
+
+ // A portrait 4:5 photograph. Crop, never stretch.
+ const targetW=720;
+ const targetH=900;
+ const targetRatio=targetW/targetH;
+
+ const sourceW=video.videoWidth;
+ const sourceH=video.videoHeight;
+ const sourceRatio=sourceW/sourceH;
+
+ let sx=0,sy=0,sw=sourceW,sh=sourceH;
+
+ if(sourceRatio>targetRatio){
+  sw=sourceH*targetRatio;
+  sx=(sourceW-sw)/2;
+ }else{
+  sh=sourceW/targetRatio;
+  sy=(sourceH-sh)/2;
+ }
+
+ canvas.width=targetW;
+ canvas.height=targetH;
+
  const ctx=canvas.getContext("2d");
 
+ // Match the mirrored front-camera preview in the final photograph.
  if(facing==="user"){
-  ctx.translate(canvas.width,0);
+  ctx.translate(targetW,0);
   ctx.scale(-1,1);
  }
 
  ctx.filter=filters[filter];
- ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+ ctx.drawImage(
+  video,
+  sx,sy,sw,sh,
+  0,0,targetW,targetH
+ );
+
  ctx.filter="none";
 
- const data=canvas.toDataURL("image/jpeg",.9);
+ const data=canvas.toDataURL("image/jpeg",.94);
  photos.push(data);
 
  const img=document.createElement("img");
  img.src=data;
+ img.alt="Captured photograph";
  document.getElementById("miniGrid").appendChild(img);
 
- flash.style.opacity="1";
- setTimeout(()=>flash.style.opacity="0",130);
+ flash.classList.remove("fire");
+ void flash.offsetWidth;
+ flash.classList.add("fire");
 }
 
 function stopCamera(){
@@ -423,14 +791,6 @@ function stopCamera(){
  document.getElementById("placeholder").style.display="flex";
 }
 
-function drawCover(ctx,img,x,y,w,h){
- const scale=Math.max(w/img.width,h/img.height);
- const sw=w/scale,sh=h/scale;
- const sx=(img.width-sw)/2;
- const sy=(img.height-sh)/2;
- ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);
-}
-
 function loadImage(src){
  return new Promise((resolve,reject)=>{
   const img=new Image();
@@ -440,100 +800,173 @@ function loadImage(src){
  });
 }
 
+function roundedRect(ctx,x,y,w,h,r){
+ ctx.beginPath();
+ ctx.roundRect(x,y,w,h,r);
+}
+
 async function generateStrip(){
  const t=themes[theme];
- const canvas=document.createElement("canvas");
- canvas.width=720;
- canvas.height=2180;
- const ctx=canvas.getContext("2d");
 
+ // Four genuine portrait photographs with matching 4:5 frames.
+ const W=720,H=3600;
+ const canvas=document.createElement("canvas");
+ canvas.width=W;
+ canvas.height=H;
+
+ const ctx=canvas.getContext("2d");
  ctx.fillStyle=t.bg;
- ctx.fillRect(0,0,720,2180);
+ ctx.fillRect(0,0,W,H);
+
+ // Subtle editorial frame.
+ ctx.strokeStyle=t.accent;
+ ctx.lineWidth=2;
+ ctx.strokeRect(19,19,W-38,H-38);
 
  ctx.textAlign="center";
  ctx.fillStyle=t.ink;
- ctx.font="bold 52px Arial";
- ctx.fillText("MINISNAP",360,95);
 
- ctx.font="18px Arial";
- ctx.fillText("A LITTLE MOMENT, A LASTING MEMORY",360,135);
+ ctx.font="600 19px Arial";
+ ctx.fillText("A MOMENT TO KEEP",360,82);
+
+ ctx.font="bold 48px Arial";
+ ctx.fillText("MINISNAP",360,145);
+
+ ctx.fillStyle=t.accent;
+ ctx.fillRect(270,173,180,3);
+
+ const x=40;
+ const yStart=215;
+ const frameW=640;
+ const frameH=800;
+ const gap=20;
 
  for(let i=0;i<4;i++){
   const img=await loadImage(photos[i]);
-  const x=40,y=180+i*430;
+  const y=yStart+i*(frameH+gap);
+
+  // Soft shadow.
+  ctx.shadowColor="#00000018";
+  ctx.shadowBlur=12;
+  ctx.shadowOffsetY=4;
+
+  roundedRect(ctx,x,y,frameW,frameH,9);
   ctx.fillStyle="#ffffff";
-  ctx.fillRect(x-7,y-7,654,414);
+  ctx.fill();
+
+  ctx.shadowColor="transparent";
+  ctx.shadowBlur=0;
+  ctx.shadowOffsetY=0;
+
   ctx.save();
-  ctx.beginPath();
-  ctx.rect(x,y,640,400);
+  roundedRect(ctx,x+7,y+7,frameW-14,frameH-14,5);
   ctx.clip();
-  drawCover(ctx,img,x,y,640,400);
+  ctx.drawImage(img,x+7,y+7,frameW-14,frameH-14);
   ctx.restore();
+
+  ctx.fillStyle=t.accent;
+  ctx.font="600 14px Arial";
+  ctx.textAlign="right";
+  ctx.fillText("0"+(i+1),W-45,y+frameH-22);
  }
 
- ctx.fillStyle=t.accent;
- ctx.fillRect(40,1900,640,4);
-
+ const bottom=3450;
+ ctx.textAlign="center";
  ctx.fillStyle=t.ink;
- ctx.font="bold 25px Arial";
- ctx.fillText("YOUR EXHIBITION MEMORY",360,1970);
 
- ctx.font="19px Arial";
- ctx.fillText(new Date().toLocaleDateString("en-IN"),360,2010);
+ ctx.font="600 19px Arial";
+ ctx.fillText(
+  new Date().toLocaleDateString("en-IN",{
+   day:"2-digit",month:"long",year:"numeric"
+  }),
+  360,bottom
+ );
 
- ctx.font="16px Arial";
- ctx.fillText("MADE WITH LOVE AT MINISNAP",360,2080);
+ ctx.font="14px Arial";
+ ctx.fillStyle=t.accent;
+ ctx.fillText("MADE WITH LOVE AT MINISNAP",360,bottom+42);
 
- stripData=canvas.toDataURL("image/jpeg",.95);
+ stripData=canvas.toDataURL("image/jpeg",.96);
  document.getElementById("resultImage").src=stripData;
 }
 
 function downloadStrip(){
  if(!stripData)return;
+
  const a=document.createElement("a");
  a.href=stripData;
- a.download="MiniSnap-Photo-Strip.jpg";
+ a.download="MiniSnap-Memory.jpg";
  a.click();
 }
 
 function printStrip(){
  if(!stripData)return;
 
- const img=document.getElementById("resultImage");
- const old=document.getElementById("printArea");
- if(old)old.remove();
-
  const area=document.createElement("div");
  area.id="printArea";
- const copy=img.cloneNode();
- copy.style.width="100%";
- copy.style.maxWidth="65mm";
- area.appendChild(copy);
- document.body.appendChild(area);
+
+ const img=document.createElement("img");
+ img.src=stripData;
+ area.appendChild(img);
 
  const style=document.createElement("style");
  style.id="printStyle";
+
  style.textContent=`
- @media print{
-  body>*:not(#printArea){display:none!important}
-  #printArea{display:block!important;text-align:center}
-  #printArea img{width:65mm!important;height:auto!important}
-  @page{size:A4 portrait;margin:15mm}
+ @media print {
+  @page { size:A4 portrait; margin:10mm; }
+
+  body * { visibility:hidden!important; }
+
+  #printArea, #printArea * {
+   visibility:visible!important;
+  }
+
+  #printArea {
+   display:block!important;
+   position:absolute;
+   top:0;
+   left:0;
+   width:50mm;
+   margin:0;
+  }
+
+  #printArea img {
+   display:block;
+   width:50mm;
+   height:auto;
+   max-height:270mm;
+   object-fit:contain;
+  }
  }
  `;
+
+ document.body.appendChild(area);
  document.head.appendChild(style);
+
+ const cleanup=()=>{
+  area.remove();
+  style.remove();
+  window.removeEventListener("afterprint",cleanup);
+ };
+
+ window.addEventListener("afterprint",cleanup);
  window.print();
- style.remove();
- area.remove();
+
+ setTimeout(cleanup,30000);
 }
 
 function retake(){
  photos=[];
  stripData=null;
+ busy=false;
  facing="user";
- document.getElementById("captureCount").textContent="0 / 4 photographs";
+
  document.getElementById("miniGrid").innerHTML="";
  document.getElementById("miniGrid").style.display="none";
+ document.getElementById("captureCount").textContent="0 OF 4 PHOTOGRAPHS";
+ document.getElementById("progressBar").style.width="0%";
+
  openCamera();
 }
 
@@ -545,8 +978,14 @@ function goHome(){
  showScreen("home");
 }
 
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden&&stream){
+  stopCamera();
+ }
+});
+
 window.addEventListener("pagehide",stopCamera);
 </script>
+
 </body>
 </html>
-
