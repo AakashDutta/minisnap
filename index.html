@@ -412,7 +412,18 @@ footer {
   transition-duration:.01ms!important;
  }
 }
-</style>
+
+/* QR delivery, guest view and admin dashboard */
+.share-panel,.admin-panel,.guest-panel{background:var(--paper);border:1px solid var(--line);border-radius:19px;padding:19px;margin-top:16px}
+.qr-wrap{display:grid;place-items:center;min-height:190px;background:#fff;border:1px dashed var(--line);border-radius:14px;margin:14px 0;padding:14px}
+#qrCode img,#qrCode canvas{max-width:100%;height:auto!important}
+.small-copy{font-size:11px;line-height:1.7;color:var(--muted)}
+.field{width:100%;border:1px solid var(--line);background:#fffdf9;border-radius:11px;padding:13px;font:inherit;font-size:13px;margin:8px 0}
+.session-row{padding:13px 0;border-bottom:1px solid var(--line);font-size:11px;line-height:1.7}
+.session-row:last-child{border:0}
+.admin-link{background:none;border:0;color:#a39a94;font:inherit;font-size:9px;letter-spacing:2px;text-decoration:underline;margin-top:10px}
+.state-pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#f3e2e2;color:#754d55;font-size:9px;font-weight:700}
+  </style>
 </head>
 
 <body>
@@ -536,16 +547,61 @@ footer {
 
   <div class="actions">
    <button class="primary" onclick="downloadStrip()">DOWNLOAD YOUR STRIP ↓</button>
-   <button class="secondary" onclick="printStrip()">PRINT YOUR MEMORY</button>
+   <button class="secondary" onclick="shareStrip()" id="shareBtn">CREATE YOUR QR CODE ↗</button>
    <button class="secondary" onclick="retake()">↻ RETAKE PHOTOGRAPHS</button>
    <button class="secondary" onclick="goHome()">FINISH SESSION</button>
   </div>
  </div>
 
- <p class="note">YOUR PHOTOGRAPHS STAY ON THIS DEVICE.</p>
+ <div class="share-panel" id="sharePanel">
+    <div class="card-title">YOUR PRIVATE PHOTO LINK</div>
+    <p class="small-copy" id="shareStatus">Create a unique QR code so the guest can scan it with their own phone and download this strip.</p>
+    <div class="qr-wrap"><div id="qrCode"><span class="small-copy">Your QR code will appear here.</span></div></div>
+    <p class="small-copy" id="shareExpiry">Each link expires after 24 hours. Photos are stored privately.</p>
+    <div class="actions">
+      <button class="secondary" id="copyLinkBtn" onclick="copyGuestLink()" disabled>COPY GUEST LINK</button>
+      <button class="secondary" onclick="shareStrip()" id="retryShareBtn">RETRY / CREATE QR</button>
+    </div>
+  </div>
+  <p class="note">THE PHOTO IS UPLOADED ONLY WHEN YOU CREATE ITS QR CODE.</p>
 </section>
 
-<footer>MADE WITH LOVE · MINISNAP</footer>
+<section class="screen" id="guestScreen">
+  <div class="result-heading">
+    <div class="eyebrow">A LITTLE MEMORY, DELIVERED</div>
+    <h1>Your MiniSnap.</h1>
+    <p>Your photo strip is ready to save.</p>
+  </div>
+  <div class="guest-panel">
+    <img id="guestImage" class="result-image" alt="Your MiniSnap photo strip">
+    <div class="actions">
+      <a id="guestDownload" class="primary" style="display:block;text-align:center;text-decoration:none" download="MiniSnap-Memory.jpg">DOWNLOAD YOUR STRIP ↓</a>
+      <button class="secondary" onclick="guestShare()">SHARE PHOTO</button>
+    </div>
+    <p class="note" id="guestExpiry">This private link is valid for a limited time.</p>
+  </div>
+</section>
+
+<section class="screen" id="adminScreen">
+  <div class="section-heading">
+    <div class="eyebrow">MINISNAP CONTROL ROOM</div>
+    <h1>Session desk.</h1>
+    <p>Private admin access. Keep this screen away from guests.</p>
+  </div>
+  <div class="admin-panel">
+    <label class="small-copy" for="adminKey">ADMIN ACCESS KEY</label>
+    <input class="field" id="adminKey" type="password" autocomplete="off" placeholder="Enter your admin key">
+    <div class="actions">
+      <button class="primary" onclick="loadAdmin()">OPEN DASHBOARD</button>
+      <button class="secondary" onclick="cleanupExpired()">DELETE EXPIRED PHOTOS</button>
+    </div>
+    <p class="small-copy" id="adminStatus" style="margin-top:12px">Only the booth operator should use this panel.</p>
+    <div id="adminSessions"></div>
+  </div>
+  <button class="secondary" style="margin-top:12px" onclick="showScreen('home')">BACK TO BOOTH</button>
+</section>
+
+<footer>MADE WITH LOVE · MINISNAP<br><button class="admin-link" onclick="openAdmin()">ADMIN ACCESS</button></footer>
 </main>
 
 <script>
@@ -899,61 +955,140 @@ function downloadStrip(){
  a.click();
 }
 
-function printStrip(){
+
+async function edgeRequest(action,{method="GET",body=null,adminKey=""}={}){
+ const headers={"apikey":SUPABASE_PUBLISHABLE_KEY,"Content-Type":"application/json"};
+ if(adminKey)headers["x-minisnap-admin"]=adminKey;
+ const response=await fetch(EDGE_URL+"?action="+encodeURIComponent(action),{
+  method,headers,body:body?JSON.stringify(body):undefined
+ });
+ const result=await response.json().catch(()=>({error:"The server returned an unreadable response."}));
+ if(!response.ok)throw new Error(result.error||"Request failed ("+response.status+").");
+ return result;
+}
+
+async function shareStrip(){
  if(!stripData)return;
-
- const area=document.createElement("div");
- area.id="printArea";
-
- const img=document.createElement("img");
- img.src=stripData;
- area.appendChild(img);
-
- const style=document.createElement("style");
- style.id="printStyle";
-
- style.textContent=`
- @media print {
-  @page { size:A4 portrait; margin:10mm; }
-
-  body * { visibility:hidden!important; }
-
-  #printArea, #printArea * {
-   visibility:visible!important;
-  }
-
-  #printArea {
-   display:block!important;
-   position:absolute;
-   top:0;
-   left:0;
-   width:50mm;
-   margin:0;
-  }
-
-  #printArea img {
-   display:block;
-   width:50mm;
-   height:auto;
-   max-height:270mm;
-   object-fit:contain;
-  }
+ const btn=document.getElementById("shareBtn");
+ const status=document.getElementById("shareStatus");
+ btn.disabled=true;
+ btn.textContent="UPLOADING YOUR STRIP…";
+ status.textContent="Uploading securely. Keep this page open for a moment.";
+ document.getElementById("qrCode").innerHTML="";
+ document.getElementById("copyLinkBtn").disabled=true;
+ try{
+  const adminKey=prompt("Enter the MiniSnap booth admin key to upload this photo strip:");
+  if(!adminKey)throw new Error("Upload cancelled. Your photo is still saved on this booth screen.");
+  const result=await edgeRequest("create",{
+   method:"POST",adminKey,
+   body:{image:stripData}
+  });
+  currentGuestLink=location.origin+location.pathname+"?guest="+encodeURIComponent(result.token);
+  if(typeof QRCode==="undefined")throw new Error("QR generator did not load. Check internet and reload the booth page.");
+  new QRCode(document.getElementById("qrCode"),{
+   text:currentGuestLink,width:190,height:190,colorDark:"#302a29",colorLight:"#ffffff",
+   correctLevel:QRCode.CorrectLevel.M
+  });
+  document.getElementById("copyLinkBtn").disabled=false;
+  document.getElementById("shareExpiry").textContent="Link expires: "+new Date(result.expiresAt).toLocaleString();
+  status.textContent="Upload complete. Ask the guest to scan this QR code using their phone camera.";
+  btn.textContent="CREATE ANOTHER QR";
+ }catch(e){
+  status.textContent=e.message+" Your photo remains on this device. You can retry when the connection is stable.";
+  btn.textContent="RETRY UPLOAD";
+ }finally{
+  btn.disabled=false;
  }
- `;
+}
 
- document.body.appendChild(area);
- document.head.appendChild(style);
+async function copyGuestLink(){
+ if(!currentGuestLink)return;
+ try{
+  await navigator.clipboard.writeText(currentGuestLink);
+  document.getElementById("shareStatus").textContent="Guest link copied.";
+ }catch(e){
+  document.getElementById("shareStatus").textContent="Copy was blocked by this browser. Guests can scan the QR code instead.";
+ }
+}
 
- const cleanup=()=>{
-  area.remove();
-  style.remove();
-  window.removeEventListener("afterprint",cleanup);
- };
+async function openGuest(token){
+ showScreen("guestScreen");
+ document.getElementById("guestImage").style.display="none";
+ document.getElementById("guestExpiry").textContent="Loading your private photo…";
+ try{
+  const result=await edgeRequest("guest");
+  // Guest token is sent as a query parameter.
+ }catch(e){}
+ try{
+  const response=await fetch(EDGE_URL+"?action=guest&token="+encodeURIComponent(token),{
+   headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}
+  });
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||"This photo link is unavailable.");
+  currentGuestImage=result.imageUrl;
+  const img=document.getElementById("guestImage");
+  img.src=result.imageUrl;
+  img.style.display="block";
+  document.getElementById("guestDownload").href=result.imageUrl;
+  document.getElementById("guestExpiry").textContent="Private link expires: "+new Date(result.expiresAt).toLocaleString();
+ }catch(e){
+  document.getElementById("guestExpiry").textContent=e.message;
+  document.getElementById("guestDownload").style.display="none";
+ }
+}
 
- window.addEventListener("afterprint",cleanup);
- window.print();
+async function guestShare(){
+ if(!currentGuestImage)return;
+ try{
+  const response=await fetch(currentGuestImage);
+  const blob=await response.blob();
+  const file=new File([blob],"MiniSnap-Memory.jpg",{type:"image/jpeg"});
+  if(navigator.canShare?.({files:[file]})){
+   await navigator.share({files:[file],title:"My MiniSnap memory"});
+  }else{
+   document.getElementById("guestExpiry").textContent="Use Download your strip, then share the saved image from your gallery.";
+  }
+ }catch(e){
+  document.getElementById("guestExpiry").textContent="Download the image first, then share it from your gallery.";
+ }
+}
 
- setTimeout(cleanup,30000);
+function openAdmin(){
+ showScreen("adminScreen");
+ document.getElementById("adminKey").value="";
+ document.getElementById("adminSessions").innerHTML="";
+}
+
+async function loadAdmin(){
+ const key=document.getElementById("adminKey").value.trim();
+ const status=document.getElementById("adminStatus");
+ status.textContent="Loading sessions…";
+ try{
+  const data=await edgeRequest("admin",{adminKey:key});
+  status.textContent=data.sessions.length+" recent sessions";
+  const host=document.getElementById("adminSessions");
+  host.innerHTML="";
+  data.sessions.forEach(session=>{
+   const row=document.createElement("div");
+   row.className="session-row";
+   const accessed=session.last_accessed_at?"Guest opened link: "+new Date(session.last_accessed_at).toLocaleString():"Not opened yet";
+   row.innerHTML="<strong>"+new Date(session.created_at).toLocaleString()+"</strong><br>"+accessed+
+    "<br>Guest opens: "+session.guest_access_count+
+    " · Expires: "+new Date(session.expires_at).toLocaleString();
+   host.appendChild(row);
+  });
+ }catch(e){status.textContent=e.message;}
+}
+
+async function cleanupExpired(){
+ const key=document.getElementById("adminKey").value.trim();
+ const status=document.getElementById("adminStatus");
+ status.textContent="Deleting expired sessions…";
+ try{
+  const result=await edgeRequest("delete-expired",{method:"POST",adminKey:key,body:{}});
+  status.textContent=result.deleted+" expired photo(s) deleted.";
+  await loadAdmin();
+ }catch(e){status.textContent=e.message;}
 }
 
 function retake(){
@@ -985,6 +1120,8 @@ document.addEventListener("visibilitychange",()=>{
 });
 
 window.addEventListener("pagehide",stopCamera);
+const guestToken=new URLSearchParams(location.search).get("guest");
+if(guestToken){openGuest(guestToken);}
 </script>
 
 </body>
