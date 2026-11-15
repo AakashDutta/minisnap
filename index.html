@@ -1031,7 +1031,7 @@ async function openGuest(token){
   const img=document.getElementById("guestImage");
   img.src=result.imageUrl;
   img.style.display="block";
-  document.getElementById("guestDownload").href=result.imageUrl;
+  document.getElementById("guestDownload").href=result.downloadUrl;
   document.getElementById("guestExpiry").textContent="Private link expires: "+new Date(result.expiresAt).toLocaleString();
  }catch(e){
   document.getElementById("guestExpiry").textContent=e.message;
