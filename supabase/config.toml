@@ -1,0 +1,2 @@
+[functions.minisnap]
+verify_jwt = false
