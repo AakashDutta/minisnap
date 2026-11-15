@@ -1,6 +1,6 @@
 // MiniSnap Edge Function: secure uploads, guest access and admin session list.
 // Deploy as function name "minisnap". Set secrets:
-// MINISNAP_ADMIN_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+// MINISNAP_ADMIN_KEY. Supabase injects SUPABASE_URL and SUPABASE_SECRET_KEYS.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const cors = {
@@ -34,7 +34,8 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
   const action = url.searchParams.get("action");
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const secretKeys = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") ?? "{}");
+  const serviceKey = secretKeys.default ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
   const adminKey = Deno.env.get("MINISNAP_ADMIN_KEY") ?? "";
   if (!supabaseUrl || !serviceKey || adminKey.length < 32) {
     return json({ error: "Server is not configured. Check Edge Function secrets." }, 500);
