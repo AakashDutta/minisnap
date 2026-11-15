@@ -1016,10 +1016,6 @@ async function openGuest(token){
  document.getElementById("guestImage").style.display="none";
  document.getElementById("guestExpiry").textContent="Loading your private photo…";
  try{
-  const result=await edgeRequest("guest");
-  // Guest token is sent as a query parameter.
- }catch(e){}
- try{
   const response=await fetch(EDGE_URL+"?action=guest&token="+encodeURIComponent(token),{
    headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}
   });
