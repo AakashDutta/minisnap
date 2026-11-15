@@ -91,12 +91,16 @@ Deno.serve(async (req) => {
       }
       const { data: signed, error: signError } = await db.storage.from("photo-strips")
         .createSignedUrl(session.storage_path, 60 * 10);
-      if (signError || !signed?.signedUrl) return json({ error: "Could not prepare your photo." }, 500);
+      const { data: download, error: downloadError } = await db.storage.from("photo-strips")
+        .createSignedUrl(session.storage_path, 60 * 10, { download: "MiniSnap-Memory.jpg" });
+      if (signError || downloadError || !signed?.signedUrl || !download?.signedUrl) {
+        return json({ error: "Could not prepare your photo." }, 500);
+      }
       await db.from("photo_sessions").update({
         last_accessed_at: new Date().toISOString(),
         guest_access_count: (session.guest_access_count ?? 0) + 1,
       }).eq("id", session.id);
-      return json({ ok: true, imageUrl: signed.signedUrl, expiresAt: session.expires_at });
+      return json({ ok: true, imageUrl: signed.signedUrl, downloadUrl: download.signedUrl, expiresAt: session.expires_at });
     }
 
     if (action === "admin" && req.method === "GET") {
