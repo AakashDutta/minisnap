@@ -604,7 +604,13 @@ footer {
 <footer>MADE WITH LOVE · MINISNAP<br><button class="admin-link" onclick="openAdmin()">ADMIN ACCESS</button></footer>
 </main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+const SUPABASE_URL="https://zbxcdiugunkyfvbxiecy.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_K-rsUdRw_4gEFx9uJxdbeQ_WBlC7WiZ";
+const EDGE_URL=SUPABASE_URL+"/functions/v1/minisnap";
+let currentGuestLink="";
+let currentGuestImage="";
 const video=document.getElementById("video");
 const countdown=document.getElementById("countdown");
 const flash=document.getElementById("flash");
