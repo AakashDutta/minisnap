@@ -1,6 +1,6 @@
 // MiniSnap Edge Function: secure uploads, guest access and admin session list.
 // Deploy as function name "minisnap". Set secrets:
-// MINISNAP_ADMIN_KEY. Supabase injects SUPABASE_URL and SUPABASE_SECRET_KEYS.
+// MINISNAP_ADMIN_KEY, MINISNAP_BOOTH_PIN (8 digits), MINISNAP_BOOTH_TOKEN_SECRET (32+ chars). Supabase injects SUPABASE_URL and SUPABASE_SECRET_KEYS.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const cors = {
@@ -17,6 +17,33 @@ const json = (body: unknown, status = 200) =>
 
 const hex = (bytes: Uint8Array) =>
   [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+
+function base64url(bytes: Uint8Array) {
+  let binary = '';
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+async function signBoothPayload(payload: string, secret: string) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const signature = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload)));
+  return base64url(signature);
+}
+
+async function validBoothToken(token: string, secret: string) {
+  const parts = token.split('.');
+  if (parts.length !== 2) return false;
+  const expected = await signBoothPayload(parts[0], secret);
+  if (expected.length !== parts[1].length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < expected.length; i++) mismatch |= expected.charCodeAt(i) ^ parts[1].charCodeAt(i);
+  if (mismatch !== 0) return false;
+  try {
+    const encoded = parts[0].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(encoded + '='.repeat((4 - encoded.length % 4) % 4)));
+    return payload.exp > Math.floor(Date.now() / 1000);
+  } catch { return false; }
+}
 
 async function sha256(value: string) {
   return hex(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value))));
@@ -37,6 +64,8 @@ Deno.serve(async (req) => {
   const secretKeys = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") ?? "{}");
   const serviceKey = secretKeys.default ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
   const adminKey = Deno.env.get("MINISNAP_ADMIN_KEY") ?? "";
+  const boothPin = Deno.env.get("MINISNAP_BOOTH_PIN") ?? "";
+  const boothTokenSecret = Deno.env.get("MINISNAP_BOOTH_TOKEN_SECRET") ?? "";
   if (!supabaseUrl || !serviceKey || adminKey.length < 32) {
     return json({ error: "Server is not configured. Check Edge Function secrets." }, 500);
   }
@@ -46,8 +75,24 @@ Deno.serve(async (req) => {
   });
 
   try {
+    if (action === "booth-auth" && req.method === "POST") {
+      if (!/^\d{8}$/.test(boothPin) || boothTokenSecret.length < 32) return json({ error: "Booth PIN is not configured. Set the booth secrets in Supabase." }, 503);
+      const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+      const ipHash = await sha256(ip);
+      const { data: allowed, error: limitError } = await db.rpc("minisnap_check_booth_attempt", { p_ip_hash: ipHash });
+      if (limitError) return json({ error: "Booth sign-in protection is not configured. Run the MiniSnap PIN SQL setup." }, 503);
+      if (!allowed) return json({ error: "Too many PIN attempts. Wait 15 minutes and try again." }, 429);
+      const body = await req.json();
+      const supplied = String(body.pin ?? "");
+      if (supplied.length !== boothPin.length || supplied !== boothPin) return json({ error: "Incorrect booth PIN." }, 401);
+      const payload = base64url(new TextEncoder().encode(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + 12 * 60 * 60 })));
+      const signature = await signBoothPayload(payload, boothTokenSecret);
+      return json({ ok: true, boothToken: payload + "." + signature, expiresIn: 43200 });
+    }
+
     if (action === "create" && req.method === "POST") {
-      if (!adminOk(req)) return json({ error: "Admin authorization failed." }, 401);
+      const boothToken = req.headers.get("x-minisnap-booth") ?? "";
+      if (boothTokenSecret.length < 32 || !await validBoothToken(boothToken, boothTokenSecret)) return json({ error: "Booth session expired. Enter the booth PIN again." }, 401);
       const body = await req.json();
       const dataUrl = String(body.image ?? "");
       const match = dataUrl.match(/^data:image\/jpeg;base64,([A-Za-z0-9+/=]+)$/);
