@@ -1016,7 +1016,8 @@ async function generateStrip(){
  ctx.fillStyle=t.accent;
  ctx.fillText("MADE WITH LOVE AT MINISNAP",360,bottom+42);
 
- // A slightly lighter JPEG keeps uploads quick on busy school mobile networks.\n  stripData=canvas.toDataURL("image/jpeg",.88);
+ // A slightly lighter JPEG keeps uploads quick on busy school mobile networks.
+  stripData=canvas.toDataURL("image/jpeg",.88);
  document.getElementById("resultImage").src=stripData;
 }
 
@@ -1064,6 +1065,7 @@ async function shareStrip(){
   if(!adminKey){
    adminKey=prompt("Unlock MiniSnap booth uploads. Enter the admin key once for this session:");
    if(!adminKey)throw new Error("Upload cancelled. Your photo is still saved on this booth screen.");
+   boothAdminKey=adminKey;
   }
   status.textContent="Uploading your photo securely… This usually takes a few seconds.";
   const result=await edgeRequest("create",{
@@ -1151,7 +1153,8 @@ async function loadAdmin(){
  status.textContent="Loading sessions…";
  try{
   const data=await edgeRequest("admin",{adminKey:key});
-  boothAdminKey=key;\n  status.textContent=data.sessions.length+" recent sessions";
+  boothAdminKey=key;
+  status.textContent=data.sessions.length+" recent sessions";
   const host=document.getElementById("adminSessions");
   host.innerHTML="";
   data.sessions.forEach(session=>{
