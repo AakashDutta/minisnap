@@ -489,6 +489,101 @@ h1{letter-spacing:-.7px}
  .intro{padding-top:42px}
 }
 
+ 
+/* MiniSnap Studio UI refresh */
+:root{
+ --bg:#f4f1ec;--paper:#fffefa;--ink:#24272b;--muted:#74777d;
+ --pink:#b97984;--line:#e6e0d9;--rose:#f2e5e6;
+ --shadow:0 18px 48px rgba(39,34,30,.07);
+}
+body{
+ background:radial-gradient(ellipse at 50% -8%,#fff 0,transparent 48%),#f4f1ec;
+ color:var(--ink);padding:22px 16px 46px;
+}
+.app{max-width:540px}
+header{padding:11px 3px 19px;border-bottom:1px solid rgba(80,70,62,.12)}
+.logo{font-size:24px;letter-spacing:2.3px}
+.header-tag{font-size:8px;font-weight:700;letter-spacing:1.2px;color:#66676c;background:#fffefa;border:1px solid var(--line);border-radius:30px;padding:9px 11px}
+.intro{padding:52px 10px 27px}
+.hero-icon{font-size:32px;margin-bottom:17px;color:var(--pink)}
+.eyebrow{font-size:9px;letter-spacing:2.5px;color:var(--pink);font-weight:800}
+h1{font-size:clamp(34px,8vw,43px);letter-spacing:-1px;line-height:1.12}
+.subtitle{font-size:13px;line-height:1.85;color:#74777d}
+.card,.result-card,.share-panel,.admin-panel,.guest-panel{
+ background:rgba(255,254,250,.96);border:1px solid var(--line);
+ border-radius:21px;box-shadow:var(--shadow)
+}
+.card{padding:23px;margin:18px 0}
+.card-title{font-size:10px;letter-spacing:1.8px;font-weight:800}
+.card-copy{font-size:13px;line-height:1.85;color:#686c72}
+.primary{background:#25282c;border-radius:13px;padding:17px 18px;font-size:11px;letter-spacing:1.15px;box-shadow:0 8px 20px rgba(32,34,37,.13)}
+.primary:hover{background:#41444a}
+.secondary{background:#fffefa;border:1px solid var(--line);border-radius:13px;padding:14px;font-size:10px;letter-spacing:.8px}
+.section-heading{padding:34px 3px 16px}
+.section-heading h1{font-size:34px}
+.section-heading p{font-size:13px;color:var(--muted);line-height:1.75}
+#setup .card{padding:22px}
+.filter-heading{margin-bottom:8px}
+.filter-intro{font-size:12px;line-height:1.7;color:var(--muted);margin-bottom:15px}
+.filter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 25px}
+.filter-option{
+ min-width:0;text-align:left;display:grid;grid-template-columns:54px 1fr;
+ grid-template-rows:auto auto;column-gap:11px;align-items:center;
+ padding:9px;border:1px solid var(--line);border-radius:14px;
+ background:#fffefa;color:var(--ink);transition:border-color .18s,background .18s,transform .18s,box-shadow .18s
+}
+.filter-option:hover{transform:translateY(-1px);box-shadow:0 7px 17px rgba(40,35,30,.06)}
+.filter-option.selected{border:1.5px solid #b97984;background:#fbf3f3;box-shadow:0 0 0 2px rgba(185,121,132,.10)}
+.filter-art{grid-row:1 / span 2;width:54px;height:58px;border-radius:9px;display:block;overflow:hidden;position:relative;background-color:#cbb9ac}
+.filter-art:before,.filter-art:after{content:"";position:absolute;display:block}
+.filter-art:before{width:30px;height:40px;left:12px;top:10px;border-radius:48% 48% 35% 35%;background:linear-gradient(145deg,#f1d6c2,#9b6f5c);box-shadow:0 0 0 4px #ffffff35}
+.filter-art:after{inset:0;background:linear-gradient(145deg,#ffffff35,transparent 55%,#29211b25)}
+.art-natural{background:linear-gradient(135deg,#b8c6b1,#e7c5a9 48%,#8c9c9a)}
+.art-mono{background:linear-gradient(135deg,#d4d2ce,#55565a 55%,#17191c);filter:grayscale(1)}
+.art-vintage{background:linear-gradient(135deg,#d8b98b,#a66e55 55%,#4d3c36)}
+.art-warm{background:linear-gradient(135deg,#f3d18d,#db9564 55%,#8b5d4c)}
+.art-campus{background:radial-gradient(circle at 30% 20%,#e7c6a0,#b37d62 48%,#463b37)}
+.art-campus:after{background:radial-gradient(ellipse,transparent 25%,#31251e88 100%)}
+.art-golden{background:radial-gradient(circle at 70% 20%,#fff2bd,#e8b65e 35%,#9a6547 100%)}
+.art-golden:after{background:radial-gradient(circle at 70% 20%,#fff8d9aa,transparent 52%)}
+.art-dream{background:linear-gradient(135deg,#d8c5d8,#f5d6c6 52%,#9caec1)}
+.art-dream:after{background:radial-gradient(circle at 50% 40%,#fff9 0,transparent 65%)}
+.art-noir{background:linear-gradient(135deg,#a7a7a5,#45464a 55%,#17181b);filter:grayscale(1)}
+.filter-name{font-size:11px;font-weight:800;line-height:1.25}
+.filter-desc{font-size:9px;color:var(--muted);line-height:1.35;margin-top:4px}
+.strip-heading{padding-top:3px;border-top:1px solid var(--line);margin-bottom:13px}
+#setup .options{gap:8px;margin:0}
+#setup .option{font-size:10px;padding:10px 14px;background:#f8f6f2}
+#setup .option.selected{background:#25282c;color:#fff;border-color:#25282c}
+.camera-box{border-radius:21px;background:#d8d2cc;box-shadow:var(--shadow)}
+.camera-overlay{inset:15px;border-color:#ffffffa8}
+#countdown{font-variant-numeric:tabular-nums;background:#17171735;backdrop-filter:blur(2px)}
+.status{font-size:9px;letter-spacing:1.4px}
+.progress{height:6px;background:#e5dfd9}
+#progressBar{background:linear-gradient(90deg,#b97984,#d8a7a5)}
+.preview-grid img{border-radius:12px;box-shadow:0 5px 16px #00000010}
+.result-heading{padding:33px 0 18px}
+.result-heading h1{font-size:33px}
+.result-card,.share-panel,.guest-panel{padding:17px}
+.result-image{border-radius:8px}
+.qr-wrap{border-radius:15px;background:#fff;border:1px solid var(--line)}
+.note{font-size:9px;letter-spacing:.8px;line-height:1.8}
+footer{font-size:8px;letter-spacing:2.2px;color:#85817d}
+.admin-link{font-size:8px}
+.field{border-radius:12px;background:#fff;padding:14px}
+.session-row{font-size:11px}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d4a1a8;outline-offset:3px}
+@media(max-width:390px){
+ body{padding:15px 12px 36px}
+ .header-tag{font-size:7px;letter-spacing:.8px;padding:8px}
+ .intro{padding-top:42px}
+ .filter-grid{gap:8px}
+ .filter-option{grid-template-columns:46px 1fr;column-gap:8px;padding:7px}
+ .filter-art{width:46px;height:53px}
+ .filter-name{font-size:10px}
+ .filter-desc{font-size:8px}
+}
+
 </style>
 </head>
 
@@ -497,14 +592,14 @@ h1{letter-spacing:-.7px}
 
 <header>
  <div class="logo">MINI<span>SNAP.</span></div>
- <div class="header-tag">THE PHOTO EXPERIENCE</div>
+ <div class="header-tag">BGKV EDITION&nbsp; · &nbsp;PHOTOBOOTH</div>
 </header>
 
 <!-- HOME -->
 <section class="screen active" id="home">
  <div class="intro">
   <div class="hero-icon">✳</div>
-  <div class="eyebrow">A LITTLE MOMENT, FOREVER</div>
+  <div class="eyebrow">BGKV SCHOOL PHOTOBOOTH</div>
   <h1>Let's make<br>some memories.</h1>
   <p class="subtitle">
    Four photographs. One beautiful strip.<br>
@@ -513,7 +608,7 @@ h1{letter-spacing:-.7px}
  </div>
 
  <div class="card">
-  <div class="card-title">YOUR MINISNAP SESSION</div>
+  <div class="card-title">THE MINI PHOTO EXPERIENCE</div>
   <p class="card-copy">
    Get your favourite poses ready.<br>
    Choose a look, strike a pose and let us capture the moment.
@@ -524,7 +619,7 @@ h1{letter-spacing:-.7px}
   BEGIN YOUR SESSION &nbsp; →
  </button>
 
- <p class="note">PLEASE ALLOW CAMERA ACCESS TO CONTINUE</p>
+ <p class="note">4 PHOTOS&nbsp; · &nbsp;1 CUSTOM STRIP&nbsp; · &nbsp;A BGKV MEMORY</p>
 </section>
 
 <!-- SETUP -->
@@ -536,15 +631,36 @@ h1{letter-spacing:-.7px}
  </div>
 
  <div class="card">
-  <div class="card-title">CHOOSE YOUR FILTER</div>
-  <div class="options">
-   <button class="option selected" data-filter="none">Natural</button>
-   <button class="option" data-filter="bw">Monochrome</button>
-   <button class="option" data-filter="vintage">Vintage</button>
-   <button class="option" data-filter="warm">Warm</button>
+  <div class="card-title filter-heading">01 / PICK YOUR PHOTO LOOK</div>
+  <p class="filter-intro">Each look is crafted to change the mood, texture and feel of your pictures.</p>
+  <div class="filter-grid">
+   <button class="filter-option selected" data-filter="none" aria-pressed="true">
+    <span class="filter-art art-natural"></span><span class="filter-name">Natural</span><span class="filter-desc">True-to-life</span>
+   </button>
+   <button class="filter-option" data-filter="bw" aria-pressed="false">
+    <span class="filter-art art-mono"></span><span class="filter-name">Monochrome</span><span class="filter-desc">Classic black & white</span>
+   </button>
+   <button class="filter-option" data-filter="vintage" aria-pressed="false">
+    <span class="filter-art art-vintage"></span><span class="filter-name">Vintage</span><span class="filter-desc">Warm analogue tones</span>
+   </button>
+   <button class="filter-option" data-filter="warm" aria-pressed="false">
+    <span class="filter-art art-warm"></span><span class="filter-name">Warm</span><span class="filter-desc">Soft golden colour</span>
+   </button>
+   <button class="filter-option" data-filter="campus" aria-pressed="false">
+    <span class="filter-art art-campus"></span><span class="filter-name">Campus 35mm</span><span class="filter-desc">Film grain + faded edges</span>
+   </button>
+   <button class="filter-option" data-filter="golden" aria-pressed="false">
+    <span class="filter-art art-golden"></span><span class="filter-name">Golden Hour</span><span class="filter-desc">Glowing highlights</span>
+   </button>
+   <button class="filter-option" data-filter="dream" aria-pressed="false">
+    <span class="filter-art art-dream"></span><span class="filter-name">Dreamglow</span><span class="filter-desc">Soft-focus bloom</span>
+   </button>
+   <button class="filter-option" data-filter="noir" aria-pressed="false">
+    <span class="filter-art art-noir"></span><span class="filter-name">Noir Cinema</span><span class="filter-desc">Cinematic contrast + grain</span>
+   </button>
   </div>
 
-  <div class="card-title">CHOOSE YOUR STRIP</div>
+  <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
   <div class="options">
    <button class="option selected" data-theme="pink">Blush</button>
    <button class="option" data-theme="cream">Vanilla</button>
@@ -695,7 +811,11 @@ const filters={
  none:"none",
  bw:"grayscale(1)",
  vintage:"sepia(.65) contrast(1.06)",
- warm:"sepia(.22) saturate(1.2)"
+ warm:"sepia(.22) saturate(1.2)",
+ campus:"sepia(.22) contrast(1.08) saturate(.82)",
+ golden:"sepia(.28) saturate(1.25) brightness(1.04)",
+ dream:"saturate(1.08) brightness(1.04)",
+ noir:"grayscale(1) contrast(1.28) brightness(.96)"
 };
 
 const themes={
@@ -715,9 +835,13 @@ function showScreen(id){
 document.querySelectorAll("[data-filter]").forEach(btn=>{
  btn.addEventListener("click",()=>{
   filter=btn.dataset.filter;
-  document.querySelectorAll("[data-filter]").forEach(b=>b.classList.remove("selected"));
+  document.querySelectorAll("[data-filter]").forEach(b=>{
+   b.classList.remove("selected");
+   b.setAttribute("aria-pressed","false");
+  });
   btn.classList.add("selected");
-  video.style.filter=filters[filter];
+  btn.setAttribute("aria-pressed","true");
+  video.style.filter=filters[filter]||"none";
  });
 });
 
@@ -911,42 +1035,81 @@ function takePhoto(){
  flash.classList.add("fire");
 }
 
-// Pixel-based filters work consistently on iPhone Safari and desktop browsers.
+// Pixel-based photo looks are processed into the actual captured image.
+// This avoids relying on Safari's inconsistent canvas CSS-filter support.
 function applyPhotoFilter(canvas,mode){
  if(!mode||mode==="none")return;
  const ctx=canvas.getContext("2d",{willReadFrequently:true});
- const image=ctx.getImageData(0,0,canvas.width,canvas.height);
+ const w=canvas.width,h=canvas.height;
+ const image=ctx.getImageData(0,0,w,h);
  const p=image.data;
- for(let i=0;i<p.length;i+=4){
-  const r=p[i],g=p[i+1],b=p[i+2];
-  let nr=r,ng=g,nb=b;
-  if(mode==="bw"){
-   const y=.299*r+.587*g+.114*b;
-   nr=ng=nb=y;
-  }else if(mode==="vintage"){
-   nr=.393*r+.769*g+.189*b;
-   ng=.349*r+.686*g+.168*b;
-   nb=.272*r+.534*g+.131*b;
-   nr=(nr-128)*1.06+128;
-   ng=(ng-128)*1.06+128;
-   nb=(nb-128)*1.06+128;
-  }else if(mode==="warm"){
-   const sr=.393*r+.769*g+.189*b;
-   const sg=.349*r+.686*g+.168*b;
-   const sb=.272*r+.534*g+.131*b;
-   nr=r*.78+sr*.22;
-   ng=g*.78+sg*.22;
-   nb=b*.78+sb*.22;
-   const y=.299*nr+.587*ng+.114*nb;
-   nr=y+(nr-y)*1.2;
-   ng=y+(ng-y)*1.2;
-   nb=y+(nb-y)*1.2;
+ const grainAmount=mode==="campus"?13:mode==="noir"?10:mode==="dream"?2:0;
+ const vignette=mode==="campus"?.30:mode==="noir"?.43:mode==="golden"?.12:0;
+ for(let y=0;y<h;y++){
+  for(let x=0;x<w;x++){
+   const i=(y*w+x)*4;
+   const r=p[i],g=p[i+1],b=p[i+2];
+   let nr=r,ng=g,nb=b;
+   const lum=.299*r+.587*g+.114*b;
+   if(mode==="bw"){
+    nr=ng=nb=lum;
+   }else if(mode==="vintage"){
+    nr=.393*r+.769*g+.189*b;
+    ng=.349*r+.686*g+.168*b;
+    nb=.272*r+.534*g+.131*b;
+    nr=(nr-128)*1.06+128;ng=(ng-128)*1.06+128;nb=(nb-128)*1.06+128;
+   }else if(mode==="warm"){
+    nr=r*1.045+9;ng=g*1.015+3;nb=b*.91-2;
+   }else if(mode==="campus"){
+    // Soft matte blacks, gentle amber highlights and visible 35mm grain.
+    nr=r*.91+20;ng=g*.91+17;nb=b*.88+14;
+    const warmth=Math.max(0,(lum-105)/150);
+    nr+=warmth*10;ng+=warmth*4;nb-=warmth*5;
+   }else if(mode==="golden"){
+    // Warm highlight roll-off with slightly lifted shadows.
+    const highlight=Math.max(0,(lum-90)/165);
+    nr=r+10+highlight*18;ng=g+5+highlight*7;nb=b-5-highlight*11;
+    nr=lum+(nr-lum)*1.08;ng=lum+(ng-lum)*1.04;
+   }else if(mode==="dream"){
+    // Low-contrast pastel rendering; bloom is layered below after pixel work.
+    nr=lum+(r-lum)*.88+10;ng=lum+(g-lum)*.88+9;nb=lum+(b-lum)*.88+12;
+    nr=nr*.94+15;ng=ng*.94+15;nb=nb*.94+15;
+   }else if(mode==="noir"){
+    // Punchy monochrome with a gently lifted film toe.
+    const yv=Math.max(0,Math.min(255,(lum-112)*1.38+126));
+    nr=ng=nb=yv;
+   }
+   if(vignette){
+    const dx=(x-w/2)/(w/2),dy=(y-h/2)/(h/2);
+    const edge=Math.max(0,(dx*dx+dy*dy-.18)/1.45);
+    const shade=1-Math.min(.55,edge*vignette);
+    nr*=shade;ng*=shade;nb*=shade;
+   }
+   if(grainAmount){
+    const noise=(Math.random()-.5)*grainAmount;
+    nr+=noise;ng+=noise;nb+=noise;
+   }
+   p[i]=Math.max(0,Math.min(255,nr));
+   p[i+1]=Math.max(0,Math.min(255,ng));
+   p[i+2]=Math.max(0,Math.min(255,nb));
   }
-  p[i]=Math.max(0,Math.min(255,nr));
-  p[i+1]=Math.max(0,Math.min(255,ng));
-  p[i+2]=Math.max(0,Math.min(255,nb));
  }
  ctx.putImageData(image,0,0);
+
+ // Dreamglow uses a small, softly upscaled highlight layer to create a
+ // gentle optical bloom without depending on canvas filter support.
+ if(mode==="dream"||mode==="golden"){
+  const bloom=document.createElement("canvas");
+  bloom.width=Math.max(1,Math.round(w/14));
+  bloom.height=Math.max(1,Math.round(h/14));
+  const bctx=bloom.getContext("2d");
+  bctx.drawImage(canvas,0,0,bloom.width,bloom.height);
+  ctx.save();
+  ctx.globalCompositeOperation="screen";
+  ctx.globalAlpha=mode==="dream"?.19:.09;
+  ctx.drawImage(bloom,0,0,bloom.width,bloom.height,0,0,w,h);
+  ctx.restore();
+ }
 }
 
 function stopCamera(){
