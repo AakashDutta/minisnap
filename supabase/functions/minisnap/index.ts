@@ -5,7 +5,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-minisnap-admin",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-minisnap-admin, x-minisnap-booth",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 
