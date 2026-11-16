@@ -584,6 +584,22 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d4a1
  .filter-desc{font-size:8px}
 }
 
+
+/* Compact, minimalist filter selector */
+.filter-options{
+ display:flex;flex-wrap:wrap;gap:8px;margin:0 0 25px;
+}
+.filter-options .option{
+ flex:0 0 auto;padding:10px 14px;border-radius:999px;
+ font-size:10px;letter-spacing:.15px;font-weight:700;
+ background:#f7f5f1;border:1px solid #e7e1da;color:#55575c;
+ box-shadow:none;transform:none;
+}
+.filter-options .option:hover{background:#f0e9e6;transform:none;box-shadow:none}
+.filter-options .option.selected{
+ background:#292a2d;border-color:#292a2d;color:#fff;
+}
+
 </style>
 </head>
 
@@ -632,31 +648,15 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d4a1
  <div class="card">
   <div class="card-title filter-heading">01 / PICK YOUR PHOTO LOOK</div>
   <p class="filter-intro">Each look is crafted to change the mood, texture and feel of your pictures.</p>
-  <div class="filter-grid">
-   <button class="filter-option selected" data-filter="none" aria-pressed="true">
-    <span class="filter-art art-natural"></span><span class="filter-name">Natural</span><span class="filter-desc">True-to-life</span>
-   </button>
-   <button class="filter-option" data-filter="bw" aria-pressed="false">
-    <span class="filter-art art-mono"></span><span class="filter-name">Monochrome</span><span class="filter-desc">Classic black & white</span>
-   </button>
-   <button class="filter-option" data-filter="vintage" aria-pressed="false">
-    <span class="filter-art art-vintage"></span><span class="filter-name">Vintage</span><span class="filter-desc">Warm analogue tones</span>
-   </button>
-   <button class="filter-option" data-filter="warm" aria-pressed="false">
-    <span class="filter-art art-warm"></span><span class="filter-name">Warm</span><span class="filter-desc">Soft golden colour</span>
-   </button>
-   <button class="filter-option" data-filter="campus" aria-pressed="false">
-    <span class="filter-art art-campus"></span><span class="filter-name">Campus 35mm</span><span class="filter-desc">Film grain + faded edges</span>
-   </button>
-   <button class="filter-option" data-filter="golden" aria-pressed="false">
-    <span class="filter-art art-golden"></span><span class="filter-name">Golden Hour</span><span class="filter-desc">Glowing highlights</span>
-   </button>
-   <button class="filter-option" data-filter="dream" aria-pressed="false">
-    <span class="filter-art art-dream"></span><span class="filter-name">Dreamglow</span><span class="filter-desc">Soft-focus bloom</span>
-   </button>
-   <button class="filter-option" data-filter="noir" aria-pressed="false">
-    <span class="filter-art art-noir"></span><span class="filter-name">Noir Cinema</span><span class="filter-desc">Cinematic contrast + grain</span>
-   </button>
+  <div class="options filter-options">
+   <button class="option selected" data-filter="none" aria-pressed="true">Natural</button>
+   <button class="option" data-filter="bw" aria-pressed="false">Monochrome</button>
+   <button class="option" data-filter="vintage" aria-pressed="false">Vintage</button>
+   <button class="option" data-filter="warm" aria-pressed="false">Warm</button>
+   <button class="option" data-filter="campus" aria-pressed="false">Campus 35mm</button>
+   <button class="option" data-filter="golden" aria-pressed="false">Golden Hour</button>
+   <button class="option" data-filter="dream" aria-pressed="false">Dreamglow</button>
+   <button class="option" data-filter="noir" aria-pressed="false">Noir Cinema</button>
   </div>
 
   <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
@@ -1042,8 +1042,8 @@ function applyPhotoFilter(canvas,mode){
  const w=canvas.width,h=canvas.height;
  const image=ctx.getImageData(0,0,w,h);
  const p=image.data;
- const grainAmount=mode==="campus"?13:mode==="noir"?10:mode==="dream"?2:0;
- const vignette=mode==="campus"?.30:mode==="noir"?.43:mode==="golden"?.12:0;
+ const grainAmount=mode==="campus"?13:mode==="noir"?10:0;
+ const vignette=mode==="campus"?.30:mode==="noir"?.43:mode==="golden"?.10:0;
  for(let y=0;y<h;y++){
   for(let x=0;x<w;x++){
    const i=(y*w+x)*4;
@@ -1060,21 +1060,24 @@ function applyPhotoFilter(canvas,mode){
    }else if(mode==="warm"){
     nr=r*1.045+9;ng=g*1.015+3;nb=b*.91-2;
    }else if(mode==="campus"){
-    // Soft matte blacks, gentle amber highlights and visible 35mm grain.
     nr=r*.91+20;ng=g*.91+17;nb=b*.88+14;
     const warmth=Math.max(0,(lum-105)/150);
     nr+=warmth*10;ng+=warmth*4;nb-=warmth*5;
    }else if(mode==="golden"){
-    // Warm highlight roll-off with slightly lifted shadows.
-    const highlight=Math.max(0,(lum-90)/165);
-    nr=r+10+highlight*18;ng=g+5+highlight*7;nb=b-5-highlight*11;
-    nr=lum+(nr-lum)*1.08;ng=lum+(ng-lum)*1.04;
+    // Stronger sunset grade: warm midtones, amber highlights and lifted shadows.
+    const shadow=Math.max(0,(115-lum)/115);
+    const highlight=Math.max(0,(lum-75)/180);
+    const base=(lum-112)*1.08+112;
+    nr=base+(r-lum)*1.08+19+highlight*17+shadow*5;
+    ng=base+(g-lum)*1.02+9+highlight*5+shadow*3;
+    nb=base+(b-lum)*.88-9-highlight*12;
    }else if(mode==="dream"){
-    // Low-contrast pastel rendering; bloom is layered below after pixel work.
-    nr=lum+(r-lum)*.88+10;ng=lum+(g-lum)*.88+9;nb=lum+(b-lum)*.88+12;
-    nr=nr*.94+15;ng=ng*.94+15;nb=nb*.94+15;
+    // Noticeably pastel, low-contrast rendering with a soft warm lift.
+    const soft=(lum-128)*.72+128;
+    nr=soft+(r-lum)*.70+22;
+    ng=soft+(g-lum)*.68+18;
+    nb=soft+(b-lum)*.72+23;
    }else if(mode==="noir"){
-    // Punchy monochrome with a gently lifted film toe.
     const yv=Math.max(0,Math.min(255,(lum-112)*1.38+126));
     nr=ng=nb=yv;
    }
@@ -1095,22 +1098,27 @@ function applyPhotoFilter(canvas,mode){
  }
  ctx.putImageData(image,0,0);
 
- // Dreamglow uses a small, softly upscaled highlight layer to create a
- // gentle optical bloom without depending on canvas filter support.
+ // A stronger, low-resolution light layer creates a visible optical glow.
  if(mode==="dream"||mode==="golden"){
   const bloom=document.createElement("canvas");
-  bloom.width=Math.max(1,Math.round(w/14));
-  bloom.height=Math.max(1,Math.round(h/14));
+  const scale=mode==="dream"?20:26;
+  bloom.width=Math.max(1,Math.round(w/scale));
+  bloom.height=Math.max(1,Math.round(h/scale));
   const bctx=bloom.getContext("2d");
   bctx.drawImage(canvas,0,0,bloom.width,bloom.height);
   ctx.save();
   ctx.globalCompositeOperation="screen";
-  ctx.globalAlpha=mode==="dream"?.19:.09;
+  ctx.globalAlpha=mode==="dream"?.34:.17;
   ctx.drawImage(bloom,0,0,bloom.width,bloom.height,0,0,w,h);
+  if(mode==="dream"){
+   ctx.globalCompositeOperation="soft-light";
+   ctx.globalAlpha=.13;
+   ctx.fillStyle="#fff0e8";
+   ctx.fillRect(0,0,w,h);
+  }
   ctx.restore();
  }
 }
-
 function stopCamera(){
  if(stream){
   stream.getTracks().forEach(t=>t.stop());
