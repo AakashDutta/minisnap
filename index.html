@@ -888,15 +888,15 @@ function takePhoto(){
   ctx.scale(-1,1);
  }
 
- ctx.filter=filters[filter];
-
+ // Do not rely on CanvasRenderingContext2D.filter here.
+ // iPhone Safari has had incomplete support for canvas filters.
  ctx.drawImage(
   video,
   sx,sy,sw,sh,
   0,0,targetW,targetH
  );
 
- ctx.filter="none";
+ applyPhotoFilter(canvas,filter);
 
  const data=canvas.toDataURL("image/jpeg",.94);
  photos.push(data);
@@ -909,6 +909,44 @@ function takePhoto(){
  flash.classList.remove("fire");
  void flash.offsetWidth;
  flash.classList.add("fire");
+}
+
+// Pixel-based filters work consistently on iPhone Safari and desktop browsers.
+function applyPhotoFilter(canvas,mode){
+ if(!mode||mode==="none")return;
+ const ctx=canvas.getContext("2d",{willReadFrequently:true});
+ const image=ctx.getImageData(0,0,canvas.width,canvas.height);
+ const p=image.data;
+ for(let i=0;i<p.length;i+=4){
+  const r=p[i],g=p[i+1],b=p[i+2];
+  let nr=r,ng=g,nb=b;
+  if(mode==="bw"){
+   const y=.299*r+.587*g+.114*b;
+   nr=ng=nb=y;
+  }else if(mode==="vintage"){
+   nr=.393*r+.769*g+.189*b;
+   ng=.349*r+.686*g+.168*b;
+   nb=.272*r+.534*g+.131*b;
+   nr=(nr-128)*1.06+128;
+   ng=(ng-128)*1.06+128;
+   nb=(nb-128)*1.06+128;
+  }else if(mode==="warm"){
+   const sr=.393*r+.769*g+.189*b;
+   const sg=.349*r+.686*g+.168*b;
+   const sb=.272*r+.534*g+.131*b;
+   nr=r*.78+sr*.22;
+   ng=g*.78+sg*.22;
+   nb=b*.78+sb*.22;
+   const y=.299*nr+.587*ng+.114*nb;
+   nr=y+(nr-y)*1.2;
+   ng=y+(ng-y)*1.2;
+   nb=y+(nb-y)*1.2;
+  }
+  p[i]=Math.max(0,Math.min(255,nr));
+  p[i+1]=Math.max(0,Math.min(255,ng));
+  p[i+2]=Math.max(0,Math.min(255,nb));
+ }
+ ctx.putImageData(image,0,0);
 }
 
 function stopCamera(){
@@ -938,8 +976,8 @@ function roundedRect(ctx,x,y,w,h,r){
 async function generateStrip(){
  const t=themes[theme];
 
- // Four genuine portrait photographs with matching 4:5 frames.
- const W=720,H=3600;
+ // A taller, balanced photobooth strip with room for BGKV branding.
+ const W=720,H=3700;
  const canvas=document.createElement("canvas");
  canvas.width=W;
  canvas.height=H;
@@ -956,19 +994,26 @@ async function generateStrip(){
  ctx.textAlign="center";
  ctx.fillStyle=t.ink;
 
- ctx.font="600 19px Arial";
- ctx.fillText("A MOMENT TO KEEP",360,82);
+ ctx.font="600 17px Arial";
+ ctx.fillText("A LITTLE MEMORY FROM",360,72);
 
- ctx.font="bold 48px Arial";
- ctx.fillText("MINISNAP",360,145);
+ ctx.font="bold 57px Arial";
+ ctx.fillText("BGKV",360,137);
+
+ ctx.font="700 23px Arial";
+ ctx.fillText("MINISNAP PHOTOBOOTH",360,178);
+
+ ctx.font="500 13px Arial";
+ ctx.fillStyle=t.accent;
+ ctx.fillText("BHAVAN'S GANGABUX KANORIA VIDYAMANDIR",360,207);
 
  ctx.fillStyle=t.accent;
- ctx.fillRect(270,173,180,3);
+ ctx.fillRect(245,226,230,3);
 
  const x=40;
- const yStart=215;
+ const yStart=250;
  const frameW=640;
- const frameH=800;
+ const frameH=790;
  const gap=20;
 
  for(let i=0;i<4;i++){
@@ -1000,7 +1045,7 @@ async function generateStrip(){
   ctx.fillText("0"+(i+1),W-45,y+frameH-22);
  }
 
- const bottom=3450;
+ const bottom=3555;
  ctx.textAlign="center";
  ctx.fillStyle=t.ink;
 
@@ -1014,10 +1059,14 @@ async function generateStrip(){
 
  ctx.font="14px Arial";
  ctx.fillStyle=t.accent;
- ctx.fillText("MADE WITH LOVE AT MINISNAP",360,bottom+42);
+ ctx.fillText("A SCHOOL MEMORY · KOLKATA",360,bottom+36);
+
+ ctx.font="bold 16px Arial";
+ ctx.fillStyle=t.ink;
+ ctx.fillText("BGKV × MINISNAP",360,bottom+73);
 
  // A slightly lighter JPEG keeps uploads quick on busy school mobile networks.
-  stripData=canvas.toDataURL("image/jpeg",.88);
+ stripData=canvas.toDataURL("image/jpeg",.88);
  document.getElementById("resultImage").src=stripData;
 }
 
