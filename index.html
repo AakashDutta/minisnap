@@ -677,8 +677,8 @@ const SUPABASE_PUBLISHABLE_KEY="sb_publishable_K-rsUdRw_4gEFx9uJxdbeQ_WBlC7WiZ";
 const EDGE_URL=SUPABASE_URL+"/functions/v1/minisnap";
 let currentGuestLink="";
 let currentGuestImage="";
-// Kept only in memory for this open booth tab; never written to browser storage.
-let boothAdminKey="";
+// Short-lived booth authorization stays in memory only for this open tab.
+let boothToken="";
 const video=document.getElementById("video");
 const countdown=document.getElementById("countdown");
 const flash=document.getElementById("flash");
@@ -1031,9 +1031,10 @@ function downloadStrip(){
 }
 
 
-async function edgeRequest(action,{method="GET",body=null,adminKey=""}={}){
+async function edgeRequest(action,{method="GET",body=null,adminKey="",boothToken:token=""}={}){
  const headers={"apikey":SUPABASE_PUBLISHABLE_KEY,"Content-Type":"application/json"};
  if(adminKey)headers["x-minisnap-admin"]=adminKey;
+ if(token)headers["x-minisnap-booth"]=token;
  const controller=new AbortController();
  const timeout=setTimeout(()=>controller.abort(),60000);
  try{
@@ -1060,19 +1061,18 @@ async function shareStrip(){
  document.getElementById("qrCode").innerHTML="";
  document.getElementById("copyLinkBtn").disabled=true;
  try{
-  // Ask once per open booth tab, then keep the key in memory for the next guests.
-  let adminKey=boothAdminKey;
-  if(!adminKey){
-   adminKey=prompt("Unlock MiniSnap booth uploads. Enter the admin key once for this session:");
-   if(!adminKey)throw new Error("Upload cancelled. Your photo is still saved on this booth screen.");
-   boothAdminKey=adminKey;
+  if(!boothToken){
+   const pin=prompt("Enter the 8-digit MiniSnap booth PIN:");
+   if(!pin)throw new Error("Upload cancelled. Your photo is still saved on this booth screen.");
+   status.textContent="Verifying booth PIN…";
+   const auth=await edgeRequest("booth-auth",{method:"POST",body:{pin}});
+   boothToken=auth.boothToken;
   }
   status.textContent="Uploading your photo securely… This usually takes a few seconds.";
   const result=await edgeRequest("create",{
-   method:"POST",adminKey,
+   method:"POST",boothToken,
    body:{image:stripData}
   });
-  boothAdminKey=adminKey;
   currentGuestLink=location.origin+location.pathname+"?guest="+encodeURIComponent(result.token);
   if(typeof QRCode==="undefined")throw new Error("QR generator did not load. Check internet and reload the booth page.");
   new QRCode(document.getElementById("qrCode"),{
@@ -1084,7 +1084,7 @@ async function shareStrip(){
   status.textContent="Ready! Ask the guest to scan this QR code with their phone camera.";
   btn.textContent="CREATE ANOTHER QR";
  }catch(e){
-  if(e.message==="Admin authorization failed.")boothAdminKey="";
+  if(e.message==="Booth session expired. Enter the booth PIN again.")boothToken="";
   status.textContent=e.message+" Your photo remains on this device. You can safely retry.";
   btn.textContent="RETRY UPLOAD";
  }finally{
@@ -1153,7 +1153,6 @@ async function loadAdmin(){
  status.textContent="Loading sessions…";
  try{
   const data=await edgeRequest("admin",{adminKey:key});
-  boothAdminKey=key;
   status.textContent=data.sessions.length+" recent sessions";
   const host=document.getElementById("adminSessions");
   host.innerHTML="";
