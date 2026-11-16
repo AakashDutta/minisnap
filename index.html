@@ -423,7 +423,73 @@ footer {
 .session-row:last-child{border:0}
 .admin-link{background:none;border:0;color:#a39a94;font:inherit;font-size:9px;letter-spacing:2px;text-decoration:underline;margin-top:10px}
 .state-pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#f3e2e2;color:#754d55;font-size:9px;font-weight:700}
-  </style>
+  
+/* MiniSnap polish pass */
+:root{
+ --bg:#f5f2ee;--paper:#fffefa;--ink:#252629;--muted:#777b82;
+ --pink:#c98791;--line:#e8e2dc;--rose:#f3e7e8;
+}
+body{
+ background:
+  radial-gradient(ellipse at 50% -12%,#fff 0,transparent 54%),
+  linear-gradient(180deg,#f7f4f0 0%,#f0ece7 100%);
+ color:var(--ink);padding:24px 17px 52px;
+}
+.app{max-width:510px}
+header{
+ position:relative;padding:10px 3px 20px;border-bottom:1px solid #e5ded7;
+}
+.logo{font-size:23px;letter-spacing:2px}
+.header-tag{
+ padding:8px 10px;border:1px solid var(--line);border-radius:30px;
+ background:#ffffffa8;font-size:8px;letter-spacing:1.5px;
+}
+.intro{padding:58px 10px 29px}
+.eyebrow{font-size:9px;letter-spacing:2.6px}
+h1{letter-spacing:-.7px}
+.card,.result-card,.share-panel,.admin-panel,.guest-panel{
+ background:rgba(255,254,250,.92);border:1px solid #e8e1da;
+ box-shadow:0 14px 38px rgba(44,35,29,.055);
+ border-radius:22px;
+}
+.card{padding:23px;margin:20px 0}
+.primary{
+ background:#292a2d;border-radius:14px;padding:18px;
+ letter-spacing:1.25px;box-shadow:0 8px 20px rgba(35,35,38,.13);
+}
+.primary:hover{background:#45464b}
+.secondary{
+ border-radius:14px;padding:15px;background:#fffefa;
+ border-color:#e5ded7;letter-spacing:.8px;
+}
+.option{padding:12px 17px}
+.option.selected{background:#292a2d;border-color:#292a2d}
+.camera-box{border-radius:24px;box-shadow:0 18px 42px rgba(35,31,29,.16)}
+.result-card,.share-panel,.admin-panel,.guest-panel{padding:20px}
+.result-image{border-radius:9px}
+.qr-wrap{border-style:solid;border-color:#e7e0da;min-height:220px}
+.field{border-radius:13px;padding:15px}
+.session-row{padding:15px 2px}
+.admin-link{letter-spacing:1.8px}
+#shareStatus{min-height:38px}
+#shareStatus.uploading{
+ display:flex;align-items:center;gap:10px;color:#5e6065;
+}
+#shareStatus.uploading:before{
+ content:"";width:13px;height:13px;flex:0 0 13px;border:2px solid #e8d9d9;
+ border-top-color:var(--pink);border-radius:50%;animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.primary:focus-visible,.secondary:focus-visible,.option:focus-visible,.field:focus-visible{
+ outline:3px solid #d9a6ae;outline-offset:3px;
+}
+@media(max-width:380px){
+ body{padding:16px 13px 38px}
+ .header-tag{font-size:7px;padding:7px 8px}
+ .intro{padding-top:42px}
+}
+
+</style>
 </head>
 
 <body>
@@ -611,6 +677,8 @@ const SUPABASE_PUBLISHABLE_KEY="sb_publishable_K-rsUdRw_4gEFx9uJxdbeQ_WBlC7WiZ";
 const EDGE_URL=SUPABASE_URL+"/functions/v1/minisnap";
 let currentGuestLink="";
 let currentGuestImage="";
+// Kept only in memory for this open booth tab; never written to browser storage.
+let boothAdminKey="";
 const video=document.getElementById("video");
 const countdown=document.getElementById("countdown");
 const flash=document.getElementById("flash");
@@ -948,7 +1016,7 @@ async function generateStrip(){
  ctx.fillStyle=t.accent;
  ctx.fillText("MADE WITH LOVE AT MINISNAP",360,bottom+42);
 
- stripData=canvas.toDataURL("image/jpeg",.96);
+ // A slightly lighter JPEG keeps uploads quick on busy school mobile networks.\n  stripData=canvas.toDataURL("image/jpeg",.88);
  document.getElementById("resultImage").src=stripData;
 }
 
@@ -965,12 +1033,19 @@ function downloadStrip(){
 async function edgeRequest(action,{method="GET",body=null,adminKey=""}={}){
  const headers={"apikey":SUPABASE_PUBLISHABLE_KEY,"Content-Type":"application/json"};
  if(adminKey)headers["x-minisnap-admin"]=adminKey;
- const response=await fetch(EDGE_URL+"?action="+encodeURIComponent(action),{
-  method,headers,body:body?JSON.stringify(body):undefined
- });
- const result=await response.json().catch(()=>({error:"The server returned an unreadable response."}));
- if(!response.ok)throw new Error(result.error||"Request failed ("+response.status+").");
- return result;
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),60000);
+ try{
+  const response=await fetch(EDGE_URL+"?action="+encodeURIComponent(action),{
+   method,headers,body:body?JSON.stringify(body):undefined,signal:controller.signal
+  });
+  const result=await response.json().catch(()=>({error:"The server returned an unreadable response."}));
+  if(!response.ok)throw new Error(result.error||"Request failed ("+response.status+").");
+  return result;
+ }catch(e){
+  if(e.name==="AbortError")throw new Error("The upload timed out after 60 seconds. Check the booth internet connection and tap RETRY.");
+  throw e;
+ }finally{clearTimeout(timeout);}
 }
 
 async function shareStrip(){
@@ -978,31 +1053,40 @@ async function shareStrip(){
  const btn=document.getElementById("shareBtn");
  const status=document.getElementById("shareStatus");
  btn.disabled=true;
- btn.textContent="UPLOADING YOUR STRIP…";
- status.textContent="Uploading securely. Keep this page open for a moment.";
+ btn.textContent="UPLOADING…";
+ status.classList.add("uploading");
+ status.textContent="Preparing your private photo link. Keep this screen open…";
  document.getElementById("qrCode").innerHTML="";
  document.getElementById("copyLinkBtn").disabled=true;
  try{
-  const adminKey=prompt("Enter the MiniSnap booth admin key to upload this photo strip:");
-  if(!adminKey)throw new Error("Upload cancelled. Your photo is still saved on this booth screen.");
+  // Ask once per open booth tab, then keep the key in memory for the next guests.
+  let adminKey=boothAdminKey;
+  if(!adminKey){
+   adminKey=prompt("Unlock MiniSnap booth uploads. Enter the admin key once for this session:");
+   if(!adminKey)throw new Error("Upload cancelled. Your photo is still saved on this booth screen.");
+  }
+  status.textContent="Uploading your photo securely… This usually takes a few seconds.";
   const result=await edgeRequest("create",{
    method:"POST",adminKey,
    body:{image:stripData}
   });
+  boothAdminKey=adminKey;
   currentGuestLink=location.origin+location.pathname+"?guest="+encodeURIComponent(result.token);
   if(typeof QRCode==="undefined")throw new Error("QR generator did not load. Check internet and reload the booth page.");
   new QRCode(document.getElementById("qrCode"),{
-   text:currentGuestLink,width:190,height:190,colorDark:"#302a29",colorLight:"#ffffff",
+   text:currentGuestLink,width:190,height:190,colorDark:"#292a2d",colorLight:"#ffffff",
    correctLevel:QRCode.CorrectLevel.M
   });
   document.getElementById("copyLinkBtn").disabled=false;
   document.getElementById("shareExpiry").textContent="Link expires: "+new Date(result.expiresAt).toLocaleString();
-  status.textContent="Upload complete. Ask the guest to scan this QR code using their phone camera.";
+  status.textContent="Ready! Ask the guest to scan this QR code with their phone camera.";
   btn.textContent="CREATE ANOTHER QR";
  }catch(e){
-  status.textContent=e.message+" Your photo remains on this device. You can retry when the connection is stable.";
+  if(e.message==="Admin authorization failed.")boothAdminKey="";
+  status.textContent=e.message+" Your photo remains on this device. You can safely retry.";
   btn.textContent="RETRY UPLOAD";
  }finally{
+  status.classList.remove("uploading");
   btn.disabled=false;
  }
 }
@@ -1067,7 +1151,7 @@ async function loadAdmin(){
  status.textContent="Loading sessions…";
  try{
   const data=await edgeRequest("admin",{adminKey:key});
-  status.textContent=data.sessions.length+" recent sessions";
+  boothAdminKey=key;\n  status.textContent=data.sessions.length+" recent sessions";
   const host=document.getElementById("adminSessions");
   host.innerHTML="";
   data.sessions.forEach(session=>{
