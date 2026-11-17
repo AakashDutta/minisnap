@@ -647,7 +647,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d4a1
 
  <div class="card">
   <div class="card-title filter-heading">01 / PICK YOUR PHOTO LOOK</div>
-  <p class="filter-intro">Each look is crafted to change the mood, texture and feel of your pictures.</p>
+  <p class="filter-intro">Tap a look to preview it. Every finish is applied to your final photo strip.</p>
   <div class="options filter-options">
    <button class="option selected" data-filter="none" aria-pressed="true">Natural</button>
    <button class="option" data-filter="bw" aria-pressed="false">Monochrome</button>
@@ -657,6 +657,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d4a1
    <button class="option" data-filter="golden" aria-pressed="false">Golden Hour</button>
    <button class="option" data-filter="dream" aria-pressed="false">Dreamglow</button>
    <button class="option" data-filter="noir" aria-pressed="false">Noir Cinema</button>
+   <button class="option" data-filter="soft" aria-pressed="false">Soft Focus</button>
+   <button class="option" data-filter="rose" aria-pressed="false">Rose Glow</button>
+   <button class="option" data-filter="iced" aria-pressed="false">Iced Latte</button>
+   <button class="option" data-filter="flash" aria-pressed="false">Flash Pop</button>
   </div>
 
   <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
@@ -809,12 +813,16 @@ let stripData=null;
 const filters={
  none:"none",
  bw:"grayscale(1)",
- vintage:"sepia(.65) contrast(1.06)",
- warm:"sepia(.22) saturate(1.2)",
- campus:"sepia(.22) contrast(1.08) saturate(.82)",
- golden:"sepia(.28) saturate(1.25) brightness(1.04)",
- dream:"saturate(1.08) brightness(1.04)",
- noir:"grayscale(1) contrast(1.28) brightness(.96)"
+ vintage:"sepia(.58) contrast(1.12) saturate(.82)",
+ warm:"sepia(.28) saturate(1.32) brightness(1.04)",
+ campus:"sepia(.30) contrast(1.16) saturate(.88)",
+ golden:"sepia(.38) saturate(1.42) contrast(1.06) brightness(1.08)",
+ dream:"saturate(.88) contrast(.82) brightness(1.12)",
+ noir:"grayscale(1) contrast(1.42) brightness(.94)",
+ soft:"saturate(1.08) contrast(.88) brightness(1.12)",
+ rose:"sepia(.16) hue-rotate(315deg) saturate(1.22) brightness(1.06)",
+ iced:"saturate(.82) hue-rotate(12deg) contrast(1.08) brightness(1.08)",
+ flash:"contrast(1.18) saturate(1.12) brightness(1.16)"
 };
 
 const themes={
@@ -1042,49 +1050,62 @@ function applyPhotoFilter(canvas,mode){
  const w=canvas.width,h=canvas.height;
  const image=ctx.getImageData(0,0,w,h);
  const p=image.data;
- const grainAmount=mode==="campus"?13:mode==="noir"?10:0;
- const vignette=mode==="campus"?.30:mode==="noir"?.43:mode==="golden"?.10:0;
+ const grainAmount=mode==="campus"?9:mode==="vintage"?5:mode==="noir"?7:0;
+ const vignette=mode==="campus"?.22:mode==="vintage"?.12:mode==="noir"?.34:mode==="golden"?.06:0;
  for(let y=0;y<h;y++){
   for(let x=0;x<w;x++){
    const i=(y*w+x)*4;
    const r=p[i],g=p[i+1],b=p[i+2];
-   let nr=r,ng=g,nb=b;
    const lum=.299*r+.587*g+.114*b;
-   if(mode==="bw"){
-    nr=ng=nb=lum;
+   let nr=r,ng=g,nb=b;
+   if(mode==="bw"||mode==="noir"){
+    const contrast=mode==="noir"?1.42:1;
+    const v=Math.max(0,Math.min(255,(lum-128)*contrast+128));
+    nr=ng=nb=v;
    }else if(mode==="vintage"){
-    nr=.393*r+.769*g+.189*b;
-    ng=.349*r+.686*g+.168*b;
-    nb=.272*r+.534*g+.131*b;
-    nr=(nr-128)*1.06+128;ng=(ng-128)*1.06+128;nb=(nb-128)*1.06+128;
+    nr=lum+(r-lum)*.82+22;
+    ng=lum+(g-lum)*.72+11;
+    nb=lum+(b-lum)*.58-4;
    }else if(mode==="warm"){
-    nr=r*1.045+9;ng=g*1.015+3;nb=b*.91-2;
+    nr=r*1.08+13;ng=g*1.025+5;nb=b*.88-3;
    }else if(mode==="campus"){
-    nr=r*.91+20;ng=g*.91+17;nb=b*.88+14;
-    const warmth=Math.max(0,(lum-105)/150);
-    nr+=warmth*10;ng+=warmth*4;nb-=warmth*5;
+    const c=(lum-118)*1.14+122;
+    nr=c+(r-lum)*.92+13;
+    ng=c+(g-lum)*.82+7;
+    nb=c+(b-lum)*.68-2;
    }else if(mode==="golden"){
-    // Stronger sunset grade: warm midtones, amber highlights and lifted shadows.
-    const shadow=Math.max(0,(115-lum)/115);
-    const highlight=Math.max(0,(lum-75)/180);
-    const base=(lum-112)*1.08+112;
-    nr=base+(r-lum)*1.08+19+highlight*17+shadow*5;
-    ng=base+(g-lum)*1.02+9+highlight*5+shadow*3;
-    nb=base+(b-lum)*.88-9-highlight*12;
+    const hi=Math.max(0,(lum-55)/200);
+    const sh=Math.max(0,(125-lum)/125);
+    const c=(lum-118)*1.08+132;
+    nr=c+(r-lum)*1.12+23+hi*16+sh*5;
+    ng=c+(g-lum)*.96+10+hi*7;
+    nb=c+(b-lum)*.78-16-hi*13;
    }else if(mode==="dream"){
-    // Noticeably pastel, low-contrast rendering with a soft warm lift.
-    const soft=(lum-128)*.72+128;
-    nr=soft+(r-lum)*.70+22;
-    ng=soft+(g-lum)*.68+18;
-    nb=soft+(b-lum)*.72+23;
-   }else if(mode==="noir"){
-    const yv=Math.max(0,Math.min(255,(lum-112)*1.38+126));
-    nr=ng=nb=yv;
+    const c=(lum-128)*.62+151;
+    nr=c+(r-lum)*.72+8;
+    ng=c+(g-lum)*.68+3;
+    nb=c+(b-lum)*.78+12;
+   }else if(mode==="soft"){
+    const c=(lum-128)*.76+153;
+    nr=c+(r-lum)*.88+8;
+    ng=c+(g-lum)*.86+7;
+    nb=c+(b-lum)*.82+8;
+   }else if(mode==="rose"){
+    nr=r*1.04+17;ng=g*.94+8;nb=b*1.02+15;
+    const mix=Math.max(0,(lum-100)/155);
+    nr+=mix*8;nb+=mix*5;
+   }else if(mode==="iced"){
+    nr=r*.91+13;ng=g*1.01+12;nb=b*1.13+19;
+   }else if(mode==="flash"){
+    const c=(lum-118)*1.2+139;
+    nr=c+(r-lum)*1.08+10;
+    ng=c+(g-lum)*1.04+8;
+    nb=c+(b-lum)*.98+6;
    }
    if(vignette){
     const dx=(x-w/2)/(w/2),dy=(y-h/2)/(h/2);
-    const edge=Math.max(0,(dx*dx+dy*dy-.18)/1.45);
-    const shade=1-Math.min(.55,edge*vignette);
+    const edge=Math.max(0,(dx*dx+dy*dy-.2)/1.35);
+    const shade=1-Math.min(.48,edge*vignette);
     nr*=shade;ng*=shade;nb*=shade;
    }
    if(grainAmount){
@@ -1098,24 +1119,43 @@ function applyPhotoFilter(canvas,mode){
  }
  ctx.putImageData(image,0,0);
 
- // A stronger, low-resolution light layer creates a visible optical glow.
- if(mode==="dream"||mode==="golden"){
-  const bloom=document.createElement("canvas");
-  const scale=mode==="dream"?20:26;
-  bloom.width=Math.max(1,Math.round(w/scale));
-  bloom.height=Math.max(1,Math.round(h/scale));
-  const bctx=bloom.getContext("2d");
-  bctx.drawImage(canvas,0,0,bloom.width,bloom.height);
+ // Soft light overlays are baked into the photograph, not just the preview.
+ if(mode==="golden"||mode==="dream"||mode==="soft"||mode==="flash"){
   ctx.save();
   ctx.globalCompositeOperation="screen";
-  ctx.globalAlpha=mode==="dream"?.34:.17;
-  ctx.drawImage(bloom,0,0,bloom.width,bloom.height,0,0,w,h);
-  if(mode==="dream"){
-   ctx.globalCompositeOperation="soft-light";
-   ctx.globalAlpha=.13;
-   ctx.fillStyle="#fff0e8";
-   ctx.fillRect(0,0,w,h);
+  const glow=ctx.createRadialGradient(
+   mode==="golden"?w*.78:w*.5,mode==="golden"?h*.12:h*.24,8,
+   mode==="golden"?w*.78:w*.5,mode==="golden"?h*.12:h*.24,
+   mode==="golden"?w*.88:w*.92
+  );
+  if(mode==="golden"){
+   glow.addColorStop(0,"rgba(255,220,150,.48)");
+   glow.addColorStop(.38,"rgba(255,185,105,.17)");
+   glow.addColorStop(1,"rgba(255,170,110,0)");
+  }else if(mode==="dream"){
+   glow.addColorStop(0,"rgba(255,244,246,.48)");
+   glow.addColorStop(.55,"rgba(255,225,235,.16)");
+   glow.addColorStop(1,"rgba(255,225,235,0)");
+  }else if(mode==="soft"){
+   glow.addColorStop(0,"rgba(255,248,235,.38)");
+   glow.addColorStop(.55,"rgba(255,242,225,.12)");
+   glow.addColorStop(1,"rgba(255,242,225,0)");
+  }else{
+   glow.addColorStop(0,"rgba(255,255,245,.32)");
+   glow.addColorStop(.5,"rgba(255,245,230,.10)");
+   glow.addColorStop(1,"rgba(255,245,230,0)");
   }
+  ctx.globalAlpha=mode==="golden"?.72:mode==="dream"?.66:mode==="soft"?.48:.42;
+  ctx.fillStyle=glow;
+  ctx.fillRect(0,0,w,h);
+  ctx.restore();
+ }
+ if(mode==="rose"||mode==="iced"){
+  ctx.save();
+  ctx.globalCompositeOperation="soft-light";
+  ctx.globalAlpha=.20;
+  ctx.fillStyle=mode==="rose"?"#e8aab9":"#b8d9ef";
+  ctx.fillRect(0,0,w,h);
   ctx.restore();
  }
 }
