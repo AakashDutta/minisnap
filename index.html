@@ -623,6 +623,37 @@ header{border-bottom:1px solid rgba(255,243,223,.2)}.logo{color:#fff3df;font-siz
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f07858;outline-offset:3px}
 @media(max-width:520px){.filter-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+/* Six-look filter picker: clear previews, concise labels, responsive tiles */
+#setup .filter-options{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+ margin:0 0 24px;
+}
+#setup .filter-options .filter-tile{
+ display:flex;align-items:center;gap:12px;min-width:0;width:100%;
+ padding:10px;text-align:left;border:1px solid #e5d8c4;border-radius:13px;
+ background:#fffaf1;color:#172940;box-shadow:none;transform:none;
+}
+#setup .filter-options .filter-tile:hover{background:#fff3e2;border-color:#e9a28b;transform:translateY(-1px)}
+#setup .filter-options .filter-tile.selected{
+ background:#172940;color:#fff3df;border:1px solid #f07858;
+ box-shadow:0 0 0 2px rgba(240,120,88,.15);
+}
+.filter-swatch{display:block;flex:0 0 48px;width:48px;height:48px;border-radius:9px;box-shadow:inset 0 0 0 1px #00000012}
+.swatch-natural{background:linear-gradient(135deg,#c8b49c 0 35%,#8caa9b 36% 65%,#e6c6a5 66%)}
+.swatch-flash{background:linear-gradient(135deg,#fff0c8 0 28%,#e7a47e 29% 58%,#40516b 59%)}
+.swatch-golden{background:radial-gradient(circle at 75% 20%,#fff5b8,#e9ad4f 40%,#a75e3e)}
+.swatch-cool{background:linear-gradient(135deg,#d7e9e8,#71aebc 52%,#344f73)}
+.swatch-mono{background:linear-gradient(135deg,#f1eee7,#858585 50%,#242424)}
+.swatch-vintage{background:linear-gradient(135deg,#e6cda0,#b77f5c 55%,#55443b)}
+.filter-label{display:block;min-width:0;font-size:11px;font-weight:800;line-height:1.25}
+.filter-label small{display:block;margin-top:4px;font-size:9px;font-weight:500;line-height:1.3;color:#777b80}
+.filter-tile.selected .filter-label small{color:#d7cabb}
+@media(max-width:420px){
+ #setup .filter-options{grid-template-columns:1fr}
+ .filter-swatch{flex-basis:44px;width:44px;height:44px}
+}
+
 </style>
 </head>
 
@@ -670,20 +701,14 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f078
 
  <div class="card">
   <div class="card-title filter-heading">01 / PICK YOUR PHOTO LOOK</div>
-  <p class="filter-intro">Twelve distinct film-inspired looks. Tap any finish to preview it before your four-frame session.</p>
+  <p class="filter-intro">Six carefully tuned looks, each with its own character. Choose one to preview it.</p>
   <div class="options filter-options">
-   <button class="option selected" data-filter="none" aria-pressed="true">Natural</button>
-   <button class="option" data-filter="flash35" aria-pressed="false">35mm Flash</button>
-   <button class="option" data-filter="pool" aria-pressed="false">Pool Blue</button>
-   <button class="option" data-filter="cherry" aria-pressed="false">Cherry Pop</button>
-   <button class="option" data-filter="forest" aria-pressed="false">Forest Film</button>
-   <button class="option" data-filter="sunfade" aria-pressed="false">Sunfade</button>
-   <button class="option" data-filter="bw" aria-pressed="false">Monochrome</button>
-   <button class="option" data-filter="dream" aria-pressed="false">Dream Soft</button>
-   <button class="option" data-filter="night" aria-pressed="false">Night Shift</button>
-   <button class="option" data-filter="frame" aria-pressed="false">Vintage Frame</button>
-   <button class="option" data-filter="rose" aria-pressed="false">Rosy Glow</button>
-   <button class="option" data-filter="cinema" aria-pressed="false">Cinema Tone</button>
+   <button class="option filter-tile selected" data-filter="none" aria-pressed="true"><span class="filter-swatch swatch-natural"></span><span class="filter-label">Natural<small>True-to-life colour</small></span></button>
+   <button class="option filter-tile" data-filter="flash35" aria-pressed="false"><span class="filter-swatch swatch-flash"></span><span class="filter-label">35mm Flash<small>Bright analogue pop</small></span></button>
+   <button class="option filter-tile" data-filter="golden" aria-pressed="false"><span class="filter-swatch swatch-golden"></span><span class="filter-label">Golden Hour<small>Warm sunlit glow</small></span></button>
+   <button class="option filter-tile" data-filter="cool" aria-pressed="false"><span class="filter-swatch swatch-cool"></span><span class="filter-label">Cool Blue<small>Clean, crisp cool tones</small></span></button>
+   <button class="option filter-tile" data-filter="bw" aria-pressed="false"><span class="filter-swatch swatch-mono"></span><span class="filter-label">Black &amp; White<small>Classic high contrast</small></span></button>
+   <button class="option filter-tile" data-filter="vintage" aria-pressed="false"><span class="filter-swatch swatch-vintage"></span><span class="filter-label">Vintage Fade<small>Soft, nostalgic film</small></span></button>
   </div>
 
   <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
@@ -834,7 +859,12 @@ let busy=false;
 let stripData=null;
 
 const filters={
- none:"none",flash35:"contrast(1.18) saturate(1.18) sepia(.18) brightness(1.08)",pool:"hue-rotate(155deg) saturate(1.35) contrast(1.06)",cherry:"saturate(1.75) hue-rotate(326deg) contrast(1.08)",forest:"hue-rotate(68deg) saturate(.88) contrast(1.12) sepia(.12)",sunfade:"sepia(.48) saturate(.88) brightness(1.12) contrast(.86)",bw:"grayscale(1) contrast(1.08)",dream:"brightness(1.15) contrast(.78) saturate(.92)",night:"hue-rotate(185deg) saturate(.82) brightness(.72) contrast(1.22)",frame:"sepia(.62) contrast(1.18) saturate(.72)",rose:"hue-rotate(315deg) saturate(1.22) brightness(1.06)",cinema:"contrast(1.28) saturate(.78) brightness(.92) sepia(.12)"
+ none:"none",
+ flash35:"contrast(1.22) saturate(1.16) sepia(.14) brightness(1.08)",
+ golden:"sepia(.32) saturate(1.34) contrast(1.04) brightness(1.08)",
+ cool:"saturate(.92) hue-rotate(12deg) contrast(1.08) brightness(1.03)",
+ bw:"grayscale(1) contrast(1.18)",
+ vintage:"sepia(.42) saturate(.78) contrast(.92) brightness(1.08)"
 };
 
 const themes={
@@ -1058,31 +1088,61 @@ function takePhoto(){
 // This avoids relying on Safari's inconsistent canvas CSS-filter support.
 function applyPhotoFilter(canvas,mode){
  if(!mode||mode==="none")return;
- const ctx=canvas.getContext("2d",{willReadFrequently:true}),w=canvas.width,h=canvas.height;
+ const ctx=canvas.getContext("2d",{willReadFrequently:true});
+ const w=canvas.width,h=canvas.height;
  const image=ctx.getImageData(0,0,w,h),p=image.data;
- const grain=({flash35:10,forest:8,frame:13,cinema:7})[mode]||0,vignette=({flash35:.18,forest:.18,night:.38,frame:.28,cinema:.16})[mode]||0;
- for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-  const i=(y*w+x)*4,r=p[i],g=p[i+1],b=p[i+2],lum=.299*r+.587*g+.114*b;let nr=r,ng=g,nb=b;
-  switch(mode){
-   case "flash35":{const c=(lum-118)*1.13+137;nr=c+(r-lum)*1.08+19;ng=c+(g-lum)*.98+9;nb=c+(b-lum)*.82-7;break}
-   case "pool":nr=r*.78+8;ng=g*.98+18;nb=b*1.18+34;break;
-   case "cherry":nr=r*1.16+18;ng=g*.78-4;nb=b*.94+10;break;
-   case "forest":nr=r*.88+8;ng=g*1.08+13;nb=b*.82+2;break;
-   case "sunfade":{const c=(lum-120)*.78+166;nr=c+(r-lum)*.72+17;ng=c+(g-lum)*.66+5;nb=c+(b-lum)*.48-15;break}
-   case "bw":{const v=Math.max(0,Math.min(255,(lum-128)*1.08+128));nr=ng=nb=v;break}
-   case "dream":{const c=(lum-128)*.68+163;nr=c+(r-lum)*.66+12;ng=c+(g-lum)*.62+5;nb=c+(b-lum)*.78+16;break}
-   case "night":nr=r*.66+5;ng=g*.79+8;nb=b*1.12+23;break;
-   case "frame":nr=lum+(r-lum)*.72+27;ng=lum+(g-lum)*.62+13;nb=lum+(b-lum)*.48-8;break;
-   case "rose":nr=r*1.08+17;ng=g*.88+5;nb=b*1.12+18;break;
-   case "cinema":{const c=(lum-118)*1.3+119;nr=c+(r-lum)*1.08+8;ng=c+(g-lum)*.88+3;nb=c+(b-lum)*.76+8;break}
+ const grain=mode==="flash35"?7:mode==="vintage"?4:0;
+ for(let y=0;y<h;y++){
+  for(let x=0;x<w;x++){
+   const i=(y*w+x)*4,r=p[i],g=p[i+1],b=p[i+2];
+   const lum=.299*r+.587*g+.114*b;
+   let nr=r,ng=g,nb=b;
+   switch(mode){
+    case "flash35":{
+     const c=(lum-118)*1.16+137;
+     nr=c+(r-lum)*1.12+17;ng=c+(g-lum)*1.02+8;nb=c+(b-lum)*.88-5;
+     break;
+    }
+    case "golden":{
+     const c=(lum-120)*.98+130;
+     nr=c+(r-lum)*.82+25;ng=c+(g-lum)*.72+12;nb=c+(b-lum)*.52-13;
+     break;
+    }
+    case "cool":{
+     nr=r*.91+2;ng=g*1.01+7;nb=b*1.13+17;
+     break;
+    }
+    case "bw":{
+     const v=Math.max(0,Math.min(255,(lum-128)*1.2+128));
+     nr=ng=nb=v;
+     break;
+    }
+    case "vintage":{
+     const c=(lum-120)*.88+151;
+     nr=c+(r-lum)*.66+17;ng=c+(g-lum)*.58+8;nb=c+(b-lum)*.42-5;
+     break;
+    }
+   }
+   if(grain){const n=(Math.random()-.5)*grain;nr+=n;ng+=n;nb+=n;}
+   if(mode==="vintage"){
+    const dx=(x-w/2)/(w/2),dy=(y-h/2)/(h/2);
+    const shade=1-Math.min(.22,Math.max(0,(dx*dx+dy*dy-.2)*.10));
+    nr*=shade;ng*=shade;nb*=shade;
+   }
+   p[i]=Math.max(0,Math.min(255,nr));
+   p[i+1]=Math.max(0,Math.min(255,ng));
+   p[i+2]=Math.max(0,Math.min(255,nb));
   }
-  if(vignette){const dx=(x-w/2)/(w/2),dy=(y-h/2)/(h/2),edge=Math.max(0,(dx*dx+dy*dy-.18)/1.25),shade=1-Math.min(.58,edge*vignette);nr*=shade;ng*=shade;nb*=shade}
-  if(grain){const n=(Math.random()-.5)*grain;nr+=n;ng+=n;nb+=n}
-  p[i]=Math.max(0,Math.min(255,nr));p[i+1]=Math.max(0,Math.min(255,ng));p[i+2]=Math.max(0,Math.min(255,nb));
  }
  ctx.putImageData(image,0,0);
- if(["pool","cherry","forest","dream","night","rose"].includes(mode)){ctx.save();ctx.globalCompositeOperation="soft-light";ctx.globalAlpha=({pool:.22,cherry:.18,forest:.20,dream:.15,night:.24,rose:.18})[mode];ctx.fillStyle=({pool:"#42c8e8",cherry:"#ed315f",forest:"#386b4b",dream:"#e6c6ed",night:"#243d88",rose:"#eaa4c0"})[mode];ctx.fillRect(0,0,w,h);ctx.restore()}
- if(["flash35","sunfade","dream","frame"].includes(mode)){ctx.save();ctx.globalCompositeOperation="screen";ctx.globalAlpha=({flash35:.23,sunfade:.30,frame:.13,dream:.20})[mode];const glow=ctx.createRadialGradient(w*.72,h*.12,4,w*.72,h*.12,w*.85);glow.addColorStop(0,mode==="sunfade"?"rgba(255,205,120,.9)":"rgba(255,239,215,.8)");glow.addColorStop(1,"rgba(255,220,180,0)");ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);ctx.restore()}
+ if(mode==="golden"||mode==="vintage"){
+  ctx.save();ctx.globalCompositeOperation="screen";
+  ctx.globalAlpha=mode==="golden"?.24:.08;
+  const glow=ctx.createRadialGradient(w*.72,h*.12,4,w*.72,h*.12,w*.82);
+  glow.addColorStop(0,mode==="golden"?"rgba(255,205,112,.9)":"rgba(255,232,196,.65)");
+  glow.addColorStop(1,"rgba(255,220,180,0)");
+  ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);ctx.restore();
+ }
 }
 function stopCamera(){
  if(stream){
