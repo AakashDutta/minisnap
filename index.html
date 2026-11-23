@@ -641,6 +641,25 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f078
 .filter-tile.selected .filter-label small{color:#d7cabb}
 @media(max-width:420px){#setup .filter-options{grid-template-columns:1fr}.filter-preview{flex-basis:52px;width:52px;height:52px}}
 
+
+/* Visual blank photostrip previews for the three actual output themes */
+#setup .strip-style-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:8px}
+#setup .strip-style{display:flex;flex-direction:column;align-items:center;gap:9px;min-width:0;padding:12px 8px;border:1px solid #e5d8c4;border-radius:13px;background:#fffaf1;color:#172940;box-shadow:none;transform:none}
+#setup .strip-style:hover{background:#fff3e2;border-color:#e9a28b;transform:translateY(-1px)}
+#setup .strip-style.selected{border:1px solid #f07858;background:#fff3e2;box-shadow:0 0 0 2px rgba(240,120,88,.15)}
+.strip-preview{width:82px;height:190px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 9px 8px;box-sizing:border-box;border:1px solid var(--preview-accent);background:var(--preview-bg);box-shadow:0 5px 12px #17294022;position:relative}
+.strip-preview-blush{--preview-bg:#f8e9e9;--preview-ink:#493437;--preview-accent:#c77f8d}
+.strip-preview-vanilla{--preview-bg:#f2eadd;--preview-ink:#504334;--preview-accent:#b39468}
+.strip-preview-midnight{--preview-bg:#29252a;--preview-ink:#fff6f1;--preview-accent:#d5a2ac}
+.strip-brand{font:800 10px Georgia,serif;letter-spacing:1.5px;color:var(--preview-ink);padding:1px 0 3px}
+.strip-photo{display:block;width:100%;flex:1;min-height:0;background:transparent;border:1px solid var(--preview-accent);position:relative}
+.strip-photo:after{content:"";position:absolute;inset:3px;border:1px dashed var(--preview-accent);opacity:.55}
+.strip-footer{font:600 5px Arial,sans-serif;letter-spacing:.8px;color:var(--preview-ink);padding-top:3px;white-space:nowrap}
+.strip-style-label{font-size:11px;font-weight:800;line-height:1.25;text-align:center}
+.strip-style-label small{display:block;margin-top:4px;font-size:9px;font-weight:500;color:#777b80;line-height:1.3}
+.strip-style.selected .strip-style-label small{color:#6b5b55}
+@media(max-width:420px){#setup .strip-style-options{gap:7px}#setup .strip-style{padding:9px 5px}.strip-preview{width:72px;height:172px}}
+
 </style>
 </head>
 
@@ -699,10 +718,20 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f078
   </div>
 
   <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
-  <div class="options">
-   <button class="option selected" data-theme="pink">Blush</button>
-   <button class="option" data-theme="cream">Vanilla</button>
-   <button class="option" data-theme="dark">Midnight</button>
+  <p class="filter-intro strip-intro">Pick a design for your keepsake. These are blank previews; your four photos will fill the frames.</p>
+  <div class="options strip-style-options">
+   <button class="option strip-style selected" data-theme="pink" aria-pressed="true">
+    <span class="strip-preview strip-preview-blush" aria-hidden="true"><span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span></span>
+    <span class="strip-style-label">Blush<small>Soft rose · delicate frame</small></span>
+   </button>
+   <button class="option strip-style" data-theme="cream" aria-pressed="false">
+    <span class="strip-preview strip-preview-vanilla" aria-hidden="true"><span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span></span>
+    <span class="strip-style-label">Vanilla<small>Warm paper · classic look</small></span>
+   </button>
+   <button class="option strip-style" data-theme="dark" aria-pressed="false">
+    <span class="strip-preview strip-preview-midnight" aria-hidden="true"><span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span></span>
+    <span class="strip-style-label">Midnight<small>Dark charcoal · muted rose</small></span>
+   </button>
   </div>
  </div>
 
