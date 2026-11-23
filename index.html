@@ -4,9 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f7f2ed">
-<title>MINISNAP — A little moment. | Studio 12</title>
-<meta name="minisnap-build" content="2026-11-17-studio-12">
+<meta name="theme-color" content="#101a2b">
+<title>MINISNAP — Your moments, in four frames</title>
+<meta name="minisnap-build" content="2026-11-23-studio-refresh-1">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
@@ -601,6 +601,28 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d4a1
  background:#292a2d;border-color:#292a2d;color:#fff;
 }
 
+
+/* MiniSnap Studio refresh: midnight navy, warm cream and coral */
+:root{--bg:#101a2b;--paper:#fff3df;--ink:#132238;--muted:#777b80;--pink:#f07858;--line:#e5d8c4;--rose:#f7dfd0;--shadow:0 18px 48px rgba(3,10,22,.22)}
+body{background:radial-gradient(ellipse at 50% -15%,#26344b 0,transparent 55%),#101a2b;color:#fff3df;padding:22px 16px 46px}.app{max-width:760px}
+header{border-bottom:1px solid rgba(255,243,223,.2)}.logo{color:#fff3df;font-size:25px;letter-spacing:2.6px}.logo span{color:#f07858}
+.header-tag{color:#fff3df;border:1px solid rgba(255,243,223,.45);background:rgba(255,243,223,.06);border-radius:30px;padding:9px 13px}
+.intro{padding:48px 10px 32px}.eyebrow{color:#f07858}h1{color:#fff3df}.subtitle{color:#d1c8bc}.hero-icon{display:none}
+.hero-filmstrip{width:78px;height:112px;margin:0 auto 24px;padding:8px 7px;display:flex;flex-direction:column;gap:5px;transform:rotate(-7deg);background:#fff0d8;border:3px solid #fff0d8;border-radius:5px;box-shadow:0 12px 28px #0005;position:relative}
+.hero-filmstrip:before,.hero-filmstrip:after{content:"";position:absolute;top:7px;bottom:7px;width:4px;background:repeating-linear-gradient(to bottom,#17243a 0 6px,transparent 6px 12px)}.hero-filmstrip:before{left:1px}.hero-filmstrip:after{right:1px}
+.hero-filmstrip span{flex:1;border-radius:2px;background:linear-gradient(135deg,#f07858,#344d66 52%,#d7b88b)}.hero-filmstrip span:nth-child(2){background:linear-gradient(135deg,#243e55,#e2a77e)}.hero-filmstrip span:nth-child(3){background:linear-gradient(135deg,#e8b69c,#6c7771)}.hero-filmstrip span:nth-child(4){background:linear-gradient(135deg,#273a54,#f07858)}
+.card,.result-card,.share-panel,.admin-panel,.guest-panel{background:var(--paper);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px}.card{padding:23px}.card-title{color:#182b42}.card-copy{color:#5e6268}
+.primary{background:#f07858;color:#142238;border-radius:13px;box-shadow:0 8px 22px #0003}.primary:hover{background:#ff906e}.secondary{background:#fff3df;color:#182b42;border-color:#e4d4bd}
+.section-heading h1,.result-heading h1{color:#fff3df}.section-heading p,.result-heading p{color:#d1c8bc}.filter-intro{color:#676c73}
+.filter-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.filter-options .option{min-width:0;padding:12px 8px;border-radius:10px;background:#f6ead8;border:1px solid #e4d4bd;color:#24334a;font-size:10px;letter-spacing:.25px}
+.filter-options .option:hover{background:#fbe1d1;border-color:#f07858}.filter-options .option.selected{background:#172940;border-color:#172940;color:#fff3df;box-shadow:inset 0 -3px 0 #f07858}
+.strip-heading{border-color:#e4d4bd}#setup .option.selected{background:#172940;border-color:#172940}.camera-box{border:5px solid #fff3df;box-shadow:0 18px 40px #0005}.status{color:#d1c8bc}
+.progress{background:#34445a}#progressBar{background:linear-gradient(90deg,#f07858,#f5c58f)}.preview-grid img{border:2px solid #fff3df}
+.result-card,.share-panel,.guest-panel{color:var(--ink)}.qr-wrap{background:#fff;border-color:#dfd2bf}.note,footer{color:#c6b9a9}
+.field{background:#fffaf1;color:#172940;border-color:#e4d4bd}.admin-link{color:#f0cbb8}.state-pill{background:#f7dfd0;color:#7b4537}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f07858;outline-offset:3px}
+@media(max-width:520px){.filter-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 
@@ -615,7 +637,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d4a1
 <!-- HOME -->
 <section class="screen active" id="home">
  <div class="intro">
-  <div class="hero-icon">✳</div>
+  <div class="hero-filmstrip" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <div class="eyebrow">BGKV SCHOOL PHOTOBOOTH</div>
   <h1>Let's make<br>some memories.</h1>
   <p class="subtitle">
@@ -648,20 +670,20 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #d4a1
 
  <div class="card">
   <div class="card-title filter-heading">01 / PICK YOUR PHOTO LOOK</div>
-  <p class="filter-intro">12 photo looks · Tap to preview · Your chosen finish is baked into the strip.</p>
+  <p class="filter-intro">Twelve distinct film-inspired looks. Tap any finish to preview it before your four-frame session.</p>
   <div class="options filter-options">
    <button class="option selected" data-filter="none" aria-pressed="true">Natural</button>
+   <button class="option" data-filter="flash35" aria-pressed="false">35mm Flash</button>
+   <button class="option" data-filter="pool" aria-pressed="false">Pool Blue</button>
+   <button class="option" data-filter="cherry" aria-pressed="false">Cherry Pop</button>
+   <button class="option" data-filter="forest" aria-pressed="false">Forest Film</button>
+   <button class="option" data-filter="sunfade" aria-pressed="false">Sunfade</button>
    <button class="option" data-filter="bw" aria-pressed="false">Monochrome</button>
-   <button class="option" data-filter="vintage" aria-pressed="false">Vintage</button>
-   <button class="option" data-filter="warm" aria-pressed="false">Warm</button>
-   <button class="option" data-filter="campus" aria-pressed="false">Campus 35mm</button>
-   <button class="option" data-filter="golden" aria-pressed="false">Golden Hour</button>
-   <button class="option" data-filter="dream" aria-pressed="false">Dreamglow</button>
-   <button class="option" data-filter="noir" aria-pressed="false">Noir Cinema</button>
-   <button class="option" data-filter="soft" aria-pressed="false">Soft Focus</button>
-   <button class="option" data-filter="rose" aria-pressed="false">Rose Glow</button>
-   <button class="option" data-filter="iced" aria-pressed="false">Iced Latte</button>
-   <button class="option" data-filter="flash" aria-pressed="false">Flash Pop</button>
+   <button class="option" data-filter="dream" aria-pressed="false">Dream Soft</button>
+   <button class="option" data-filter="night" aria-pressed="false">Night Shift</button>
+   <button class="option" data-filter="frame" aria-pressed="false">Vintage Frame</button>
+   <button class="option" data-filter="rose" aria-pressed="false">Rosy Glow</button>
+   <button class="option" data-filter="cinema" aria-pressed="false">Cinema Tone</button>
   </div>
 
   <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
@@ -812,18 +834,7 @@ let busy=false;
 let stripData=null;
 
 const filters={
- none:"none",
- bw:"grayscale(1)",
- vintage:"sepia(.58) contrast(1.12) saturate(.82)",
- warm:"sepia(.28) saturate(1.32) brightness(1.04)",
- campus:"sepia(.30) contrast(1.16) saturate(.88)",
- golden:"sepia(.38) saturate(1.42) contrast(1.06) brightness(1.08)",
- dream:"saturate(.88) contrast(.82) brightness(1.12)",
- noir:"grayscale(1) contrast(1.42) brightness(.94)",
- soft:"saturate(1.08) contrast(.88) brightness(1.12)",
- rose:"sepia(.16) hue-rotate(315deg) saturate(1.22) brightness(1.06)",
- iced:"saturate(.82) hue-rotate(12deg) contrast(1.08) brightness(1.08)",
- flash:"contrast(1.18) saturate(1.12) brightness(1.16)"
+ none:"none",flash35:"contrast(1.18) saturate(1.18) sepia(.18) brightness(1.08)",pool:"hue-rotate(155deg) saturate(1.35) contrast(1.06)",cherry:"saturate(1.75) hue-rotate(326deg) contrast(1.08)",forest:"hue-rotate(68deg) saturate(.88) contrast(1.12) sepia(.12)",sunfade:"sepia(.48) saturate(.88) brightness(1.12) contrast(.86)",bw:"grayscale(1) contrast(1.08)",dream:"brightness(1.15) contrast(.78) saturate(.92)",night:"hue-rotate(185deg) saturate(.82) brightness(.72) contrast(1.22)",frame:"sepia(.62) contrast(1.18) saturate(.72)",rose:"hue-rotate(315deg) saturate(1.22) brightness(1.06)",cinema:"contrast(1.28) saturate(.78) brightness(.92) sepia(.12)"
 };
 
 const themes={
@@ -1047,118 +1058,31 @@ function takePhoto(){
 // This avoids relying on Safari's inconsistent canvas CSS-filter support.
 function applyPhotoFilter(canvas,mode){
  if(!mode||mode==="none")return;
- const ctx=canvas.getContext("2d",{willReadFrequently:true});
- const w=canvas.width,h=canvas.height;
- const image=ctx.getImageData(0,0,w,h);
- const p=image.data;
- const grainAmount=mode==="campus"?9:mode==="vintage"?5:mode==="noir"?7:0;
- const vignette=mode==="campus"?.22:mode==="vintage"?.12:mode==="noir"?.34:mode==="golden"?.06:0;
- for(let y=0;y<h;y++){
-  for(let x=0;x<w;x++){
-   const i=(y*w+x)*4;
-   const r=p[i],g=p[i+1],b=p[i+2];
-   const lum=.299*r+.587*g+.114*b;
-   let nr=r,ng=g,nb=b;
-   if(mode==="bw"||mode==="noir"){
-    const contrast=mode==="noir"?1.42:1;
-    const v=Math.max(0,Math.min(255,(lum-128)*contrast+128));
-    nr=ng=nb=v;
-   }else if(mode==="vintage"){
-    nr=lum+(r-lum)*.82+22;
-    ng=lum+(g-lum)*.72+11;
-    nb=lum+(b-lum)*.58-4;
-   }else if(mode==="warm"){
-    nr=r*1.08+13;ng=g*1.025+5;nb=b*.88-3;
-   }else if(mode==="campus"){
-    const c=(lum-118)*1.14+122;
-    nr=c+(r-lum)*.92+13;
-    ng=c+(g-lum)*.82+7;
-    nb=c+(b-lum)*.68-2;
-   }else if(mode==="golden"){
-    const hi=Math.max(0,(lum-55)/200);
-    const sh=Math.max(0,(125-lum)/125);
-    const c=(lum-118)*1.08+132;
-    nr=c+(r-lum)*1.12+23+hi*16+sh*5;
-    ng=c+(g-lum)*.96+10+hi*7;
-    nb=c+(b-lum)*.78-16-hi*13;
-   }else if(mode==="dream"){
-    const c=(lum-128)*.62+151;
-    nr=c+(r-lum)*.72+8;
-    ng=c+(g-lum)*.68+3;
-    nb=c+(b-lum)*.78+12;
-   }else if(mode==="soft"){
-    const c=(lum-128)*.76+153;
-    nr=c+(r-lum)*.88+8;
-    ng=c+(g-lum)*.86+7;
-    nb=c+(b-lum)*.82+8;
-   }else if(mode==="rose"){
-    nr=r*1.04+17;ng=g*.94+8;nb=b*1.02+15;
-    const mix=Math.max(0,(lum-100)/155);
-    nr+=mix*8;nb+=mix*5;
-   }else if(mode==="iced"){
-    nr=r*.91+13;ng=g*1.01+12;nb=b*1.13+19;
-   }else if(mode==="flash"){
-    const c=(lum-118)*1.2+139;
-    nr=c+(r-lum)*1.08+10;
-    ng=c+(g-lum)*1.04+8;
-    nb=c+(b-lum)*.98+6;
-   }
-   if(vignette){
-    const dx=(x-w/2)/(w/2),dy=(y-h/2)/(h/2);
-    const edge=Math.max(0,(dx*dx+dy*dy-.2)/1.35);
-    const shade=1-Math.min(.48,edge*vignette);
-    nr*=shade;ng*=shade;nb*=shade;
-   }
-   if(grainAmount){
-    const noise=(Math.random()-.5)*grainAmount;
-    nr+=noise;ng+=noise;nb+=noise;
-   }
-   p[i]=Math.max(0,Math.min(255,nr));
-   p[i+1]=Math.max(0,Math.min(255,ng));
-   p[i+2]=Math.max(0,Math.min(255,nb));
+ const ctx=canvas.getContext("2d",{willReadFrequently:true}),w=canvas.width,h=canvas.height;
+ const image=ctx.getImageData(0,0,w,h),p=image.data;
+ const grain=({flash35:10,forest:8,frame:13,cinema:7})[mode]||0,vignette=({flash35:.18,forest:.18,night:.38,frame:.28,cinema:.16})[mode]||0;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+  const i=(y*w+x)*4,r=p[i],g=p[i+1],b=p[i+2],lum=.299*r+.587*g+.114*b;let nr=r,ng=g,nb=b;
+  switch(mode){
+   case "flash35":{const c=(lum-118)*1.13+137;nr=c+(r-lum)*1.08+19;ng=c+(g-lum)*.98+9;nb=c+(b-lum)*.82-7;break}
+   case "pool":nr=r*.78+8;ng=g*.98+18;nb=b*1.18+34;break;
+   case "cherry":nr=r*1.16+18;ng=g*.78-4;nb=b*.94+10;break;
+   case "forest":nr=r*.88+8;ng=g*1.08+13;nb=b*.82+2;break;
+   case "sunfade":{const c=(lum-120)*.78+166;nr=c+(r-lum)*.72+17;ng=c+(g-lum)*.66+5;nb=c+(b-lum)*.48-15;break}
+   case "bw":{const v=Math.max(0,Math.min(255,(lum-128)*1.08+128));nr=ng=nb=v;break}
+   case "dream":{const c=(lum-128)*.68+163;nr=c+(r-lum)*.66+12;ng=c+(g-lum)*.62+5;nb=c+(b-lum)*.78+16;break}
+   case "night":nr=r*.66+5;ng=g*.79+8;nb=b*1.12+23;break;
+   case "frame":nr=lum+(r-lum)*.72+27;ng=lum+(g-lum)*.62+13;nb=lum+(b-lum)*.48-8;break;
+   case "rose":nr=r*1.08+17;ng=g*.88+5;nb=b*1.12+18;break;
+   case "cinema":{const c=(lum-118)*1.3+119;nr=c+(r-lum)*1.08+8;ng=c+(g-lum)*.88+3;nb=c+(b-lum)*.76+8;break}
   }
+  if(vignette){const dx=(x-w/2)/(w/2),dy=(y-h/2)/(h/2),edge=Math.max(0,(dx*dx+dy*dy-.18)/1.25),shade=1-Math.min(.58,edge*vignette);nr*=shade;ng*=shade;nb*=shade}
+  if(grain){const n=(Math.random()-.5)*grain;nr+=n;ng+=n;nb+=n}
+  p[i]=Math.max(0,Math.min(255,nr));p[i+1]=Math.max(0,Math.min(255,ng));p[i+2]=Math.max(0,Math.min(255,nb));
  }
  ctx.putImageData(image,0,0);
-
- // Soft light overlays are baked into the photograph, not just the preview.
- if(mode==="golden"||mode==="dream"||mode==="soft"||mode==="flash"){
-  ctx.save();
-  ctx.globalCompositeOperation="screen";
-  const glow=ctx.createRadialGradient(
-   mode==="golden"?w*.78:w*.5,mode==="golden"?h*.12:h*.24,8,
-   mode==="golden"?w*.78:w*.5,mode==="golden"?h*.12:h*.24,
-   mode==="golden"?w*.88:w*.92
-  );
-  if(mode==="golden"){
-   glow.addColorStop(0,"rgba(255,220,150,.48)");
-   glow.addColorStop(.38,"rgba(255,185,105,.17)");
-   glow.addColorStop(1,"rgba(255,170,110,0)");
-  }else if(mode==="dream"){
-   glow.addColorStop(0,"rgba(255,244,246,.48)");
-   glow.addColorStop(.55,"rgba(255,225,235,.16)");
-   glow.addColorStop(1,"rgba(255,225,235,0)");
-  }else if(mode==="soft"){
-   glow.addColorStop(0,"rgba(255,248,235,.38)");
-   glow.addColorStop(.55,"rgba(255,242,225,.12)");
-   glow.addColorStop(1,"rgba(255,242,225,0)");
-  }else{
-   glow.addColorStop(0,"rgba(255,255,245,.32)");
-   glow.addColorStop(.5,"rgba(255,245,230,.10)");
-   glow.addColorStop(1,"rgba(255,245,230,0)");
-  }
-  ctx.globalAlpha=mode==="golden"?.72:mode==="dream"?.66:mode==="soft"?.48:.42;
-  ctx.fillStyle=glow;
-  ctx.fillRect(0,0,w,h);
-  ctx.restore();
- }
- if(mode==="rose"||mode==="iced"){
-  ctx.save();
-  ctx.globalCompositeOperation="soft-light";
-  ctx.globalAlpha=.20;
-  ctx.fillStyle=mode==="rose"?"#e8aab9":"#b8d9ef";
-  ctx.fillRect(0,0,w,h);
-  ctx.restore();
- }
+ if(["pool","cherry","forest","dream","night","rose"].includes(mode)){ctx.save();ctx.globalCompositeOperation="soft-light";ctx.globalAlpha=({pool:.22,cherry:.18,forest:.20,dream:.15,night:.24,rose:.18})[mode];ctx.fillStyle=({pool:"#42c8e8",cherry:"#ed315f",forest:"#386b4b",dream:"#e6c6ed",night:"#243d88",rose:"#eaa4c0"})[mode];ctx.fillRect(0,0,w,h);ctx.restore()}
+ if(["flash35","sunfade","dream","frame"].includes(mode)){ctx.save();ctx.globalCompositeOperation="screen";ctx.globalAlpha=({flash35:.23,sunfade:.30,frame:.13,dream:.20})[mode];const glow=ctx.createRadialGradient(w*.72,h*.12,4,w*.72,h*.12,w*.85);glow.addColorStop(0,mode==="sunfade"?"rgba(255,205,120,.9)":"rgba(255,239,215,.8)");glow.addColorStop(1,"rgba(255,220,180,0)");ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);ctx.restore()}
 }
 function stopCamera(){
  if(stream){
