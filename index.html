@@ -4,9 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101a2b">
+<meta name="theme-color" content="#eee4d5">
 <title>MINISNAP — Your moments, in four frames</title>
-<meta name="minisnap-build" content="2026-11-23-studio-refresh-1">
+<meta name="minisnap-build" content="2026-11-23-beige-ui-1">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
@@ -659,6 +659,62 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #f078
 .strip-style-label small{display:block;margin-top:4px;font-size:9px;font-weight:500;color:#777b80;line-height:1.3}
 .strip-style.selected .strip-style-label small{color:#6b5b55}
 @media(max-width:420px){#setup .strip-style-options{gap:7px}#setup .strip-style{padding:9px 5px}.strip-preview{width:72px;height:172px}}
+
+
+/* Final warm beige interface theme */
+:root{
+ --bg:#eee4d5;--paper:#fbf6ed;--ink:#403329;--muted:#857568;
+ --pink:#b87958;--line:#dfd0bd;--rose:#ead8c5;
+ --shadow:0 18px 48px rgba(67,48,32,.09);
+}
+body{
+ background:radial-gradient(ellipse at 50% -12%,#fffaf1 0,transparent 52%),linear-gradient(180deg,#eee4d5 0%,#e7dac8 100%);
+ color:var(--ink);
+}
+header{border-bottom-color:#d8c7b3}
+.logo{color:#403329}
+.logo span,.eyebrow{color:#ad7555}
+.header-tag{color:#725f50;background:#f8f0e5;border-color:#d9c8b5}
+h1,.section-heading h1,.result-heading h1{color:#403329}
+.subtitle,.section-heading p,.result-heading p,.status{color:#857568}
+.card,.result-card,.share-panel,.admin-panel,.guest-panel{
+ background:#fbf6ed;color:#403329;border-color:#dfd0bd;
+ box-shadow:0 14px 36px rgba(67,48,32,.08)
+}
+.card-title{color:#49382b}
+.card-copy,.filter-intro{color:#78685a}
+.primary{background:#76523d;color:#fff8ef;box-shadow:0 8px 20px rgba(78,52,34,.17)}
+.primary:hover{background:#8a6248}
+.secondary{background:#f8f0e5;color:#49382b;border-color:#dfd0bd}
+.option{background:#f6eee2;border-color:#dfd0bd;color:#594638}
+.option.selected,#setup .option.selected{background:#76523d;border-color:#76523d;color:#fff8ef}
+.filter-options .option{background:#f8f0e5;border-color:#dfd0bd;color:#594638}
+.filter-options .option:hover{background:#eee0ce;border-color:#c79a79}
+.filter-options .option.selected{background:#76523d;border-color:#76523d;color:#fff8ef}
+#setup .filter-options .filter-tile{background:#f8f0e5;border-color:#dfd0bd;color:#49382b}
+#setup .filter-options .filter-tile:hover{background:#f1e5d5;border-color:#c79a79}
+#setup .filter-options .filter-tile.selected{background:#76523d;color:#fff8ef;border-color:#b87958;box-shadow:0 0 0 2px rgba(184,121,88,.16)}
+.filter-tile.selected .filter-label small{color:#ead8c5}
+.strip-heading{border-color:#dfd0bd}
+#setup .strip-style{background:#f8f0e5;border-color:#dfd0bd;color:#49382b}
+#setup .strip-style:hover{background:#f1e5d5;border-color:#c79a79}
+#setup .strip-style.selected{background:#f1e5d5;border-color:#b87958;box-shadow:0 0 0 2px rgba(184,121,88,.15)}
+.strip-style-label small{color:#857568}
+.camera-box{background:#d6c8b8;border:5px solid #fbf6ed}
+.camera-placeholder{color:#756455}
+.progress{background:#dfd0bd}
+#progressBar{background:linear-gradient(90deg,#ad7555,#d4a47e)}
+.preview-grid img{border-color:#fbf6ed}
+.qr-wrap{background:#fffdf8;border-color:#dfd0bd}
+.field{background:#fffaf2;color:#403329;border-color:#dfd0bd}
+.admin-link{color:#98765f}
+.state-pill{background:#ead8c5;color:#76523d}
+.note,footer{color:#857568}
+#shareStatus.uploading{color:#78685a}
+#shareStatus.uploading:before{border-color:#dfd0bd;border-top-color:#b87958}
+button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
+.hero-filmstrip{background:#f6ead8;border-color:#f6ead8}
+.hero-filmstrip:before,.hero-filmstrip:after{background:repeating-linear-gradient(to bottom,#76523d 0 6px,transparent 6px 12px)}
 
 </style>
 </head>
