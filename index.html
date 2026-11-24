@@ -1576,7 +1576,7 @@ function applyPhotoFilter(canvas,mode){
     const edge=Math.min(1,(edgeX+edgeY)/180),wave=Math.sin(y*.05+x*.018)*2;
     const si=(y*w+Math.max(0,Math.min(w-1,x+Math.round(wave))))*4;
     r=src[si]+edge*42;g=src[i+1]*.82+edge*78+sh*12;b=src[i+2]*1.14+edge*95+sh*9;
-    const scan=y%4===0?.91:1;r*=scan;g*=scan;b*=scan;
+    const scan=(y%4===0)?0.91:1;r*=scan;g*=scan;b*=scan;
    }
    const nx=(x/(w-1)-.5)*2,shade=1-L.v*Math.max(0,(nx*nx+ny*ny-.18)/1.5);
    const hash=(Math.imul(x+1,73856093)^Math.imul(y+1,19349663))>>>0;
