@@ -1524,7 +1524,7 @@ function takePhoto(){
 
  // Keep the complete phone portrait. Landscape sensor streams are rotated
  // automatically when the browser viewport is portrait.
- drawCameraFrame(video,canvas,facing==="user");
+ drawCameraFrame(video,canvas,false);
  applyPhotoFilter(canvas,filter);
 
  const data=canvas.toDataURL("image/jpeg",.96);
