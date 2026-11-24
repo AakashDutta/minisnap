@@ -1321,6 +1321,37 @@ async function openCamera(){
  }
 }
 
+function syncVideoOrientation(){
+ const box=document.querySelector("#cameraScreen .camera-box");
+ if(!box||!video.videoWidth||!video.videoHeight)return;
+ const portrait=window.innerHeight>=window.innerWidth;
+ const rotate=portrait&&video.videoWidth>video.videoHeight;
+ if(rotate){
+  const rect=box.getBoundingClientRect();
+  video.style.position="absolute";
+  video.style.width=rect.height+"px";
+  video.style.height=rect.width+"px";
+  video.style.left="50%";
+  video.style.top="50%";
+  video.style.right="auto";
+  video.style.bottom="auto";
+  video.style.inset="auto";
+  video.style.objectFit="cover";
+  video.style.setProperty("transform","translate(-50%,-50%) rotate(90deg)","important");
+ }else{
+  video.style.position="absolute";
+  video.style.inset="0";
+  video.style.left="0";
+  video.style.top="0";
+  video.style.right="0";
+  video.style.bottom="0";
+  video.style.width="100%";
+  video.style.height="100%";
+  video.style.objectFit="contain";
+  video.style.setProperty("transform","none","important");
+ }
+}
+
 async function startCamera(){
  stopLivePreview();
  if(!navigator.mediaDevices?.getUserMedia){
@@ -1344,21 +1375,12 @@ async function startCamera(){
  video.srcObject=stream;
  await video.play();
 
- // Use the unmodified camera stream, exactly as the browser supplies it.
- // No rotation and no mirroring: the preview must never move opposite to
- // the physical phone when the user turns it.
+ // iOS can expose a landscape sensor frame while the phone is held
+ // upright. Rotate that frame clockwise and swap its display dimensions.
  video.style.display="block";
  video.style.opacity="1";
- video.style.inset="0";
- video.style.left="0";
- video.style.top="0";
- video.style.right="0";
- video.style.bottom="0";
- video.style.width="100%";
- video.style.height="100%";
- video.style.transform="none";
- video.style.objectFit="contain";
  video.style.backgroundColor="#e8ded0";
+ syncVideoOrientation();
 
  document.getElementById("placeholder").style.display="none";
  document.getElementById("status").textContent="● CAMERA READY";
@@ -1470,7 +1492,7 @@ function drawSourceFit(ctx,source,targetW,targetH,mirror,fitMode,orientation){
  ctx.save();
  ctx.translate(targetW/2,targetH/2);
  if(mirror)ctx.scale(-1,1);
- if(orientation.rotate)ctx.rotate(-Math.PI/2);
+ if(orientation.rotate)ctx.rotate(Math.PI/2);
  ctx.drawImage(source,-drawW/2,-drawH/2,drawW,drawH);
  ctx.restore();
 }
@@ -1496,6 +1518,9 @@ function startLivePreview(){
  const canvas=document.getElementById("livePreview");
  if(canvas)canvas.style.display="none";
 }
+window.addEventListener("resize",syncVideoOrientation);
+window.addEventListener("orientationchange",()=>setTimeout(syncVideoOrientation,120));
+
 function stopLivePreview(){
  const canvas=document.getElementById("livePreview");
  if(canvas)canvas.style.display="none";
