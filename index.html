@@ -1351,6 +1351,11 @@ async function startCamera(){
  video.style.width="100%";
  video.style.height="100%";
  video.style.objectFit="cover";
+ // Correct the upside-down front-camera feed on phone-sized screens only.
+ // This visual transform does not alter the source pixels read by drawImage(video).
+ const phoneViewport=window.matchMedia("(max-width: 700px)").matches;
+ video.style.transform=(facing==="user" && phoneViewport)?"rotate(180deg)":"none";
+ video.style.transformOrigin="center center";
 
  // Request true 0.5x only when this camera/browser explicitly supports it.
  // Many front cameras expose a minimum zoom of 1x, in which case leave native zoom.
