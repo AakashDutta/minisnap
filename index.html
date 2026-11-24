@@ -1351,10 +1351,8 @@ async function startCamera(){
  video.style.width="100%";
  video.style.height="100%";
  video.style.objectFit="cover";
- // Correct the upside-down front-camera feed on phone-sized screens only.
- // This visual transform does not alter the source pixels read by drawImage(video).
- const phoneViewport=window.matchMedia("(max-width: 700px)").matches;
- video.style.transform=(facing==="user" && phoneViewport)?"rotate(180deg)":"none";
+ // Keep the live camera preview native and untouched.
+ video.style.transform="none";
  video.style.transformOrigin="center center";
 
  // Request true 0.5x only when this camera/browser explicitly supports it.
@@ -1479,7 +1477,7 @@ function drawSourceFit(ctx,source,targetW,targetH,mirror,fitMode,orientation){
  ctx.save();
  ctx.translate(targetW/2,targetH/2);
  if(mirror)ctx.scale(-1,1);
- if(orientation.rotate)ctx.rotate(Math.PI/2);
+ if(orientation.rotate)ctx.rotate(-Math.PI/2);
  ctx.drawImage(source,-drawW/2,-drawH/2,drawW,drawH);
  ctx.restore();
 }
