@@ -978,10 +978,17 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
  background:#e8ded0;
 }
 #cameraScreen #video{
+ display:block!important;
  position:absolute;
- width:1px;
- height:1px;
- opacity:0!important;
+ inset:0;
+ width:100%!important;
+ height:100%!important;
+ opacity:1!important;
+ visibility:visible!important;
+ object-fit:cover;
+ transform:none!important;
+ transform-origin:center center;
+ z-index:1;
  pointer-events:none;
 }
 #cameraScreen #livePreview{
