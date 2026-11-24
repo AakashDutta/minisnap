@@ -1047,8 +1047,8 @@ header{padding:12px 4px 22px;border-bottom:1px solid rgba(112,83,60,.19)}
 .camera-box{border-radius:26px;background:#dfd1c2;box-shadow:0 22px 50px rgba(65,45,30,.2)}
 /* Native camera: video only, no canvas repaint loop or filter processing. */
 #cameraScreen .camera-box{position:relative;overflow:hidden;isolation:isolate}
-#cameraScreen #video{display:block!important;position:absolute;inset:0;width:100%;height:100%;opacity:1!important;visibility:visible;object-fit:cover;pointer-events:none;background:#e8ded0}
-#cameraScreen #livePreview{display:none!important}
+#cameraScreen #video{display:block!important;position:absolute;inset:0;width:100%;height:100%;opacity:0!important;visibility:visible;object-fit:cover;transform:none!important;pointer-events:none;background:#e8ded0;z-index:0}
+#cameraScreen #livePreview{display:block!important;position:absolute;inset:0;width:100%;height:100%;z-index:1;object-fit:fill;pointer-events:none}
 #cameraScreen .camera-placeholder{z-index:1}
 #cameraScreen .camera-overlay{z-index:2}
 #cameraScreen #countdown{z-index:3}
@@ -1269,6 +1269,7 @@ const countdown=document.getElementById("countdown");
 const flash=document.getElementById("flash");
 
 let stream=null;
+let livePreviewFrame=0;
 let facing="user";
 let photos=[];
 let filter="none";
@@ -1351,15 +1352,15 @@ async function startCamera(){
  video.srcObject=stream;
  await video.play();
 
- // The front-camera stream is mirrored on this device/browser.
-// Counter-flip the preview so it reads like a normal, non-mirrored camera.
+ // Keep the source stream untouched. The canvas preview handles rotation only.
   video.style.display="block";
-  video.style.opacity="1";
+  video.style.opacity="0";
   video.style.width="100%";
   video.style.height="100%";
   video.style.objectFit="cover";
-  video.style.transform=facing==="user"?"scaleX(-1)":"none";
+  video.style.transform="none";
   video.style.transformOrigin="center center";
+  startLivePreview();
 
  // Request true 0.5x only when this camera/browser explicitly supports it.
  // Many front cameras expose a minimum zoom of 1x, in which case leave native zoom.
@@ -1473,7 +1474,7 @@ function getCameraOrientation(sourceW,sourceH,targetW,targetH){
 
 // Draw without cropping. A soft, blurred edge-fill uses the same frame while
 // the complete sharp photograph is fitted over it.
-function drawSourceFit(ctx,source,targetW,targetH,mirror,fitMode,orientation){
+function drawSourceFit(ctx,source,targetW,targetH,fitMode,orientation){
  const sourceW=source.videoWidth||source.naturalWidth||source.width;
  const sourceH=source.videoHeight||source.naturalHeight||source.height;
  if(!sourceW||!sourceH)return;
@@ -1484,13 +1485,14 @@ function drawSourceFit(ctx,source,targetW,targetH,mirror,fitMode,orientation){
  const drawH=sourceH*fit;
  ctx.save();
  ctx.translate(targetW/2,targetH/2);
- if(mirror)ctx.scale(-1,1);
- if(orientation.rotate)ctx.rotate(-Math.PI/2);
+ // Clockwise quarter-turn only when source and target orientations differ.
+ // No horizontal or vertical mirroring is applied.
+ if(orientation.rotate)ctx.rotate(Math.PI/2);
  ctx.drawImage(source,-drawW/2,-drawH/2,drawW,drawH);
  ctx.restore();
 }
 
-function drawCameraFrame(source,targetCanvas,mirror=false){
+function drawCameraFrame(source,targetCanvas){
  const ctx=targetCanvas.getContext("2d",{willReadFrequently:true});
  const sourceW=source.videoWidth||source.naturalWidth||source.width;
  const sourceH=source.videoHeight||source.naturalHeight||source.height;
@@ -1503,19 +1505,42 @@ function drawCameraFrame(source,targetCanvas,mirror=false){
 
  // Fill the complete photo slot with a natural proportional crop.
  // No blurred extension, letterboxing or stretching.
- drawSourceFit(ctx,source,w,h,mirror,"cover",orientation);
+ drawSourceFit(ctx,source,w,h,"cover",orientation);
 }
 
-// Live video stays in the browser's native camera orientation.
+// Draw live frames with the same rotation-only pipeline as the photo strip.
 function startLivePreview(){
- const canvas=document.getElementById("livePreview");
- if(canvas)canvas.style.display="none";
-}
+  const canvas=document.getElementById("livePreview");
+  if(!canvas)return;
+  stopLivePreview();
+  canvas.style.display="block";
 
+  const renderFrame=()=>{
+   if(!stream||video.readyState<2){
+    livePreviewFrame=requestAnimationFrame(renderFrame);
+    return;
+   }
+   const rect=canvas.parentElement.getBoundingClientRect();
+   const dpr=Math.min(window.devicePixelRatio||1,2);
+   const width=Math.max(1,Math.round(rect.width*dpr));
+   const height=Math.max(1,Math.round(rect.height*dpr));
+   if(canvas.width!==width||canvas.height!==height){
+    canvas.width=width;
+    canvas.height=height;
+   }
+   drawCameraFrame(video,canvas);
+   livePreviewFrame=requestAnimationFrame(renderFrame);
+  };
+  livePreviewFrame=requestAnimationFrame(renderFrame);
+}
 
 function stopLivePreview(){
- const canvas=document.getElementById("livePreview");
- if(canvas)canvas.style.display="none";
+  if(livePreviewFrame){
+   cancelAnimationFrame(livePreviewFrame);
+   livePreviewFrame=0;
+  }
+  const canvas=document.getElementById("livePreview");
+  if(canvas)canvas.style.display="none";
 }
 
 function takePhoto(){
@@ -1523,9 +1548,8 @@ function takePhoto(){
  canvas.width=720;
  canvas.height=900;
 
- // Match the captured frame to the portrait photo slot. Apply the same
-  // front-camera counter-mirror as the corrected live preview.
-  drawCameraFrame(video,canvas,facing==="user");
+ // Match the portrait slot using rotation only. Never mirror the photo.
+  drawCameraFrame(video,canvas);
  applyPhotoFilter(canvas,filter);
 
  const data=canvas.toDataURL("image/jpeg",.96);
