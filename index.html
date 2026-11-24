@@ -1493,135 +1493,49 @@ function takePhoto(){
  flash.classList.add("fire");
 }
 
-// Editorial film looks. This same pixel pipeline powers the live camera,
-// thumbnail previews and final captures, so the selected look stays consistent.
+// Distinct editorial photo looks. This still-image pipeline is shared by thumbnails and captures only.
 function applyPhotoFilter(canvas,mode){
  if(!mode||mode==="none")return;
- const ctx=canvas.getContext("2d",{willReadFrequently:true});
- const w=canvas.width,h=canvas.height;
- const image=ctx.getImageData(0,0,w,h),p=image.data;
- const profiles={
-  flash35:{contrast:1.15,saturation:1.10,exposure:1.035,warm:4,grain:2.1,vignette:.025,fade:0},
-  golden:{contrast:1.045,saturation:1.12,exposure:1.025,warm:15,grain:.45,vignette:.02,fade:0},
-  cool:{contrast:1.105,saturation:1.04,exposure:1.015,warm:-3,grain:.35,vignette:.015,fade:0},
-  bw:{contrast:1.22,saturation:0,exposure:1.025,warm:0,grain:1.25,vignette:.055,fade:0},
-  vintage:{contrast:.93,saturation:.76,exposure:1.025,warm:9,grain:2.8,vignette:.19,fade:13},
-  touchdesigner:{contrast:1.16,saturation:1.28,exposure:1.02,warm:0,grain:0,vignette:.08,fade:0}
- };
- const look=profiles[mode];
- if(!look)return;
+ const ctx=canvas.getContext("2d",{willReadFrequently:true}),w=canvas.width,h=canvas.height;
+ const image=ctx.getImageData(0,0,w,h),p=image.data,src=new Uint8ClampedArray(image.data);
  const clamp=v=>Math.max(0,Math.min(255,v));
- const sourcePixels=mode==="touchdesigner"?new Uint8ClampedArray(p):null;
- for(let y=0;y<h;y++){
-  const ny=(y/(h-1)-.5)*2;
-  for(let x=0;x<w;x++){
-   const i=(y*w+x)*4;
+ const looks={
+ flash35:{c:1.24,s:1.2,e:1.07,w:7,sh:[5,2,-4],hi:[10,4,0],grain:4,v:.18},
+ golden:{c:1.08,s:1.27,e:1.06,w:18,sh:[8,4,-6],hi:[15,8,-9],grain:1,v:.1},
+ cool:{c:1.17,s:1.16,e:1.04,w:-7,sh:[-8,4,15],hi:[-4,2,12],grain:.8,v:.14},
+ bw:{c:1.34,s:0,e:1.04,w:0,sh:[0,0,0],hi:[0,0,0],grain:2.4,v:.2},
+ vintage:{c:.94,s:.78,e:1.04,w:12,sh:[13,8,1],hi:[8,3,-6],grain:4.5,v:.25},
+ touchdesigner:{c:1.2,s:1.3,e:1.02,w:0,sh:[-5,18,24],hi:[12,-2,22],grain:.3,v:.1}
+ };
+ const L=looks[mode];if(!L)return;
+ for(let y=0;y<h;y++){const ny=(y/(h-1)-.5)*2;
+  for(let x=0;x<w;x++){const i=(y*w+x)*4;
+   let r=src[i],g=src[i+1],b=src[i+2],lum=.2126*r+.7152*g+.0722*b;
+   const sh=Math.pow(1-clamp(lum/255),1.4),hi=Math.pow(clamp((lum-68)/187),1.35);
+   r=(r-128)*L.c+128;g=(g-128)*L.c+128;b=(b-128)*L.c+128;
+   lum=.2126*r+.7152*g+.0722*b;
+   r=(lum+(r-lum)*L.s)*L.e+L.w+L.sh[0]*sh+L.hi[0]*hi;
+   g=(lum+(g-lum)*L.s)*L.e+L.w*.22+L.sh[1]*sh+L.hi[1]*hi;
+   b=(lum+(b-lum)*L.s)*L.e-L.w*.42+L.sh[2]*sh+L.hi[2]*hi;
+   if(mode==="bw"){r=g=b=(.2126*r+.7152*g+.0722*b-128)*1.12+134;}
+   if(mode==="vintage"){r=r*.9+22;g=g*.9+15;b=b*.9+8;}
    if(mode==="touchdesigner"){
-    // Lightweight generative-video treatment: subtle wave displacement,
-    // RGB channel separation, teal/magenta toning and luminous contour lines.
-    const wave=Math.sin(y*.035+x*.012)*2.2+Math.sin(x*.022-y*.018)*1.5;
-    const sx=Math.max(0,Math.min(w-1,Math.round(x+wave)));
-    const sy=Math.max(0,Math.min(h-1,Math.round(y+Math.sin(x*.026)*1.2)));
-    const base=(sy*w+sx)*4;
-    const redX=Math.max(0,Math.min(w-1,sx+2));
-    const blueX=Math.max(0,Math.min(w-1,sx-2));
-    const rr=sourcePixels[(sy*w+redX)*4];
-    const gg=sourcePixels[base+1];
-    const bb=sourcePixels[(sy*w+blueX)*4+2];
-    const lum=.2126*rr+.7152*gg+.0722*bb;
-    const left=sourcePixels[(sy*w+Math.max(0,sx-1))*4];
-    const right=sourcePixels[(sy*w+Math.min(w-1,sx+1))*4];
-    const up=sourcePixels[(Math.max(0,sy-1)*w+sx)*4];
-    const down=sourcePixels[(Math.min(h-1,sy+1)*w+sx)*4];
-    const edge=Math.min(1,(Math.abs(right-left)+Math.abs(down-up))/150);
-    const scan=(y%4===0)?0.94:1;
-    const shadow=1-clamp(lum/255);
-    p[i]=clamp((rr*1.08+edge*34)*scan+lum*.025);
-    p[i+1]=clamp((gg*.94+shadow*13+edge*82)*scan);
-    p[i+2]=clamp((bb*1.10+edge*104+shadow*8)*scan);
-    p[i+3]=255;
-    continue;
+    const edgeX=Math.abs((src[i+4]||src[i])-(src[i-4]||src[i]));
+    const edgeY=Math.abs((src[i+w*4]||src[i])-(src[i-w*4]||src[i]));
+    const edge=Math.min(1,(edgeX+edgeY)/180),wave=Math.sin(y*.05+x*.018)*2;
+    const si=(y*w+Math.max(0,Math.min(w-1,x+Math.round(wave))))*4;
+    r=src[si]+edge*42;g=src[i+1]*.82+edge*78+sh*12;b=src[i+2]*1.14+edge*95+sh*9;
+    const scan=y%4===0?.91:1;r*=scan;g*=scan;b*=scan;
    }
-   let r=(p[i]-128)*look.contrast+128;
-   let g=(p[i+1]-128)*look.contrast+128;
-   let b=(p[i+2]-128)*look.contrast+128;
-   let lum=.2126*r+.7152*g+.0722*b;
-
-   r=lum+(r-lum)*look.saturation;
-   g=lum+(g-lum)*look.saturation;
-   b=lum+(b-lum)*look.saturation;
-
-   const highlight=clamp((lum-82)/173);
-   const shadow=clamp((145-lum)/145);
-   r=r*look.exposure+look.warm*(.34+highlight*.66);
-   g=g*look.exposure+look.warm*.17*highlight;
-   b=b*look.exposure-look.warm*(.22+highlight*.54);
-
-   if(mode==="flash35"){
-    r+=3+highlight*3;g+=1.5+highlight*1.2;b-=2.5;
-   }else if(mode==="golden"){
-    r+=highlight*8+shadow*1.5;
-    g+=highlight*3.5;
-    b-=highlight*5+shadow*1.5;
-   }else if(mode==="cool"){
-    r-=shadow*7;g+=shadow*1.5;b+=shadow*10+highlight*2;
-   }else if(mode==="bw"){
-    const mono=(.2126*r+.7152*g+.0722*b-128)*1.04+132;
-    r=mono;g=mono;b=mono;
-   }else if(mode==="vintage"){
-    r=r*(1-look.fade/255)+look.fade+2;
-    g=g*(1-look.fade/255)+look.fade-1;
-    b=b*(1-look.fade/255)+look.fade-4;
-   }
-
-   if(look.vignette){
-    const nx=(x/(w-1)-.5)*2;
-    const edge=clamp((nx*nx+ny*ny-.22)/1.55);
-    const shade=1-look.vignette*edge;
-    r*=shade;g*=shade;b*=shade;
-   }
-
-   if(look.grain){
-    // A deterministic fine-grain pattern keeps thumbnail and capture results stable.
-    const hash=(Math.imul(x+1,73856093)^Math.imul(y+1,19349663))>>>0;
-    const noise=((hash&255)/255-.5)*look.grain;
-    r+=noise;g+=noise;b+=noise;
-   }
-
-   p[i]=clamp(r);p[i+1]=clamp(g);p[i+2]=clamp(b);
+   const nx=(x/(w-1)-.5)*2,shade=1-L.v*Math.max(0,(nx*nx+ny*ny-.18)/1.5);
+   const hash=(Math.imul(x+1,73856093)^Math.imul(y+1,19349663))>>>0;
+   const noise=((hash&1023)/1023-.5)*L.grain;
+   p[i]=clamp(r*shade+noise);p[i+1]=clamp(g*shade+noise);p[i+2]=clamp(b*shade+noise);
   }
  }
  ctx.putImageData(image,0,0);
- if(mode==="touchdesigner"){
-  // Fine HUD-like geometry and soft neon traces, drawn identically in
-  // thumbnails, live preview and the captured photo.
-  ctx.save();
-  ctx.globalCompositeOperation="screen";
-  ctx.lineWidth=Math.max(1,w/360);
-  ctx.strokeStyle="rgba(76,235,211,.48)";
-  ctx.beginPath();
-  for(let gy=1;gy<6;gy++){
-   const yy=h*gy/6;
-   ctx.moveTo(w*.06,yy);ctx.lineTo(w*.94,yy);
-  }
-  for(let gx=1;gx<5;gx++){
-   const xx=w*gx/5;
-   ctx.moveTo(xx,h*.05);ctx.lineTo(xx,h*.95);
-  }
-  ctx.stroke();
-  ctx.strokeStyle="rgba(255,94,185,.72)";
-  ctx.lineWidth=Math.max(1.2,w/260);
-  const inset=w*.055,corner=w*.075;
-  ctx.beginPath();
-  ctx.moveTo(inset+corner,inset);ctx.lineTo(inset,inset);ctx.lineTo(inset,inset+corner);
-  ctx.moveTo(w-inset-corner,inset);ctx.lineTo(w-inset,inset);ctx.lineTo(w-inset,inset+corner);
-  ctx.moveTo(inset,h-inset-corner);ctx.lineTo(inset,h-inset);ctx.lineTo(inset+corner,h-inset);
-  ctx.moveTo(w-inset-corner,h-inset);ctx.lineTo(w-inset,h-inset);ctx.lineTo(w-inset,h-inset-corner);
-  ctx.stroke();
-  ctx.restore();
- }
+ if(mode==="touchdesigner"){ctx.save();ctx.globalCompositeOperation="screen";ctx.strokeStyle="rgba(65,235,210,.48)";ctx.lineWidth=Math.max(1,w/360);ctx.beginPath();for(let y=1;y<7;y++){const yy=h*y/7;ctx.moveTo(w*.05,yy);ctx.lineTo(w*.95,yy);}ctx.stroke();ctx.strokeStyle="rgba(255,80,174,.8)";const m=w*.055,c=w*.07;ctx.beginPath();ctx.moveTo(m+c,m);ctx.lineTo(m,m);ctx.lineTo(m,m+c);ctx.moveTo(w-m-c,m);ctx.lineTo(w-m,m);ctx.lineTo(w-m,m+c);ctx.moveTo(m,h-m-c);ctx.lineTo(m,h-m);ctx.lineTo(m+c,h-m);ctx.moveTo(w-m-c,h-m);ctx.lineTo(w-m,h-m);ctx.lineTo(w-m,h-m-c);ctx.stroke();ctx.restore();}
 }
-
 function renderFilterPreviews(){
  const canvases=[...document.querySelectorAll("[data-preview-filter]")];
  if(!canvases.length)return;
