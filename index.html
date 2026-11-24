@@ -1347,10 +1347,9 @@ async function startCamera(){
 
  // The preview and final front-camera image use the same orientation.
  video.style.display="block";
- video.style.opacity="0";
+ video.style.opacity="1";
 
  document.getElementById("placeholder").style.display="none";
- startLivePreview();
  document.getElementById("status").textContent="● CAMERA READY";
  document.getElementById("captureBtn").disabled=false;
  document.getElementById("switchBtn").disabled=false;
@@ -1489,36 +1488,13 @@ function drawCameraFrame(source,targetCanvas,mirror=false){
  drawSourceFit(ctx,source,w,h,mirror,"contain",orientation);
 }
 
-let livePreviewFrame=0;
-let lastLivePreviewPaint=0;
-
 function startLivePreview(){
  const canvas=document.getElementById("livePreview");
- if(!canvas)return;
- stopLivePreview();
- canvas.width=360;
- canvas.height=450;
- canvas.style.display="block";
- const render=(timestamp)=>{
-  if(!stream)return;
-  if(video.readyState>=2&&timestamp-lastLivePreviewPaint>=100){
-   drawCameraFrame(video,canvas,facing==="user");
-   applyPhotoFilter(canvas,filter);
-   lastLivePreviewPaint=timestamp;
-  }
-  livePreviewFrame=requestAnimationFrame(render);
- };
- livePreviewFrame=requestAnimationFrame(render);
+ if(canvas)canvas.style.display="none";
 }
-
 function stopLivePreview(){
- if(livePreviewFrame){
-  cancelAnimationFrame(livePreviewFrame);
-  livePreviewFrame=0;
- }
  const canvas=document.getElementById("livePreview");
  if(canvas)canvas.style.display="none";
- lastLivePreviewPaint=0;
 }
 
 function takePhoto(){
