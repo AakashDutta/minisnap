@@ -1530,6 +1530,8 @@ function startLivePreview(){
  const canvas=document.getElementById("livePreview");
  if(canvas)canvas.style.display="none";
 }
+video.addEventListener("loadedmetadata",fitLiveVideo);
+video.addEventListener("loadeddata",fitLiveVideo);
 window.addEventListener("resize",fitLiveVideo);
 window.addEventListener("orientationchange",()=>setTimeout(fitLiveVideo,150));
 
