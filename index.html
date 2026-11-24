@@ -1470,7 +1470,7 @@ function drawSourceFit(ctx,source,targetW,targetH,mirror,fitMode,orientation){
  ctx.save();
  ctx.translate(targetW/2,targetH/2);
  if(mirror)ctx.scale(-1,1);
- if(orientation.rotate)ctx.rotate(Math.PI/2);
+ if(orientation.rotate)ctx.rotate(-Math.PI/2);
  ctx.drawImage(source,-drawW/2,-drawH/2,drawW,drawH);
  ctx.restore();
 }
