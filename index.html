@@ -9,7 +9,7 @@
 <meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#eee4d5">
 <title>MINISNAP — Your moments, in four frames</title>
-<meta name="minisnap-build" content="2026-11-24-livefix-1">
+<meta name="minisnap-build" content="2026-11-24-touchdesigner-filter-1">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
@@ -428,6 +428,12 @@ footer {
 .admin-link{background:none;border:0;color:#a39a94;font:inherit;font-size:9px;letter-spacing:2px;text-decoration:underline;margin-top:10px}
 .state-pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#f3e2e2;color:#754d55;font-size:9px;font-weight:700}
   
+/* TouchDesigner-inspired filter tile accent */
+.touchdesigner-tile{position:relative;overflow:hidden}
+.touchdesigner-tile:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(135deg,rgba(62,225,205,.09),transparent 48%,rgba(238,91,171,.11));}
+.touchdesigner-tile.selected{box-shadow:0 0 0 1px rgba(59,198,186,.4),0 8px 24px rgba(40,160,158,.13)}
+.touchdesigner-tile .filter-label small{color:#6f8581}
+
 /* MiniSnap polish pass */
 :root{
  --bg:#f5f2ee;--paper:#fffefa;--ink:#252629;--muted:#777b82;
@@ -1044,7 +1050,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
 
  <div class="card">
   <div class="card-title filter-heading">01 / PICK YOUR PHOTO LOOK</div>
-  <p class="filter-intro">Six carefully tuned looks, each with its own character. Choose one to preview it.</p>
+  <p class="filter-intro">Seven carefully tuned looks, each with its own character. Choose one to preview it.</p>
   <div class="options filter-options">
    <button class="option filter-tile selected" data-filter="none" aria-pressed="true"><canvas class="filter-preview" data-preview-filter="none" width="180" height="180" role="img" aria-label="Portrait shown with the Natural filter"></canvas><span class="filter-label">Natural<small>True-to-life colour</small></span></button>
    <button class="option filter-tile" data-filter="flash35" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="flash35" width="180" height="180" role="img" aria-label="Same portrait shown with the 35mm Flash filter"></canvas><span class="filter-label">35mm Flash<small>Bright analogue pop</small></span></button>
@@ -1052,6 +1058,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
    <button class="option filter-tile" data-filter="cool" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="cool" width="180" height="180" role="img" aria-label="Same portrait shown with the Cool Blue filter"></canvas><span class="filter-label">Cool Blue<small>Clean, crisp cool tones</small></span></button>
    <button class="option filter-tile" data-filter="bw" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="bw" width="180" height="180" role="img" aria-label="Same portrait shown in Black and White"></canvas><span class="filter-label">Black &amp; White<small>Classic high contrast</small></span></button>
    <button class="option filter-tile" data-filter="vintage" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="vintage" width="180" height="180" role="img" aria-label="Same portrait shown with the Vintage Fade filter"></canvas><span class="filter-label">Vintage Fade<small>Soft, nostalgic film</small></span></button>
+   <button class="option filter-tile touchdesigner-tile" data-filter="touchdesigner" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="touchdesigner" width="180" height="180" role="img" aria-label="Portrait with a TouchDesigner-inspired generative neon filter"></canvas><span class="filter-label">TouchDesigner<small>Generative neon signal</small></span></button>
   </div>
 
   <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
@@ -1498,15 +1505,43 @@ function applyPhotoFilter(canvas,mode){
   golden:{contrast:1.045,saturation:1.12,exposure:1.025,warm:15,grain:.45,vignette:.02,fade:0},
   cool:{contrast:1.105,saturation:1.04,exposure:1.015,warm:-3,grain:.35,vignette:.015,fade:0},
   bw:{contrast:1.22,saturation:0,exposure:1.025,warm:0,grain:1.25,vignette:.055,fade:0},
-  vintage:{contrast:.93,saturation:.76,exposure:1.025,warm:9,grain:2.8,vignette:.19,fade:13}
+  vintage:{contrast:.93,saturation:.76,exposure:1.025,warm:9,grain:2.8,vignette:.19,fade:13},
+  touchdesigner:{contrast:1.16,saturation:1.28,exposure:1.02,warm:0,grain:0,vignette:.08,fade:0}
  };
  const look=profiles[mode];
  if(!look)return;
  const clamp=v=>Math.max(0,Math.min(255,v));
+ const sourcePixels=mode==="touchdesigner"?new Uint8ClampedArray(p):null;
  for(let y=0;y<h;y++){
   const ny=(y/(h-1)-.5)*2;
   for(let x=0;x<w;x++){
    const i=(y*w+x)*4;
+   if(mode==="touchdesigner"){
+    // Lightweight generative-video treatment: subtle wave displacement,
+    // RGB channel separation, teal/magenta toning and luminous contour lines.
+    const wave=Math.sin(y*.035+x*.012)*2.2+Math.sin(x*.022-y*.018)*1.5;
+    const sx=Math.max(0,Math.min(w-1,Math.round(x+wave)));
+    const sy=Math.max(0,Math.min(h-1,Math.round(y+Math.sin(x*.026)*1.2)));
+    const base=(sy*w+sx)*4;
+    const redX=Math.max(0,Math.min(w-1,sx+2));
+    const blueX=Math.max(0,Math.min(w-1,sx-2));
+    const rr=sourcePixels[(sy*w+redX)*4];
+    const gg=sourcePixels[base+1];
+    const bb=sourcePixels[(sy*w+blueX)*4+2];
+    const lum=.2126*rr+.7152*gg+.0722*bb;
+    const left=sourcePixels[(sy*w+Math.max(0,sx-1))*4];
+    const right=sourcePixels[(sy*w+Math.min(w-1,sx+1))*4];
+    const up=sourcePixels[(Math.max(0,sy-1)*w+sx)*4];
+    const down=sourcePixels[(Math.min(h-1,sy+1)*w+sx)*4];
+    const edge=Math.min(1,(Math.abs(right-left)+Math.abs(down-up))/150);
+    const scan=(y%4===0)?0.94:1;
+    const shadow=1-clamp(lum/255);
+    p[i]=clamp((rr*1.08+edge*34)*scan+lum*.025);
+    p[i+1]=clamp((gg*.94+shadow*13+edge*82)*scan);
+    p[i+2]=clamp((bb*1.10+edge*104+shadow*8)*scan);
+    p[i+3]=255;
+    continue;
+   }
    let r=(p[i]-128)*look.contrast+128;
    let g=(p[i+1]-128)*look.contrast+128;
    let b=(p[i+2]-128)*look.contrast+128;
@@ -1557,6 +1592,34 @@ function applyPhotoFilter(canvas,mode){
   }
  }
  ctx.putImageData(image,0,0);
+ if(mode==="touchdesigner"){
+  // Fine HUD-like geometry and soft neon traces, drawn identically in
+  // thumbnails, live preview and the captured photo.
+  ctx.save();
+  ctx.globalCompositeOperation="screen";
+  ctx.lineWidth=Math.max(1,w/360);
+  ctx.strokeStyle="rgba(76,235,211,.48)";
+  ctx.beginPath();
+  for(let gy=1;gy<6;gy++){
+   const yy=h*gy/6;
+   ctx.moveTo(w*.06,yy);ctx.lineTo(w*.94,yy);
+  }
+  for(let gx=1;gx<5;gx++){
+   const xx=w*gx/5;
+   ctx.moveTo(xx,h*.05);ctx.lineTo(xx,h*.95);
+  }
+  ctx.stroke();
+  ctx.strokeStyle="rgba(255,94,185,.72)";
+  ctx.lineWidth=Math.max(1.2,w/260);
+  const inset=w*.055,corner=w*.075;
+  ctx.beginPath();
+  ctx.moveTo(inset+corner,inset);ctx.lineTo(inset,inset);ctx.lineTo(inset,inset+corner);
+  ctx.moveTo(w-inset-corner,inset);ctx.lineTo(w-inset,inset);ctx.lineTo(w-inset,inset+corner);
+  ctx.moveTo(inset,h-inset-corner);ctx.lineTo(inset,h-inset);ctx.lineTo(inset+corner,h-inset);
+  ctx.moveTo(w-inset-corner,h-inset);ctx.lineTo(w-inset,h-inset);ctx.lineTo(w-inset,h-inset-corner);
+  ctx.stroke();
+  ctx.restore();
+ }
 }
 
 function renderFilterPreviews(){
