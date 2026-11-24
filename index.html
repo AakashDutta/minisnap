@@ -1040,7 +1040,7 @@ header{padding:12px 4px 22px;border-bottom:1px solid rgba(112,83,60,.19)}
 .camera-box{border-radius:26px;background:#dfd1c2;box-shadow:0 22px 50px rgba(65,45,30,.2)}
 /* Native camera: video only, no canvas repaint loop or filter processing. */
 #cameraScreen .camera-box{position:relative;overflow:hidden;isolation:isolate}
-#cameraScreen #video{display:block!important;position:absolute;inset:0;width:100%;height:100%;opacity:1!important;visibility:visible;object-fit:cover;pointer-events:none}
+#cameraScreen #video{display:block!important;position:absolute;inset:0;width:100%;height:100%;opacity:1!important;visibility:visible;object-fit:contain;pointer-events:none;background:#e8ded0}
 #cameraScreen #video{transform:none!important}
 #cameraScreen #livePreview{display:none!important}
 #cameraScreen .camera-placeholder{z-index:1}
@@ -1357,7 +1357,8 @@ async function startCamera(){
  video.style.width="100%";
  video.style.height="100%";
  video.style.transform="none";
- video.style.objectFit="cover";
+ video.style.objectFit="contain";
+ video.style.backgroundColor="#e8ded0";
 
  document.getElementById("placeholder").style.display="none";
  document.getElementById("status").textContent="● CAMERA READY";
@@ -1485,17 +1486,9 @@ function drawCameraFrame(source,targetCanvas,mirror=false){
  ctx.fillStyle="#e8ded0";
  ctx.fillRect(0,0,w,h);
 
- // A restrained blurred extension fills the frame edges without cutting off
- // the original portrait. Browsers without canvas filter support use the matte.
- if(typeof ctx.filter==="string"){
-  ctx.save();
-  ctx.filter="blur(22px) saturate(.72) brightness(.78)";
-  drawSourceFit(ctx,source,w,h,mirror,"cover",orientation);
-  ctx.restore();
-  ctx.fillStyle="rgba(247,239,227,.20)";
-  ctx.fillRect(0,0,w,h);
- }
- drawSourceFit(ctx,source,w,h,mirror,"contain",orientation);
+ // Fill the complete photo slot with a natural proportional crop.
+ // No blurred extension, letterboxing or stretching.
+ drawSourceFit(ctx,source,w,h,mirror,"cover",orientation);
 }
 
 // Live video stays in the browser's native camera orientation.
@@ -1665,9 +1658,10 @@ async function generateStrip(){
  ctx.fillStyle=t.accent;
  ctx.fillRect(245,226,230,3);
 
- const x=40;
+ // Align each photo with the inner edge of the strip border.
+ const x=20;
  const yStart=250;
- const frameW=640;
+ const frameW=680;
  const frameH=790;
  const gap=20;
 
