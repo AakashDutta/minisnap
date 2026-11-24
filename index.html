@@ -6,284 +6,265 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="theme-color" content="#eee4d5">
-<title>MINISNAP — Your moments, in four frames</title>
-<meta name="minisnap-build" content="2026-11-24-snap-studio-v2">
+<meta name="theme-color" content="#09090b">
+<title>MINISNAP — Studio Edition</title>
+<meta name="minisnap-build" content="2026-11-24-monolith-v4">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,500&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
- --bg: #efe6d9;
- --bg-deep: #e5d8c6;
- --paper: rgba(255, 251, 245, 0.9);
- --paper-solid: #fffbf5;
- --surface: #f7efe4;
- --ink: #33271e;
- --ink-soft: #5c4b3d;
- --muted: #827162;
- --accent: #b87356;
- --accent-dark: #744e3a;
- --accent-soft: #f0dfd1;
- --rose: #c77f8d;
- --line: rgba(114, 84, 60, 0.16);
- --line-strong: rgba(114, 84, 60, 0.28);
- --shadow-sm: 0 6px 18px rgba(62, 42, 26, 0.06);
- --shadow-md: 0 18px 44px rgba(62, 42, 26, 0.11);
- --shadow-lg: 0 26px 64px rgba(54, 35, 20, 0.17);
- --radius-lg: 24px;
- --radius-md: 16px;
- --radius-sm: 12px;
- --minisnap-watercolor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201200%201450%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22edge%22%20x%3D%22-18%25%22%20y%3D%22-18%25%22%20width%3D%22136%25%22%20height%3D%22136%25%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%22.009%20.014%22%20numOctaves%3D%223%22%20seed%3D%2221%22%20result%3D%22noise%22%2F%3E%3CfeDisplacementMap%20in%3D%22SourceGraphic%22%20in2%3D%22noise%22%20scale%3D%2266%22%20xChannelSelector%3D%22R%22%20yChannelSelector%3D%22G%22%20result%3D%22rough%22%2F%3E%3CfeGaussianBlur%20in%3D%22rough%22%20stdDeviation%3D%225%22%2F%3E%3C%2Ffilter%3E%3Cfilter%20id%3D%22soft%22%3E%3CfeGaussianBlur%20stdDeviation%3D%2224%22%2F%3E%3C%2Ffilter%3E%3CradialGradient%20id%3D%22sage%22%20cx%3D%2228%25%22%20cy%3D%2222%25%22%20r%3D%2276%25%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23607d78%22%20stop-opacity%3D%22.85%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%23859a8f%22%20stop-opacity%3D%22.65%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23aebbb0%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22sand%22%20cx%3D%2255%25%22%20cy%3D%2246%25%22%20r%3D%2270%25%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23e5b98e%22%20stop-opacity%3D%22.8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f1dfc8%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22clay%22%20cx%3D%2262%25%22%20cy%3D%2255%25%22%20r%3D%2270%25%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23b9624e%22%20stop-opacity%3D%22.78%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23dfab92%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22rose%22%20cx%3D%2245%25%22%20cy%3D%2255%25%22%20r%3D%2272%25%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23d39b91%22%20stop-opacity%3D%22.72%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f2d9c9%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3ClinearGradient%20id%3D%22paper%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23f5eee2%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%23fffaf1%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23f2e7d8%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%221200%22%20height%3D%221450%22%20fill%3D%22url(%23paper)%22%2F%3E%3Cg%20filter%3D%22url(%23edge)%22%3E%3Cpath%20d%3D%22M-90%20-30%20C120%20-95%20350%205%20430%20155%20C525%20330%20420%20455%20300%20525%20C165%20605%2070%20510%20-40%20565%20Z%22%20fill%3D%22url(%23sage)%22%2F%3E%3Cpath%20d%3D%22M730%20280%20C900%20185%201165%20260%201255%20460%20C1340%20650%201190%20790%201045%20835%20C880%20888%20730%20785%20665%20635%20C610%20505%20635%20365%20730%20280%20Z%22%20fill%3D%22url(%23sand)%22%2F%3E%3Cpath%20d%3D%22M-90%20895%20C45%20770%20245%20810%20335%20955%20C415%201085%20330%201260%20185%201320%20C65%201370%20-35%201280%20-100%201200%20Z%22%20fill%3D%22url(%23rose)%22%2F%3E%3Cpath%20d%3D%22M770%20780%20C945%20675%201190%20760%201270%20975%20C1350%201190%201200%201430%201000%201505%20C830%201565%20700%201410%20665%201235%20C635%201080%20650%20890%20770%20780%20Z%22%20fill%3D%22url(%23clay)%22%2F%3E%3C%2Fg%3E%3Cg%20opacity%3D%22.42%22%20filter%3D%22url(%23soft)%22%3E%3Cellipse%20cx%3D%22130%22%20cy%3D%22370%22%20rx%3D%22190%22%20ry%3D%22245%22%20fill%3D%22%23718a82%22%2F%3E%3Cellipse%20cx%3D%221070%22%20cy%3D%221120%22%20rx%3D%22175%22%20ry%3D%22245%22%20fill%3D%22%23a94f42%22%2F%3E%3Cellipse%20cx%3D%221020%22%20cy%3D%22560%22%20rx%3D%22155%22%20ry%3D%22185%22%20fill%3D%22%23d7a273%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+ --bg: #09090b;
+ --surface: #111114;
+ --surface-2: #18181c;
+ --surface-3: #222228;
+ --ink: #fafafa;
+ --ink-2: #a1a1aa;
+ --muted: #6e6e78;
+ --line: rgba(255, 255, 255, 0.09);
+ --line-strong: rgba(255, 255, 255, 0.18);
+ --accent: #ffffff;
+ --accent-ink: #09090b;
+ --rec: #ff3b30;
+ --ready: #32d74b;
+ --radius-xl: 22px;
+ --radius-lg: 16px;
+ --radius-md: 12px;
+ --radius-sm: 8px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
  background: var(--bg);
+ color-scheme: dark;
  -webkit-font-smoothing: antialiased;
  -moz-osx-font-smoothing: grayscale;
+ text-rendering: optimizeLegibility;
 }
 
 body {
  min-height: 100vh;
- color: var(--ink);
- font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
  background:
-  radial-gradient(ellipse at 12% 0%, rgba(198, 160, 121, 0.22) 0%, transparent 40%),
-  radial-gradient(ellipse at 90% 20%, rgba(185, 126, 114, 0.16) 0%, transparent 38%),
-  linear-gradient(160deg, #f6efe4 0%, #ede2d3 52%, #f4ece0 100%);
- padding: 20px 16px 56px;
+  radial-gradient(ellipse 80% 45% at 50% -10%, rgba(255, 255, 255, 0.055), transparent 65%),
+  var(--bg);
+ color: var(--ink);
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+ padding: 18px 16px 64px;
  overflow-x: hidden;
 }
 
 button, a, input { font: inherit; }
-button { cursor: pointer; }
-button:disabled { opacity: 0.42; cursor: not-allowed; transform: none !important; }
+button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
 button:focus-visible, a:focus-visible, input:focus-visible {
- outline: 3px solid rgba(184, 115, 86, 0.55);
+ outline: 2px solid #ffffff;
  outline-offset: 3px;
 }
 
 .app {
  max-width: 820px;
  margin: 0 auto;
- position: relative;
 }
 
-/* Header & Stepper */
+/* Header */
 header {
  display: flex;
  align-items: center;
  justify-content: space-between;
- gap: 12px;
- padding: 10px 4px 18px;
+ padding: 10px 2px 18px;
  border-bottom: 1px solid var(--line);
- position: relative;
- z-index: 5;
 }
 
 .logo {
- font-size: 23px;
- font-weight: 800;
- letter-spacing: 3px;
- color: var(--ink);
- display: flex;
+ display: inline-flex;
  align-items: center;
- gap: 8px;
+ gap: 10px;
+ font-family: 'Space Grotesk', sans-serif;
+ font-size: 18px;
+ font-weight: 700;
+ letter-spacing: 0.14em;
+ color: var(--ink);
 }
 
-.logo span { color: var(--accent); }
+.logo-mark {
+ width: 18px;
+ height: 18px;
+ border: 1.5px solid var(--ink);
+ border-radius: 4px;
+ display: grid;
+ place-items: center;
+}
+
+.logo-mark::after {
+ content: "";
+ width: 6px;
+ height: 6px;
+ border-radius: 50%;
+ background: var(--rec);
+}
+
+.logo span { color: var(--ink-2); font-weight: 500; }
 
 .header-tag {
- font-size: 9px;
- font-weight: 700;
- letter-spacing: 1.8px;
- color: var(--ink-soft);
- background: rgba(255, 251, 245, 0.78);
+ display: inline-flex;
+ align-items: center;
+ gap: 7px;
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 10px;
+ font-weight: 500;
+ letter-spacing: 0.1em;
+ color: var(--ink-2);
+ background: var(--surface);
  border: 1px solid var(--line);
  border-radius: 999px;
- padding: 8px 13px;
- backdrop-filter: blur(8px);
- white-space: nowrap;
+ padding: 6px 12px;
 }
 
+.header-dot {
+ width: 6px;
+ height: 6px;
+ border-radius: 50%;
+ background: var(--ready);
+ box-shadow: 0 0 8px rgba(50, 215, 75, 0.55);
+}
+
+/* Minimal Stepper */
 .stepper {
  display: flex;
  align-items: center;
  justify-content: center;
- gap: 8px;
- margin: 16px auto 4px;
- position: relative;
- z-index: 4;
+ gap: 6px;
+ margin: 18px auto 6px;
 }
 
 .stepper.hidden { display: none; }
 
 .step-pill {
- display: inline-flex;
- align-items: center;
- gap: 6px;
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 10px;
+ font-weight: 500;
+ letter-spacing: 0.08em;
+ text-transform: uppercase;
+ color: var(--muted);
  padding: 6px 12px;
  border-radius: 999px;
- font-size: 10px;
- font-weight: 700;
- letter-spacing: 1px;
- color: var(--muted);
- background: rgba(255, 251, 245, 0.56);
- border: 1px solid var(--line);
- transition: all 0.25s ease;
+ border: 1px solid transparent;
+ transition: all 0.22s ease;
 }
 
 .step-pill.active {
- color: #fffaf3;
- background: var(--accent-dark);
- border-color: var(--accent-dark);
- box-shadow: 0 6px 16px rgba(116, 78, 58, 0.2);
+ color: var(--accent-ink);
+ background: var(--accent);
+ font-weight: 600;
 }
 
 .step-pill.done {
- color: var(--accent-dark);
- background: var(--accent-soft);
- border-color: rgba(184, 115, 86, 0.3);
+ color: var(--ink);
+ border-color: var(--line-strong);
+ background: var(--surface-2);
 }
 
-/* Screens & Watercolor Backdrop */
-.screen {
- display: none;
- position: relative;
- isolation: isolate;
- padding-bottom: 12px;
-}
-
+/* Screens */
+.screen { display: none; }
 .screen.active {
  display: block;
- animation: screenEnter 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+ animation: enter 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.screen::before,
-.screen::after {
- content: "";
- position: fixed;
- inset: 0;
- pointer-events: none;
- z-index: -1;
-}
-
-.screen::before {
- background-image: var(--minisnap-watercolor);
- background-size: cover;
- background-position: center 45%;
- opacity: 0.42;
-}
-
-#home::before { opacity: 0.72; }
-
-.screen::after {
- background: radial-gradient(ellipse at 50% 42%, rgba(255, 251, 244, 0.42) 0%, transparent 72%);
-}
-
-@keyframes screenEnter {
- from { opacity: 0; transform: translateY(14px); }
+@keyframes enter {
+ from { opacity: 0; transform: translateY(10px); }
  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes floatFilm {
- 0%, 100% { transform: rotate(-6deg) translateY(0); }
- 50% { transform: rotate(-4deg) translateY(-7px); }
+@keyframes countPop {
+ 0% { opacity: 0; transform: scale(0.8); }
+ 30% { opacity: 1; transform: scale(1.04); }
+ 100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes flashPulse {
  0% { opacity: 0; }
- 15% { opacity: 0.95; }
+ 14% { opacity: 0.96; }
  100% { opacity: 0; }
 }
 
-@keyframes countPop {
- 0% { opacity: 0; transform: scale(0.75); }
- 25% { opacity: 1; transform: scale(1.04); }
- 100% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes spin {
- to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Typography */
 .eyebrow {
- display: inline-block;
- font-size: 10px;
- font-weight: 800;
- letter-spacing: 2.8px;
- color: var(--accent);
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 10.5px;
+ font-weight: 500;
+ letter-spacing: 0.16em;
  text-transform: uppercase;
- margin-bottom: 14px;
+ color: var(--ink-2);
+ margin-bottom: 12px;
 }
 
 h1 {
- font-family: 'Playfair Display', Georgia, serif;
+ font-family: 'Space Grotesk', sans-serif;
  font-weight: 600;
+ letter-spacing: -0.04em;
+ line-height: 1.02;
  color: var(--ink);
- letter-spacing: -0.025em;
- line-height: 1.08;
 }
 
 .subtitle {
- font-size: 14px;
- line-height: 1.8;
- color: var(--ink-soft);
+ font-size: 15px;
+ line-height: 1.65;
+ color: var(--ink-2);
  margin-top: 14px;
+ max-width: 440px;
 }
 
-/* Cards & Buttons */
+/* Surfaces & Buttons */
 .card, .result-card, .share-panel, .admin-panel, .guest-panel {
- background: var(--paper);
- border: 1px solid rgba(255, 255, 255, 0.88);
- border-radius: var(--radius-lg);
- box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.9);
- backdrop-filter: blur(16px);
- -webkit-backdrop-filter: blur(16px);
+ background: var(--surface);
+ border: 1px solid var(--line);
+ border-radius: var(--radius-xl);
 }
 
 .card {
- padding: clamp(20px, 3.2vw, 28px);
+ padding: clamp(18px, 3vw, 26px);
  margin: 20px 0;
 }
 
 .card-title {
+ font-family: 'JetBrains Mono', monospace;
  font-size: 10px;
- font-weight: 800;
- letter-spacing: 2.2px;
- color: var(--accent);
- margin-bottom: 10px;
+ font-weight: 600;
+ letter-spacing: 0.14em;
  text-transform: uppercase;
+ color: var(--ink-2);
+ margin-bottom: 8px;
 }
 
 .card-copy {
- font-size: 13.5px;
- line-height: 1.75;
- color: var(--ink-soft);
+ font-size: 14px;
+ line-height: 1.65;
+ color: var(--ink-2);
 }
 
 .primary {
  width: 100%;
  border: 0;
- border-radius: 15px;
- padding: 18px 22px;
- font-size: 11.5px;
- font-weight: 800;
- letter-spacing: 1.8px;
+ border-radius: var(--radius-md);
+ padding: 17px 22px;
+ font-family: 'Space Grotesk', sans-serif;
+ font-size: 13px;
+ font-weight: 700;
+ letter-spacing: 0.08em;
  text-transform: uppercase;
- color: #fffaf3;
- background: linear-gradient(135deg, #4b382a 0%, #7a5841 100%);
- box-shadow: 0 12px 26px rgba(75, 56, 42, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.18);
- transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+ color: var(--accent-ink);
+ background: var(--accent);
+ transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
 .primary:hover:not(:disabled) {
- transform: translateY(-2px);
- filter: brightness(1.08);
- box-shadow: 0 16px 32px rgba(75, 56, 42, 0.28);
+ background: #e4e4e7;
+ transform: translateY(-1px);
+ box-shadow: 0 10px 26px rgba(255, 255, 255, 0.12);
 }
 
 .primary:active:not(:disabled) { transform: scale(0.985); }
@@ -291,122 +272,103 @@ h1 {
 .secondary {
  width: 100%;
  border: 1px solid var(--line-strong);
- border-radius: 14px;
- padding: 14px 18px;
- font-size: 11px;
- font-weight: 700;
- letter-spacing: 1.2px;
+ border-radius: var(--radius-md);
+ padding: 14px 16px;
+ font-family: 'Space Grotesk', sans-serif;
+ font-size: 12px;
+ font-weight: 600;
+ letter-spacing: 0.07em;
  text-transform: uppercase;
  color: var(--ink);
- background: rgba(255, 251, 245, 0.88);
- transition: all 0.2s ease;
+ background: var(--surface-2);
+ transition: all 0.18s ease;
 }
 
 .secondary:hover:not(:disabled) {
- background: var(--accent-soft);
- border-color: rgba(184, 115, 86, 0.45);
- transform: translateY(-1px);
+ background: var(--surface-3);
+ border-color: rgba(255, 255, 255, 0.34);
 }
 
-.actions {
- display: grid;
- gap: 10px;
- margin-top: 16px;
-}
-
-.actions-row {
- display: grid;
- grid-template-columns: 1fr 1fr;
- gap: 10px;
-}
+.actions { display: grid; gap: 10px; margin-top: 14px; }
+.actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
 /* Home Screen */
-.intro {
- text-align: center;
- max-width: 600px;
- margin: 0 auto;
- padding: 48px 10px 24px;
+.home-hero {
+ padding: 48px 4px 18px;
+ display: grid;
+ gap: 28px;
 }
 
-.hero-filmstrip {
- width: 78px;
- height: 112px;
- margin: 0 auto 24px;
- padding: 8px 7px;
- display: flex;
- flex-direction: column;
+.viewfinder-emblem {
+ width: 92px;
+ height: 118px;
+ border: 1px solid var(--line-strong);
+ border-radius: 10px;
+ padding: 8px;
+ display: grid;
+ grid-template-rows: repeat(4, 1fr);
  gap: 5px;
- background: #fff4e4;
- border: 3px solid #fffaf1;
- border-radius: 6px;
- box-shadow: 0 16px 32px rgba(59, 41, 26, 0.2), 0 2px 6px rgba(59, 41, 26, 0.12);
+ background: var(--surface);
  position: relative;
- animation: floatFilm 4.2s ease-in-out infinite;
 }
 
-.hero-filmstrip::before,
-.hero-filmstrip::after {
- content: "";
+.viewfinder-emblem::before {
+ content: "REC";
  position: absolute;
- top: 7px;
- bottom: 7px;
- width: 4px;
- background: repeating-linear-gradient(to bottom, #6f4e37 0 5px, transparent 5px 11px);
- opacity: 0.7;
-}
-.hero-filmstrip::before { left: 1.5px; }
-.hero-filmstrip::after { right: 1.5px; }
-
-.hero-filmstrip span {
- flex: 1;
- border-radius: 2px;
- background: linear-gradient(135deg, #e79d7c, #5d6f74);
-}
-.hero-filmstrip span:nth-child(2) { background: linear-gradient(135deg, #4b5d69, #e4b68c); }
-.hero-filmstrip span:nth-child(3) { background: linear-gradient(135deg, #d79c94, #6b7d76); }
-.hero-filmstrip span:nth-child(4) { background: linear-gradient(135deg, #5d4a40, #df896b); }
-
-#home .eyebrow {
- padding: 7px 14px;
+ top: -9px;
+ right: 8px;
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 8px;
+ letter-spacing: 0.12em;
+ padding: 2px 6px;
  border-radius: 999px;
- background: rgba(255, 251, 245, 0.75);
- border: 1px solid var(--line);
- backdrop-filter: blur(6px);
+ background: var(--rec);
+ color: #fff;
+ font-weight: 600;
 }
 
-#home h1 {
- font-size: clamp(40px, 8vw, 60px);
- text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
+.viewfinder-emblem span {
+ border-radius: 3px;
+ background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.14));
+}
+
+.home-hero h1 {
+ font-size: clamp(42px, 8.5vw, 66px);
 }
 
 .home-specs {
  display: grid;
  grid-template-columns: repeat(3, 1fr);
- gap: 10px;
- margin-top: 16px;
- padding-top: 16px;
  border-top: 1px solid var(--line);
+ margin-top: 18px;
+ padding-top: 18px;
 }
 
 .spec-item {
- text-align: center;
+ padding: 0 10px;
+ border-right: 1px solid var(--line);
 }
+.spec-item:first-child { padding-left: 0; }
+.spec-item:last-child { border-right: 0; }
+
 .spec-item strong {
  display: block;
- font-size: 13px;
- font-weight: 800;
+ font-family: 'Space Grotesk', sans-serif;
+ font-size: 16px;
+ font-weight: 600;
  color: var(--ink);
 }
 .spec-item span {
+ font-family: 'JetBrains Mono', monospace;
  font-size: 10px;
  color: var(--muted);
- letter-spacing: 0.4px;
+ letter-spacing: 0.04em;
 }
 
 .note {
+ font-family: 'JetBrains Mono', monospace;
  font-size: 10px;
- font-weight: 600;
- letter-spacing: 1.6px;
+ letter-spacing: 0.14em;
  color: var(--muted);
  text-align: center;
  line-height: 1.8;
@@ -414,127 +376,111 @@ h1 {
 }
 
 /* Setup Screen */
-.section-heading {
- padding: 26px 4px 10px;
-}
-.section-heading h1 {
- font-size: clamp(32px, 6vw, 44px);
-}
+.section-heading { padding: 22px 2px 6px; }
+.section-heading h1 { font-size: clamp(30px, 6vw, 42px); }
 .section-heading p {
- font-size: 13.5px;
- color: var(--ink-soft);
+ font-size: 14px;
+ color: var(--ink-2);
  margin-top: 8px;
- line-height: 1.65;
+ line-height: 1.6;
 }
 
 .filter-intro {
  font-size: 12.5px;
  color: var(--muted);
- line-height: 1.6;
  margin-bottom: 16px;
+ line-height: 1.55;
 }
 
 .filter-options {
  display: grid;
  grid-template-columns: repeat(2, minmax(0, 1fr));
- gap: 12px;
- margin-bottom: 28px;
+ gap: 10px;
+ margin-bottom: 26px;
 }
 
 .filter-tile {
  position: relative;
  display: flex;
  align-items: center;
- gap: 13px;
+ gap: 12px;
  width: 100%;
  min-width: 0;
- padding: 10px;
+ padding: 9px;
  text-align: left;
  border: 1px solid var(--line);
- border-radius: var(--radius-md);
- background: linear-gradient(145deg, #fffdf9, #f6ece0);
+ border-radius: var(--radius-lg);
+ background: var(--surface-2);
  color: var(--ink);
- box-shadow: var(--shadow-sm);
- transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
- overflow: hidden;
+ transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
 }
 
 .filter-tile:hover {
- transform: translateY(-2px);
- border-color: rgba(184, 115, 86, 0.5);
- box-shadow: 0 12px 24px rgba(68, 46, 30, 0.1);
+ background: var(--surface-3);
+ border-color: var(--line-strong);
+ transform: translateY(-1px);
 }
 
 .filter-tile.selected {
- background: linear-gradient(135deg, #4b382a, #74513b);
- color: #fffaf2;
- border-color: var(--accent);
- box-shadow: 0 0 0 2px rgba(184, 115, 86, 0.25), 0 12px 26px rgba(75, 56, 42, 0.22);
+ background: var(--ink);
+ color: var(--accent-ink);
+ border-color: var(--ink);
+}
+
+.filter-tile.selected::after {
+ content: "";
+ position: absolute;
+ top: 10px;
+ right: 10px;
+ width: 7px;
+ height: 7px;
+ border-radius: 50%;
+ background: var(--accent-ink);
 }
 
 .filter-preview {
- flex: 0 0 68px;
- width: 68px;
- height: 74px;
- border-radius: 11px;
+ flex: 0 0 60px;
+ width: 60px;
+ height: 68px;
+ border-radius: 10px;
  object-fit: cover;
- background: #e5d8c8;
- border: 1px solid rgba(255, 255, 255, 0.72);
- box-shadow: 0 4px 12px rgba(40, 26, 16, 0.16);
+ background: var(--surface-3);
 }
 
-.filter-meta {
- min-width: 0;
- flex: 1;
-}
+.filter-meta { min-width: 0; flex: 1; padding-right: 10px; }
 
 .filter-badge {
  display: inline-block;
- font-size: 8px;
- font-weight: 800;
- letter-spacing: 1.1px;
- padding: 3px 7px;
- border-radius: 999px;
- background: rgba(184, 115, 86, 0.14);
- color: var(--accent-dark);
- margin-bottom: 5px;
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 8.5px;
+ font-weight: 500;
+ letter-spacing: 0.08em;
  text-transform: uppercase;
+ color: var(--ink-2);
+ margin-bottom: 4px;
 }
 
-.filter-tile.selected .filter-badge {
- background: rgba(255, 250, 242, 0.18);
- color: #ffeadb;
-}
+.filter-tile.selected .filter-badge { color: #52525b; }
 
 .filter-label {
  display: block;
- font-size: 13px;
- font-weight: 800;
- line-height: 1.25;
+ font-family: 'Space Grotesk', sans-serif;
+ font-size: 13.5px;
+ font-weight: 600;
+ line-height: 1.2;
 }
 
 .filter-label small {
  display: block;
  margin-top: 3px;
- font-size: 10.5px;
- font-weight: 500;
+ font-family: 'Inter', sans-serif;
+ font-size: 11px;
+ font-weight: 400;
  color: var(--muted);
- line-height: 1.35;
+ line-height: 1.3;
 }
 
-.filter-tile.selected .filter-label small {
- color: #e8d5c3;
-}
-
-.touchdesigner-tile {
- background: linear-gradient(135deg, #f2f4ee, #e5eeed);
-}
-
-.touchdesigner-tile.selected {
- background: linear-gradient(135deg, #21373a, #4d3852);
- border-color: #4bd6c3;
- box-shadow: 0 0 0 2px rgba(75, 214, 195, 0.25), 0 12px 26px rgba(33, 55, 58, 0.26);
-}
+.filter-tile.selected .filter-label small { color: #52525b; }
 
 .strip-heading {
  padding-top: 22px;
@@ -544,7 +490,7 @@ h1 {
 .strip-style-options {
  display: grid;
  grid-template-columns: repeat(3, minmax(0, 1fr));
- gap: 12px;
+ gap: 10px;
  margin-top: 12px;
 }
 
@@ -555,44 +501,46 @@ h1 {
  gap: 10px;
  padding: 14px 8px;
  border: 1px solid var(--line);
- border-radius: var(--radius-md);
- background: linear-gradient(145deg, #fffdf9, #f5ebdf);
+ border-radius: var(--radius-lg);
+ background: var(--surface-2);
  color: var(--ink);
- box-shadow: var(--shadow-sm);
- transition: all 0.2s ease;
+ transition: all 0.18s ease;
 }
 
 .strip-style:hover {
- transform: translateY(-2px);
- border-color: rgba(184, 115, 86, 0.45);
+ background: var(--surface-3);
+ border-color: var(--line-strong);
 }
 
 .strip-style.selected {
- background: #f3e4d4;
- border: 1.5px solid var(--accent);
- box-shadow: 0 0 0 2px rgba(184, 115, 86, 0.16), 0 12px 24px rgba(75, 56, 42, 0.12);
+ background: var(--ink);
+ color: var(--accent-ink);
+ border-color: var(--ink);
 }
 
 .strip-preview {
- width: 84px;
- height: 192px;
+ width: 76px;
+ height: 176px;
  display: flex;
  flex-direction: column;
  align-items: center;
  gap: 5px;
- padding: 9px 8px 8px;
+ padding: 8px 7px;
  border: 1px solid var(--preview-accent);
  background: var(--preview-bg);
  border-radius: 3px;
- box-shadow: 0 8px 18px rgba(45, 30, 18, 0.16);
+ box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+ transition: transform 0.2s ease;
 }
+
+.strip-style:hover .strip-preview { transform: translateY(-2px); }
 
 .strip-preview-blush { --preview-bg: #f8e9e9; --preview-ink: #493437; --preview-accent: #c77f8d; }
 .strip-preview-vanilla { --preview-bg: #f2eadd; --preview-ink: #504334; --preview-accent: #b39468; }
-.strip-preview-midnight { --preview-bg: #29252a; --preview-ink: #fff6f1; --preview-accent: #d5a2ac; }
+.strip-preview-midnight { --preview-bg: #1e1c21; --preview-ink: #fff6f1; --preview-accent: #8f7b83; }
 
 .strip-brand {
- font: 800 9px Georgia, serif;
+ font: 700 8px 'Space Grotesk', sans-serif;
  letter-spacing: 1.5px;
  color: var(--preview-ink);
  padding-bottom: 2px;
@@ -602,50 +550,60 @@ h1 {
  width: 100%;
  flex: 1;
  border: 1px solid var(--preview-accent);
- border-radius: 2px;
+ border-radius: 1.5px;
  opacity: 0.72;
 }
 
 .strip-footer {
- font: 600 5px Arial, sans-serif;
- letter-spacing: 0.8px;
+ font: 500 4.5px 'JetBrains Mono', monospace;
+ letter-spacing: 0.6px;
  color: var(--preview-ink);
  padding-top: 2px;
 }
 
 .strip-style-label {
- font-size: 12px;
- font-weight: 800;
+ font-family: 'Space Grotesk', sans-serif;
+ font-size: 12.5px;
+ font-weight: 600;
  text-align: center;
 }
 
 .strip-style-label small {
  display: block;
- margin-top: 3px;
- font-size: 9.5px;
- font-weight: 500;
+ margin-top: 2px;
+ font-family: 'Inter', sans-serif;
+ font-size: 10px;
+ font-weight: 400;
  color: var(--muted);
 }
 
-/* Camera Screen */
+.strip-style.selected .strip-style-label small { color: #52525b; }
+
+/* Camera Viewfinder */
 .camera-stage {
  max-width: 460px;
  margin: 14px auto 0;
 }
 
+.camera-bezel {
+ border-radius: var(--radius-xl);
+ border: 1px solid var(--line-strong);
+ background: #000;
+ padding: 4px;
+ box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75);
+}
+
 .camera-box {
  width: 100%;
- aspect-ratio: 4 / 5;
- border-radius: 26px;
- background: #221b17;
- border: 5px solid rgba(255, 251, 245, 0.94);
- box-shadow: var(--shadow-lg);
+ aspect-ratio: 3 / 4;
+ border-radius: 18px;
+ background: #0d0d0f;
  overflow: hidden;
  position: relative;
  isolation: isolate;
 }
 
-/* Native <video> rendering: upright, smooth 60fps, mirrored ONLY in selfie mode */
+/* Native <video>: upright, crisp, mirrored ONLY in selfie mode */
 #cameraScreen #video {
  position: absolute;
  inset: 0;
@@ -663,17 +621,16 @@ h1 {
  transform: scaleX(-1);
 }
 
-/* Live Snapchat-inspired CSS previews on the live video */
-.camera-box[data-look="none"] #video { filter: contrast(1.03) saturate(1.03); }
-.camera-box[data-look="paris"] #video { filter: brightness(1.07) contrast(0.95) saturate(1.08) sepia(0.08); }
-.camera-box[data-look="golden"] #video { filter: sepia(0.24) saturate(1.28) contrast(1.05) brightness(1.06); }
-.camera-box[data-look="y2k"] #video { filter: contrast(1.24) saturate(1.16) brightness(1.05); }
-.camera-box[data-look="rio"] #video { filter: saturate(1.34) contrast(1.14) hue-rotate(-6deg); }
-.camera-box[data-look="prism"] #video { filter: contrast(1.1) saturate(1.2) brightness(1.04); }
-.camera-box[data-look="noir"] #video { filter: grayscale(1) contrast(1.28) brightness(1.02); }
-.camera-box[data-look="cyber"] #video { filter: contrast(1.25) saturate(1.35) hue-rotate(10deg); }
+/* Live Snapchat-inspired CSS previews matching the 8 filters */
+.camera-box[data-look="none"] #video   { filter: contrast(1.04) saturate(1.04); }
+.camera-box[data-look="paris"] #video  { filter: brightness(1.08) contrast(0.95) saturate(1.06) sepia(0.06); }
+.camera-box[data-look="golden"] #video { filter: sepia(0.22) saturate(1.3) contrast(1.05) brightness(1.07); }
+.camera-box[data-look="y2k"] #video    { filter: contrast(1.24) saturate(1.16) brightness(1.04); }
+.camera-box[data-look="rio"] #video    { filter: saturate(1.36) contrast(1.14) hue-rotate(-7deg); }
+.camera-box[data-look="prism"] #video  { filter: contrast(1.12) saturate(1.22) brightness(1.05); }
+.camera-box[data-look="noir"] #video   { filter: grayscale(1) contrast(1.3) brightness(1.03); }
+.camera-box[data-look="cyber"] #video  { filter: contrast(1.26) saturate(1.38) hue-rotate(12deg); }
 
-/* Live look overlays (pure non-blocking CSS overlays on top of video) */
 .camera-look-overlay {
  position: absolute;
  inset: 0;
@@ -685,19 +642,19 @@ h1 {
 
 .camera-box[data-look="paris"] .camera-look-overlay {
  opacity: 1;
- background: radial-gradient(circle at 50% 45%, rgba(255, 224, 226, 0.22) 0%, transparent 72%);
+ background: radial-gradient(circle at 50% 42%, rgba(255, 224, 228, 0.24) 0%, transparent 72%);
  mix-blend-mode: screen;
 }
 
 .camera-box[data-look="golden"] .camera-look-overlay {
  opacity: 1;
- background: radial-gradient(circle at 86% 14%, rgba(255, 206, 118, 0.42) 0%, rgba(255, 165, 92, 0.14) 38%, transparent 70%);
+ background: radial-gradient(circle at 86% 14%, rgba(255, 210, 122, 0.45) 0%, rgba(255, 162, 88, 0.16) 40%, transparent 72%);
  mix-blend-mode: screen;
 }
 
 .camera-box[data-look="prism"] .camera-look-overlay {
  opacity: 1;
- background: linear-gradient(125deg, rgba(255, 90, 175, 0.2) 0%, rgba(110, 230, 255, 0.16) 45%, rgba(255, 220, 110, 0.18) 100%);
+ background: linear-gradient(125deg, rgba(255, 92, 178, 0.22) 0%, rgba(105, 232, 255, 0.16) 46%, rgba(255, 224, 118, 0.18) 100%);
  mix-blend-mode: screen;
 }
 
@@ -710,9 +667,9 @@ h1 {
 
 .camera-hud {
  position: absolute;
- top: 14px;
- left: 14px;
- right: 14px;
+ top: 12px;
+ left: 12px;
+ right: 12px;
  display: flex;
  justify-content: space-between;
  align-items: center;
@@ -722,16 +679,17 @@ h1 {
 }
 
 .hud-pill {
- font-size: 9px;
- font-weight: 800;
- letter-spacing: 1.2px;
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 9.5px;
+ font-weight: 500;
+ letter-spacing: 0.1em;
  text-transform: uppercase;
- color: #fffaf3;
- background: rgba(24, 18, 15, 0.56);
- border: 1px solid rgba(255, 255, 255, 0.24);
- padding: 6px 10px;
+ color: #fff;
+ background: rgba(9, 9, 11, 0.62);
+ border: 1px solid rgba(255, 255, 255, 0.16);
+ padding: 5px 10px;
  border-radius: 999px;
- backdrop-filter: blur(8px);
+ backdrop-filter: blur(10px);
 }
 
 .camera-placeholder {
@@ -744,19 +702,17 @@ h1 {
  justify-content: center;
  gap: 10px;
  text-align: center;
- color: #dfd4c7;
- background: #221b17;
+ color: var(--ink-2);
+ background: #0d0d0f;
  padding: 20px;
 }
 
-.camera-placeholder span { font-size: 38px; opacity: 0.85; }
-.camera-placeholder p { font-size: 12.5px; line-height: 1.6; }
+.camera-placeholder span { font-size: 30px; opacity: 0.7; }
+.camera-placeholder p { font-size: 12.5px; }
 
 .camera-overlay {
  position: absolute;
  inset: 14px;
- border: 1px solid rgba(255, 255, 255, 0.36);
- border-radius: 16px;
  pointer-events: none;
  z-index: 3;
 }
@@ -765,13 +721,13 @@ h1 {
 .camera-overlay::after {
  content: "";
  position: absolute;
- width: 18px;
- height: 18px;
- border-color: rgba(255, 255, 255, 0.9);
+ width: 16px;
+ height: 16px;
+ border-color: rgba(255, 255, 255, 0.55);
  border-style: solid;
 }
-.camera-overlay::before { top: -1px; left: -1px; border-width: 2.5px 0 0 2.5px; border-top-left-radius: 10px; }
-.camera-overlay::after { bottom: -1px; right: -1px; border-width: 0 2.5px 2.5px 0; border-bottom-right-radius: 10px; }
+.camera-overlay::before { top: 0; left: 0; border-width: 1.5px 0 0 1.5px; }
+.camera-overlay::after { bottom: 0; right: 0; border-width: 0 1.5px 1.5px 0; }
 
 #countdown {
  position: absolute;
@@ -780,15 +736,14 @@ h1 {
  display: none;
  align-items: center;
  justify-content: center;
- font-family: 'Playfair Display', serif;
- font-size: 104px;
+ font-family: 'Space Grotesk', sans-serif;
+ font-size: 112px;
  font-weight: 700;
  font-variant-numeric: tabular-nums;
  color: #fff;
- background: rgba(18, 14, 12, 0.28);
- text-shadow: 0 8px 34px rgba(0, 0, 0, 0.55);
+ background: rgba(9, 9, 11, 0.35);
  backdrop-filter: blur(2px);
- animation: countPop 0.35s ease;
+ animation: countPop 0.32s ease;
 }
 
 #flash {
@@ -799,99 +754,102 @@ h1 {
  opacity: 0;
  pointer-events: none;
 }
-#flash.fire { animation: flashPulse 0.42s ease-out; }
+#flash.fire { animation: flashPulse 0.4s ease-out; }
+
+.status-row {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ margin: 14px 2px 8px;
+}
 
 .status {
- text-align: center;
+ font-family: 'JetBrains Mono', monospace;
  font-size: 10px;
- font-weight: 700;
- letter-spacing: 1.6px;
- color: var(--muted);
- margin: 14px 0 8px;
+ letter-spacing: 0.1em;
+ color: var(--ink-2);
 }
 
 .progress {
- height: 6px;
- background: rgba(114, 84, 60, 0.14);
+ height: 3px;
+ background: var(--surface-3);
  border-radius: 999px;
  overflow: hidden;
- margin: 8px 0 6px;
+ margin-bottom: 12px;
 }
 
 #progressBar {
  height: 100%;
  width: 0;
- background: linear-gradient(90deg, var(--accent), #dda580);
- border-radius: 999px;
- transition: width 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+ background: #ffffff;
+ transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .preview-grid {
  display: grid;
  grid-template-columns: repeat(4, 1fr);
  gap: 8px;
- margin: 14px 0 6px;
+ margin: 12px 0 4px;
 }
 
 .preview-grid img {
  width: 100%;
- aspect-ratio: 4 / 5;
- object-fit: cover;
- border-radius: 10px;
- border: 2px solid rgba(255, 251, 245, 0.94);
- box-shadow: var(--shadow-sm);
- background: #e8ded0;
+ aspect-ratio: 3 / 4;
+ object-fit: contain;
+ border-radius: 8px;
+ border: 1px solid var(--line-strong);
+ background: #000;
 }
 
-/* Result & Guest & Admin Screens */
+/* Result & Guest & Admin */
 .result-heading {
- text-align: center;
- padding: 26px 4px 18px;
+ padding: 22px 2px 18px;
 }
-.result-heading h1 { font-size: clamp(32px, 6vw, 44px); }
-.result-heading p { font-size: 13.5px; color: var(--ink-soft); margin-top: 8px; }
+.result-heading h1 { font-size: clamp(30px, 6vw, 42px); }
+.result-heading p { font-size: 14px; color: var(--ink-2); margin-top: 8px; }
 
 .result-layout {
  display: grid;
  grid-template-columns: 1fr;
- gap: 18px;
+ gap: 16px;
  align-items: start;
 }
 
-.result-card, .share-panel, .admin-panel, .guest-panel {
- padding: 20px;
+.result-card, .share-panel, .admin-panel, .guest-panel { padding: 18px; }
+
+.result-card {
+ background: #141418;
+ display: grid;
+ place-items: center;
 }
 
 .result-image {
  display: block;
  width: 100%;
- max-width: 340px;
+ max-width: 320px;
  height: auto;
  margin: 0 auto;
- border-radius: 10px;
- box-shadow: 0 12px 30px rgba(45, 29, 17, 0.16);
- background: var(--accent-soft);
+ border-radius: 6px;
+ box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
 }
-
-.share-panel { margin-top: 0; }
 
 .qr-wrap {
  display: grid;
  place-items: center;
- min-height: 215px;
- background: #fff;
- border: 1px solid var(--line);
- border-radius: 16px;
+ min-height: 210px;
+ background: #ffffff;
+ border-radius: 14px;
  margin: 14px 0;
  padding: 14px;
 }
 
 #qrCode img, #qrCode canvas { max-width: 100%; height: auto !important; }
+#qrCode .small-copy { color: #52525b; }
 
 .small-copy {
- font-size: 12px;
- line-height: 1.65;
- color: var(--muted);
+ font-size: 12.5px;
+ line-height: 1.6;
+ color: var(--ink-2);
 }
 
 #shareStatus { min-height: 36px; }
@@ -899,15 +857,15 @@ h1 {
  display: flex;
  align-items: center;
  gap: 10px;
- color: var(--ink-soft);
+ color: var(--ink);
 }
 #shareStatus.uploading::before {
  content: "";
- width: 14px;
- height: 14px;
- flex: 0 0 14px;
- border: 2px solid var(--accent-soft);
- border-top-color: var(--accent);
+ width: 13px;
+ height: 13px;
+ flex: 0 0 13px;
+ border: 2px solid rgba(255, 255, 255, 0.2);
+ border-top-color: #ffffff;
  border-radius: 50%;
  animation: spin 0.8s linear infinite;
 }
@@ -915,9 +873,9 @@ h1 {
 .field {
  width: 100%;
  border: 1px solid var(--line-strong);
- background: #fffdf9;
+ background: var(--surface-2);
  color: var(--ink);
- border-radius: 12px;
+ border-radius: var(--radius-md);
  padding: 14px;
  font-size: 13.5px;
  margin: 8px 0 4px;
@@ -928,46 +886,46 @@ h1 {
  border-bottom: 1px solid var(--line);
  font-size: 12px;
  line-height: 1.7;
+ color: var(--ink-2);
 }
+.session-row strong { color: var(--ink); }
 .session-row:last-child { border-bottom: 0; }
 
 footer {
  text-align: center;
+ font-family: 'JetBrains Mono', monospace;
  color: var(--muted);
- font-size: 9px;
- font-weight: 600;
- letter-spacing: 2.5px;
- margin-top: 38px;
+ font-size: 9.5px;
+ letter-spacing: 0.16em;
+ margin-top: 42px;
 }
 
 .admin-link {
  background: none;
  border: 0;
  color: var(--muted);
- font-size: 8.5px;
- letter-spacing: 2px;
+ font-size: 9px;
+ letter-spacing: 0.16em;
  text-decoration: underline;
  margin-top: 10px;
- opacity: 0.75;
 }
-.admin-link:hover { opacity: 1; color: var(--ink); }
+.admin-link:hover { color: var(--ink); }
 
-/* Responsive */
-@media (min-width: 720px) {
+@media (min-width: 740px) {
  body { padding: 26px 24px 64px; }
- .result-layout { grid-template-columns: 320px 1fr; }
+ .result-layout { grid-template-columns: 340px 1fr; }
 }
 
 @media (max-width: 520px) {
- body { padding: 14px 12px 40px; }
- .logo { font-size: 20px; letter-spacing: 2.2px; }
- .header-tag { font-size: 8px; padding: 7px 10px; letter-spacing: 1.2px; }
- .filter-options { gap: 9px; }
+ body { padding: 14px 12px 44px; }
+ .logo { font-size: 16px; }
+ .header-tag { font-size: 9px; padding: 5px 10px; }
+ .filter-options { gap: 8px; }
  .filter-tile { padding: 8px; gap: 10px; }
- .filter-preview { flex-basis: 56px; width: 56px; height: 64px; }
- .filter-label { font-size: 11.5px; }
- .filter-label small { font-size: 9.5px; }
- .strip-preview { width: 70px; height: 162px; }
+ .filter-preview { flex-basis: 52px; width: 52px; height: 60px; }
+ .filter-label { font-size: 12px; }
+ .filter-label small { font-size: 10px; }
+ .strip-preview { width: 66px; height: 152px; }
  .actions-row { grid-template-columns: 1fr; }
 }
 
@@ -988,8 +946,11 @@ footer {
 <main class="app">
 
 <header>
- <div class="logo">MINI<span>SNAP</span></div>
- <div class="header-tag">BGKV EDITION &nbsp;·&nbsp; STUDIO</div>
+ <div class="logo">
+  <span class="logo-mark" aria-hidden="true"></span>
+  MINI<span>SNAP</span>
+ </div>
+ <div class="header-tag"><span class="header-dot" aria-hidden="true"></span>BGKV · STUDIO</div>
 </header>
 
 <nav class="stepper hidden" id="stepper" aria-label="Photobooth steps">
@@ -1000,53 +961,56 @@ footer {
 
 <!-- HOME -->
 <section class="screen active" id="home">
- <div class="intro">
-  <div class="hero-filmstrip" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-  <div class="eyebrow">BGKV SCHOOL PHOTOBOOTH</div>
-  <h1>Let's make<br>some memories.</h1>
-  <p class="subtitle">
-   Four frames. Your people. Your moment.<br>
-   Crafted into a keepsake strip in seconds.
-  </p>
+ <div class="home-hero">
+  <div class="viewfinder-emblem" aria-hidden="true">
+   <span></span><span></span><span></span><span></span>
+  </div>
+  <div>
+   <div class="eyebrow">BGKV SCHOOL PHOTOBOOTH</div>
+   <h1>Four frames.<br>Pure memory.</h1>
+   <p class="subtitle">
+    Step in, pick a lens, and capture four clean frames assembled into a keepsake strip—ready to scan in seconds.
+   </p>
+  </div>
  </div>
 
  <div class="card">
-  <div class="card-title">THE MINI PHOTO EXPERIENCE</div>
+  <div class="card-title">STUDIO OVERVIEW</div>
   <p class="card-copy">
-   Pick from eight Snapchat-inspired studio lenses, step into the live viewfinder, and let MiniSnap capture four crisp moments in one custom strip.
+   Select one of eight custom color lenses and a strip finish, pose with the 5-second viewfinder timer, and scan your private QR code to save directly to your phone.
   </p>
   <div class="home-specs">
-   <div class="spec-item"><strong>8 Lenses</strong><span>Snap-grade looks</span></div>
-   <div class="spec-item"><strong>4 Frames</strong><span>5-sec pose timer</span></div>
-   <div class="spec-item"><strong>Private QR</strong><span>Instant phone save</span></div>
+   <div class="spec-item"><strong>08</strong><span>SNAP LENSES</span></div>
+   <div class="spec-item"><strong>04</strong><span>FRAMES / STRIP</span></div>
+   <div class="spec-item"><strong>24H</strong><span>PRIVATE QR</span></div>
   </div>
  </div>
 
  <button class="primary" onclick="showScreen('setup')">
-  BEGIN YOUR SESSION &nbsp; →
+  START SESSION &nbsp; →
  </button>
 
- <p class="note">4 PHOTOS &nbsp;·&nbsp; 1 CUSTOM STRIP &nbsp;·&nbsp; A BGKV MEMORY</p>
+ <p class="note">BGKV EDITION · INSTANT DIGITAL STRIP</p>
 </section>
 
 <!-- SETUP -->
 <section class="screen" id="setup">
  <div class="section-heading">
-  <div class="eyebrow">01 / PERSONALISE</div>
-  <h1>Set your mood.</h1>
-  <p>Choose your camera lens and keepsake paper finish before stepping in.</p>
+  <div class="eyebrow">01 / CONFIGURE</div>
+  <h1>Pick your look.</h1>
+  <p>Select a camera lens and paper strip finish.</p>
  </div>
 
  <div class="card">
-  <div class="card-title">01 / PICK YOUR SNAP LENS</div>
-  <p class="filter-intro">Eight high-definition computational looks with live camera preview and studio color grading.</p>
+  <div class="card-title">01 / CAMERA LENS</div>
+  <p class="filter-intro">Real-time viewfinder grading paired with studio post-processing.</p>
 
   <div class="filter-options">
    <button class="filter-tile selected" data-filter="none" data-label="Studio Clean" aria-pressed="true">
     <canvas class="filter-preview" data-preview-filter="none" width="180" height="196" role="img" aria-label="Studio Clean filter preview"></canvas>
     <span class="filter-meta">
-     <span class="filter-badge">Clean</span>
-     <span class="filter-label">Studio Clean<small>Crisp skin &amp; true colour</small></span>
+     <span class="filter-badge">Natural</span>
+     <span class="filter-label">Studio Clean<small>Crisp skin &amp; clarity</small></span>
     </span>
    </button>
 
@@ -1054,7 +1018,7 @@ footer {
     <canvas class="filter-preview" data-preview-filter="paris" width="180" height="196" role="img" aria-label="Paris Glow filter preview"></canvas>
     <span class="filter-meta">
      <span class="filter-badge">Snap Glow</span>
-     <span class="filter-label">Paris Glow<small>Soft-focus radiant bloom</small></span>
+     <span class="filter-label">Paris Glow<small>Soft skin &amp; halo</small></span>
     </span>
    </button>
 
@@ -1062,124 +1026,127 @@ footer {
     <canvas class="filter-preview" data-preview-filter="golden" width="180" height="196" role="img" aria-label="Golden Hour filter preview"></canvas>
     <span class="filter-meta">
      <span class="filter-badge">Sunlit</span>
-     <span class="filter-label">Golden Hour<small>Warm flare &amp; amber haze</small></span>
+     <span class="filter-label">Golden Hour<small>Amber warmth &amp; flare</small></span>
     </span>
    </button>
 
    <button class="filter-tile" data-filter="y2k" data-label="Y2K Digicam" aria-pressed="false">
     <canvas class="filter-preview" data-preview-filter="y2k" width="180" height="196" role="img" aria-label="Y2K Digicam filter preview"></canvas>
     <span class="filter-meta">
-     <span class="filter-badge">Flash</span>
-     <span class="filter-label">Y2K Digicam<small>2000s flash pop &amp; grain</small></span>
+     <span class="filter-badge">Digicam</span>
+     <span class="filter-label">Y2K Digicam<small>Flash pop &amp; grain</small></span>
     </span>
    </button>
 
    <button class="filter-tile" data-filter="rio" data-label="Rio Sunset" aria-pressed="false">
     <canvas class="filter-preview" data-preview-filter="rio" width="180" height="196" role="img" aria-label="Rio Sunset filter preview"></canvas>
     <span class="filter-meta">
-     <span class="filter-badge">Vibrant</span>
-     <span class="filter-label">Rio Sunset<small>Coral highs &amp; teal lows</small></span>
+     <span class="filter-badge">Snap Pop</span>
+     <span class="filter-label">Rio Sunset<small>Coral &amp; teal grade</small></span>
     </span>
    </button>
 
-   <button class="filter-tile" data-filter="prism" data-label="Prism Aura" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="prism" width="180" height="196" role="img" aria-label="Prism Aura filter preview"></canvas>
+   <button class="filter-tile" data-filter="prism" data-label="Prism Dream" aria-pressed="false">
+    <canvas class="filter-preview" data-preview-filter="prism" width="180" height="196" role="img" aria-label="Prism Dream filter preview"></canvas>
     <span class="filter-meta">
      <span class="filter-badge">Prism</span>
-     <span class="filter-label">Prism Aura<small>RGB split &amp; rainbow leak</small></span>
+     <span class="filter-label">Prism Dream<small>RGB split &amp; leak</small></span>
     </span>
    </button>
 
-   <button class="filter-tile" data-filter="noir" data-label="Studio Noir" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="noir" width="180" height="196" role="img" aria-label="Studio Noir filter preview"></canvas>
+   <button class="filter-tile" data-filter="noir" data-label="Velvet Noir" aria-pressed="false">
+    <canvas class="filter-preview" data-preview-filter="noir" width="180" height="196" role="img" aria-label="Velvet Noir filter preview"></canvas>
     <span class="filter-meta">
      <span class="filter-badge">Mono</span>
-     <span class="filter-label">Studio Noir<small>Classic high-contrast B&amp;W</small></span>
+     <span class="filter-label">Velvet Noir<small>High-contrast B&amp;W</small></span>
     </span>
    </button>
 
-   <button class="filter-tile touchdesigner-tile" data-filter="cyber" data-label="Cyber Signal" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="cyber" width="180" height="196" role="img" aria-label="Cyber Signal filter preview"></canvas>
+   <button class="filter-tile" data-filter="cyber" data-label="Neon Signal" aria-pressed="false">
+    <canvas class="filter-preview" data-preview-filter="cyber" width="180" height="196" role="img" aria-label="Neon Signal filter preview"></canvas>
     <span class="filter-meta">
-     <span class="filter-badge">Neon AR</span>
-     <span class="filter-label">Cyber Signal<small>Neon edge &amp; scanline HUD</small></span>
+     <span class="filter-badge">AR Neon</span>
+     <span class="filter-label">Neon Signal<small>Edge glow &amp; HUD</small></span>
     </span>
    </button>
   </div>
 
-  <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
-  <p class="filter-intro">Your four captured frames will fill these bordered keepsake slots.</p>
+  <div class="card-title strip-heading">02 / STRIP FINISH</div>
+  <p class="filter-intro">Choose the border paper tone for your final 4-frame strip.</p>
   <div class="strip-style-options">
    <button class="strip-style selected" data-theme="pink" aria-pressed="true">
     <span class="strip-preview strip-preview-blush" aria-hidden="true">
      <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span>
     </span>
-    <span class="strip-style-label">Blush<small>Soft rose paper</small></span>
+    <span class="strip-style-label">Blush<small>Soft rose</small></span>
    </button>
 
    <button class="strip-style" data-theme="cream" aria-pressed="false">
     <span class="strip-preview strip-preview-vanilla" aria-hidden="true">
      <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span>
     </span>
-    <span class="strip-style-label">Vanilla<small>Warm archival</small></span>
+    <span class="strip-style-label">Vanilla<small>Warm paper</small></span>
    </button>
 
    <button class="strip-style" data-theme="dark" aria-pressed="false">
     <span class="strip-preview strip-preview-midnight" aria-hidden="true">
      <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span>
     </span>
-    <span class="strip-style-label">Midnight<small>Charcoal gallery</small></span>
+    <span class="strip-style-label">Midnight<small>Matte dark</small></span>
    </button>
   </div>
  </div>
 
- <button class="primary" onclick="openCamera()">CONTINUE TO CAMERA &nbsp; →</button>
+ <button class="primary" onclick="openCamera()">OPEN CAMERA &nbsp; →</button>
  <div style="margin-top:10px">
-  <button class="secondary" onclick="showScreen('home')">GO BACK</button>
+  <button class="secondary" onclick="showScreen('home')">BACK</button>
  </div>
 </section>
 
 <!-- CAMERA -->
 <section class="screen" id="cameraScreen">
  <div class="section-heading">
-  <div class="eyebrow">02 / THE PHOTO SESSION</div>
-  <h1>Look your best.</h1>
-  <p id="instruction">Find your pose. Your first picture is coming up.</p>
+  <div class="eyebrow">02 / VIEWFINDER</div>
+  <h1>Frame your shot.</h1>
+  <p id="instruction">Find your pose. First frame up next.</p>
  </div>
 
  <div class="camera-stage">
-  <div class="camera-box" id="cameraBox" data-look="none">
-   <video id="video" autoplay muted playsinline></video>
-   <div class="camera-look-overlay" aria-hidden="true"></div>
+  <div class="camera-bezel">
+   <div class="camera-box" id="cameraBox" data-look="none">
+    <video id="video" autoplay muted playsinline></video>
+    <div class="camera-look-overlay" aria-hidden="true"></div>
 
-   <div class="camera-hud">
-    <span class="hud-pill" id="hudFilterLabel">STUDIO CLEAN</span>
-    <span class="hud-pill" id="hudCameraLabel">SELFIE · MIRROR</span>
+    <div class="camera-hud">
+     <span class="hud-pill" id="hudFilterLabel">STUDIO CLEAN</span>
+     <span class="hud-pill" id="hudCameraLabel">SELFIE · MIRROR</span>
+    </div>
+
+    <div class="camera-placeholder" id="placeholder">
+     <span>◎</span>
+     <p>Requesting camera access...</p>
+    </div>
+
+    <div class="camera-overlay"></div>
+    <div id="countdown"></div>
+    <div id="flash"></div>
    </div>
-
-   <div class="camera-placeholder" id="placeholder">
-    <span>◎</span>
-    <p>Waiting for camera access...</p>
-   </div>
-
-   <div class="camera-overlay"></div>
-   <div id="countdown"></div>
-   <div id="flash"></div>
   </div>
 
-  <div class="status" id="status">CONNECTING TO CAMERA</div>
+  <div class="status-row">
+   <span class="status" id="status">CONNECTING</span>
+   <span class="status" id="captureCount">0 OF 4 PHOTOGRAPHS</span>
+  </div>
 
   <div class="progress">
    <div id="progressBar"></div>
   </div>
 
-  <p class="status" id="captureCount">0 OF 4 PHOTOGRAPHS</p>
-
   <div class="preview-grid" id="miniGrid" style="display:none"></div>
 
   <div class="actions">
    <button class="primary" id="captureBtn" onclick="startSession()" disabled>
-    START PHOTO SESSION
+    CAPTURE 4 FRAMES
    </button>
    <div class="actions-row">
     <button class="secondary" id="switchBtn" onclick="switchCamera()" disabled>
@@ -1194,9 +1161,9 @@ footer {
 <!-- RESULTS -->
 <section class="screen" id="resultScreen">
  <div class="result-heading">
-  <div class="eyebrow">03 / YOUR MEMORIES</div>
-  <h1>Made to remember.</h1>
-  <p>Your MiniSnap strip is ready to save and share.</p>
+  <div class="eyebrow">03 / KEEPSAKE</div>
+  <h1>Ready to keep.</h1>
+  <p>Download directly or generate a private QR code for mobile save.</p>
  </div>
 
  <div class="result-layout">
@@ -1205,72 +1172,75 @@ footer {
   </div>
 
   <div class="actions" style="margin-top:0">
-   <div class="card" style="margin:0; padding:20px">
-    <div class="card-title">SAVE OR ADJUST</div>
+   <div class="card" style="margin:0; padding:18px">
+    <div class="card-title">EXPORT &amp; ORIENTATION</div>
     <div class="actions" style="margin-top:10px">
-     <button class="primary" onclick="downloadStrip()">DOWNLOAD YOUR STRIP &nbsp; ↓</button>
-     <button class="secondary" onclick="shareStrip()" id="shareBtn">CREATE YOUR QR CODE &nbsp; ↗</button>
+     <button class="primary" onclick="downloadStrip()">DOWNLOAD STRIP &nbsp; ↓</button>
+     <button class="secondary" onclick="shareStrip()" id="shareBtn">CREATE QR CODE &nbsp; ↗</button>
      <div class="actions-row">
-      <button class="secondary" onclick="rotateStrip90()" id="rotateBtn">↻ ROTATE 90°</button>
-      <button class="secondary" onclick="retake()">↻ RETAKE</button>
+      <button class="secondary" onclick="rotateStrip(90)" id="rotateBtn">↻ ROTATE +90°</button>
+      <button class="secondary" onclick="rotateStrip(-90)" id="rotateBackBtn">↺ ROTATE -90°</button>
      </div>
-     <button class="secondary" onclick="goHome()">FINISH SESSION</button>
+     <div class="actions-row">
+      <button class="secondary" onclick="retake()">↻ RETAKE</button>
+      <button class="secondary" onclick="goHome()">DONE</button>
+     </div>
     </div>
    </div>
 
    <div class="share-panel" id="sharePanel">
-    <div class="card-title">YOUR PRIVATE PHOTO LINK</div>
-    <p class="small-copy" id="shareStatus">Create a unique QR code so the guest can scan it with their phone and download this strip.</p>
-    <div class="qr-wrap"><div id="qrCode"><span class="small-copy">Your QR code will appear here.</span></div></div>
-    <p class="small-copy" id="shareExpiry">Each link expires after 24 hours. Photos are stored privately.</p>
+    <div class="card-title">PRIVATE QR DELIVERY</div>
+    <p class="small-copy" id="shareStatus">Generate a private QR code so guests can scan and download onto their phone.</p>
+    <div class="qr-wrap"><div id="qrCode"><span class="small-copy">QR code appears here.</span></div></div>
+    <p class="small-copy" id="shareExpiry">Links expire automatically after 24 hours.</p>
     <div class="actions">
      <button class="secondary" id="copyLinkBtn" onclick="copyGuestLink()" disabled>COPY GUEST LINK</button>
-     <button class="secondary" onclick="shareStrip()" id="retryShareBtn">RETRY / CREATE QR</button>
+     <button class="secondary" onclick="shareStrip()" id="retryShareBtn">RETRY / NEW QR</button>
     </div>
    </div>
   </div>
  </div>
- <p class="note">THE PHOTO IS UPLOADED ONLY WHEN YOU CREATE ITS QR CODE.</p>
+ <p class="note">PHOTOS UPLOAD ONLY WHEN GENERATING A QR CODE</p>
 </section>
 
 <!-- GUEST -->
 <section class="screen" id="guestScreen">
  <div class="result-heading">
-  <div class="eyebrow">A LITTLE MEMORY, DELIVERED</div>
-  <h1>Your MiniSnap.</h1>
-  <p>Your photo strip is ready to save.</p>
+  <div class="eyebrow">MINISNAP DELIVERY</div>
+  <h1>Your strip.</h1>
+  <p>Save your high-resolution photo strip below.</p>
  </div>
  <div class="guest-panel">
   <img id="guestImage" class="result-image" alt="Your MiniSnap photo strip">
   <div class="actions">
-   <a id="guestDownload" class="primary" style="display:block;text-align:center;text-decoration:none" download="MiniSnap-Memory.jpg">DOWNLOAD YOUR STRIP &nbsp; ↓</a>
+   <a id="guestDownload" class="primary" style="display:block;text-align:center;text-decoration:none" download="MiniSnap-Memory.jpg">DOWNLOAD STRIP &nbsp; ↓</a>
    <button class="secondary" onclick="guestShare()">SHARE PHOTO</button>
   </div>
-  <p class="note" id="guestExpiry">This private link is valid for a limited time.</p>
+  <p class="note" id="guestExpiry">Private link expires soon.</p>
  </div>
 </section>
 
 <!-- ADMIN -->
 <section class="screen" id="adminScreen">
  <div class="section-heading">
-  <div class="eyebrow">MINISNAP CONTROL ROOM</div>
+  <div class="eyebrow">CONTROL ROOM</div>
   <h1>Session desk.</h1>
-  <p>Private admin access. Keep this screen away from guests.</p>
+  <p>Operator access only.</p>
  </div>
  <div class="admin-panel">
   <label class="small-copy" for="adminKey">ADMIN ACCESS KEY</label>
-  <input class="field" id="adminKey" type="password" autocomplete="off" placeholder="Enter your admin key">
+  <input class="field" id="adminKey" type="password" autocomplete="off" placeholder="Enter admin key">
   <div class="actions">
    <button class="primary" onclick="loadAdmin()">OPEN DASHBOARD</button>
    <button class="secondary" onclick="cleanupExpired()">DELETE EXPIRED PHOTOS</button>
   </div>
-  <p class="small-copy" id="adminStatus" style="margin-top:12px">Only the booth operator should use this panel.</p>
+  <p class="small-copy" id="adminStatus" style="margin-top:12px">Operator panel.</p>
   <div id="adminSessions"></div>
  </div>
  <button class="secondary" style="margin-top:12px" onclick="showScreen('home')">BACK TO BOOTH</button>
 </section>
 
-<footer>MADE WITH LOVE · MINISNAP<br><button class="admin-link" onclick="openAdmin()">ADMIN ACCESS</button></footer>
+<footer>MINISNAP STUDIO · BGKV<br><button class="admin-link" onclick="openAdmin()">ADMIN ACCESS</button></footer>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1357,7 +1327,7 @@ async function openCamera(){
  showScreen("cameraScreen");
  cameraBox.dataset.look=filter;
  document.getElementById("hudFilterLabel").textContent=filterLabel.toUpperCase();
- document.getElementById("status").textContent="REQUESTING CAMERA ACCESS";
+ document.getElementById("status").textContent="REQUESTING CAMERA";
  document.getElementById("captureBtn").disabled=true;
  document.getElementById("switchBtn").disabled=true;
 
@@ -1365,7 +1335,7 @@ async function openCamera(){
   await startCamera();
  }catch(e){
   console.error(e);
-  document.getElementById("status").textContent="CAMERA UNAVAILABLE — CHECK PERMISSIONS AND HTTPS";
+  document.getElementById("status").textContent="CAMERA UNAVAILABLE";
  }
 }
 
@@ -1387,8 +1357,7 @@ async function startCamera(){
  video.srcObject=stream;
  await video.play();
 
- // Normal phone camera behavior:
- // Selfie mode mirrors horizontally (scaleX(-1)); rear camera stays untouched.
+ // Selfie mirrors horizontally like a phone camera; rear camera stays untouched.
  const isSelfie=(facing==="user");
  video.classList.toggle("is-selfie",isSelfie);
  document.getElementById("hudCameraLabel").textContent=isSelfie?"SELFIE · MIRROR":"REAR CAMERA";
@@ -1404,7 +1373,7 @@ async function startCamera(){
  }
 
  document.getElementById("placeholder").style.display="none";
- document.getElementById("status").textContent="● CAMERA READY";
+ document.getElementById("status").textContent="● READY";
  document.getElementById("captureBtn").disabled=false;
  document.getElementById("switchBtn").disabled=false;
 }
@@ -1417,7 +1386,7 @@ async function switchCamera(){
   await startCamera();
  }catch(e){
   facing=previous;
-  document.getElementById("status").textContent="COULD NOT SWITCH CAMERA";
+  document.getElementById("status").textContent="SWITCH FAILED";
  }
 }
 
@@ -1446,7 +1415,7 @@ async function startSession(){
 
  try{
   for(let i=0;i<4;i++){
-   document.getElementById("instruction").textContent="Photograph "+(i+1)+" of 4. Find your pose!";
+   document.getElementById("instruction").textContent="Frame "+(i+1)+" of 4 — hold your pose.";
 
    for(let n=5;n>=1;n--){
     countdown.style.display="flex";
@@ -1466,7 +1435,7 @@ async function startSession(){
    document.getElementById("progressBar").style.width=(photos.length*25)+"%";
   }
 
-  document.getElementById("instruction").textContent="Developing your memories...";
+  document.getElementById("instruction").textContent="Rendering final strip...";
   await delay(300);
   await generateStrip();
 
@@ -1474,7 +1443,7 @@ async function startSession(){
   showScreen("resultScreen");
  }catch(e){
   console.error(e);
-  document.getElementById("status").textContent="CAPTURE ERROR. PLEASE TRY AGAIN.";
+  document.getElementById("status").textContent="CAPTURE ERROR";
   busy=false;
   btn.disabled=false;
   document.getElementById("switchBtn").disabled=false;
@@ -1484,24 +1453,28 @@ async function startSession(){
  busy=false;
 }
 
+// Preserves 100% of the centered frame at its true rotated aspect ratio — zero cropping or off-center drift.
 function renderCapturedFrame(rawCapture,extraDeg,look){
- const out=document.createElement("canvas");
- out.width=720;
- out.height=900;
- const ctx=out.getContext("2d",{willReadFrequently:true});
  const src=rawCapture.canvas;
- const deg=(rawCapture.baseRotate+extraDeg+360)%360;
+ const deg=(rawCapture.baseRotate+extraDeg+3600)%360;
  const quarterTurn=(deg===90||deg===270);
  const orientedW=quarterTurn?src.height:src.width;
  const orientedH=quarterTurn?src.width:src.height;
- const scale=Math.max(out.width/orientedW,out.height/orientedH);
- const drawW=src.width*scale;
- const drawH=src.height*scale;
 
- ctx.fillStyle="#e8ded0";
- ctx.fillRect(0,0,out.width,out.height);
+ const maxDim=1040;
+ const fitScale=maxDim/Math.max(orientedW,orientedH);
+ const outW=Math.max(1,Math.round(orientedW*fitScale));
+ const outH=Math.max(1,Math.round(orientedH*fitScale));
+ const drawW=src.width*fitScale;
+ const drawH=src.height*fitScale;
+
+ const out=document.createElement("canvas");
+ out.width=outW;
+ out.height=outH;
+ const ctx=out.getContext("2d",{willReadFrequently:true});
+
  ctx.save();
- ctx.translate(out.width/2,out.height/2);
+ ctx.translate(outW/2,outH/2);
  if(rawCapture.mirror)ctx.scale(-1,1);
  if(deg!==0)ctx.rotate((deg*Math.PI)/180);
  ctx.drawImage(src,-drawW/2,-drawH/2,drawW,drawH);
@@ -1514,15 +1487,28 @@ function renderCapturedFrame(rawCapture,extraDeg,look){
 function takePhoto(){
  const vw=video.videoWidth;
  const vh=video.videoHeight;
- const rawCanvas=document.createElement("canvas");
- rawCanvas.width=vw;
- rawCanvas.height=vh;
- rawCanvas.getContext("2d").drawImage(video,0,0,vw,vh);
 
- // When the user clicks a photo on a vertical phone/tablet whose raw video buffer
- // is landscape (vw > vh), flip 90 degrees after capture so the vertical photo is straight.
+ const boxRatio=3/4;
+ const videoRatio=vw/vh;
+ let sx=0, sy=0, sw=vw, sh=vh;
+
  const isPortraitScreen=window.innerHeight>=window.innerWidth;
  const baseRotate=(isPortraitScreen && vw>vh)?90:0;
+
+ if(baseRotate===0){
+  if(videoRatio>boxRatio){
+   sw=Math.round(vh*boxRatio);
+   sx=Math.round((vw-sw)/2);
+  }else if(videoRatio<boxRatio){
+   sh=Math.round(vw/boxRatio);
+   sy=Math.round((vh-sh)/2);
+  }
+ }
+
+ const rawCanvas=document.createElement("canvas");
+ rawCanvas.width=sw;
+ rawCanvas.height=sh;
+ rawCanvas.getContext("2d").drawImage(video,sx,sy,sw,sh,0,0,sw,sh);
 
  const rawCapture={
   canvas:rawCanvas,
@@ -1546,16 +1532,16 @@ function takePhoto(){
 
 function resetShareUI(){
  currentGuestLink="";
- document.getElementById("qrCode").innerHTML='<span class="small-copy">Your QR code will appear here.</span>';
+ document.getElementById("qrCode").innerHTML='<span class="small-copy">QR code appears here.</span>';
  document.getElementById("copyLinkBtn").disabled=true;
- document.getElementById("shareBtn").textContent="CREATE YOUR QR CODE \u00A0 ↗";
- document.getElementById("shareStatus").textContent="Create a unique QR code so the guest can scan it with their phone and download this strip.";
- document.getElementById("shareExpiry").textContent="Each link expires after 24 hours. Photos are stored privately.";
+ document.getElementById("shareBtn").textContent="CREATE QR CODE \u00A0 ↗";
+ document.getElementById("shareStatus").textContent="Generate a private QR code so guests can scan and download onto their phone.";
+ document.getElementById("shareExpiry").textContent="Links expire automatically after 24 hours.";
 }
 
-async function rotateStrip90(){
+async function rotateStrip(deltaDeg){
  if(!rawCaptures.length)return;
- extraRotation=(extraRotation+90)%360;
+ extraRotation=(extraRotation+deltaDeg+3600)%360;
  photos=rawCaptures.map(raw=>renderCapturedFrame(raw,extraRotation,filter));
  const gridImgs=document.getElementById("miniGrid").querySelectorAll("img");
  photos.forEach((src,i)=>{if(gridImgs[i])gridImgs[i].src=src;});
@@ -1563,8 +1549,8 @@ async function rotateStrip90(){
  resetShareUI();
 }
 
-// High-end Snapchat-inspired multi-stage computational photo filters.
-function applySoftBloom(canvas,strength,tintColor){
+// High-end Snapchat-inspired multi-stage computational photo filters
+function applySoftBloom(canvas,strength,tintColor,blendMode="screen"){
  const w=canvas.width,h=canvas.height;
  const small=document.createElement("canvas");
  small.width=Math.max(24,Math.round(w/14));
@@ -1576,7 +1562,7 @@ function applySoftBloom(canvas,strength,tintColor){
  const ctx=canvas.getContext("2d",{willReadFrequently:true});
  ctx.save();
  ctx.globalAlpha=strength;
- ctx.globalCompositeOperation="screen";
+ ctx.globalCompositeOperation=blendMode;
  ctx.imageSmoothingEnabled=true;
  ctx.drawImage(small,0,0,w,h);
  if(tintColor){
@@ -1592,7 +1578,8 @@ function applyPhotoFilter(canvas,mode){
  const w=canvas.width,h=canvas.height;
 
  if(mode==="paris"){
-  applySoftBloom(canvas,0.28,"rgba(255,212,216,0.22)");
+  applySoftBloom(canvas,0.22,"rgba(255,218,224,0.28)","soft-light");
+  applySoftBloom(canvas,0.18,null,"screen");
  }
 
  const image=ctx.getImageData(0,0,w,h);
@@ -1601,18 +1588,18 @@ function applyPhotoFilter(canvas,mode){
  const clamp=v=>v<0?0:v>255?255:v;
 
  const specs={
-  none:  {c:1.05, s:1.05, e:1.01, w:3,  sh:[2,1,-1],    hi:[3,1,0],    lift:0,  grain:0,   vig:0.04},
-  paris: {c:0.96, s:1.09, e:1.04, w:10, sh:[10,6,8],    hi:[12,6,4],   lift:10, grain:1.5, vig:0.08},
-  golden:{c:1.07, s:1.28, e:1.05, w:22, sh:[10,5,-8],   hi:[20,11,-12],lift:4,  grain:1.5, vig:0.12},
-  y2k:   {c:1.28, s:1.18, e:1.05, w:-2, sh:[-6,3,10],   hi:[14,10,4],  lift:0,  grain:5.5, vig:0.24},
-  rio:   {c:1.16, s:1.34, e:1.03, w:6,  sh:[-12,10,20], hi:[22,-3,10], lift:2,  grain:1.5, vig:0.14},
-  prism: {c:1.09, s:1.22, e:1.03, w:4,  sh:[4,0,10],    hi:[10,4,12],  lift:4,  grain:1.0, vig:0.10},
-  noir:  {c:1.34, s:0.00, e:1.03, w:0,  sh:[0,0,0],     hi:[0,0,0],    lift:2,  grain:4.0, vig:0.26},
-  cyber: {c:1.22, s:1.32, e:1.02, w:0,  sh:[-8,18,26],  hi:[14,-2,24], lift:0,  grain:0.8, vig:0.14}
+  none:  {c:1.05, s:1.06, e:1.01, w:3,  sh:[2,1,-1],     hi:[4,2,0],     lift:0,  vib:0.06, grain:0,   vig:0.05},
+  paris: {c:0.95, s:1.07, e:1.05, w:11, sh:[12,7,10],    hi:[14,7,6],    lift:11, vib:0.10, grain:1.2, vig:0.07},
+  golden:{c:1.08, s:1.24, e:1.05, w:24, sh:[12,5,-9],    hi:[24,13,-14], lift:5,  vib:0.16, grain:1.4, vig:0.11},
+  y2k:   {c:1.30, s:1.18, e:1.05, w:-3, sh:[-8,4,12],    hi:[16,11,4],   lift:0,  vib:0.12, grain:6.2, vig:0.28},
+  rio:   {c:1.14, s:1.24, e:1.03, w:7,  sh:[-14,12,22],  hi:[24,-2,12],  lift:3,  vib:0.28, grain:1.4, vig:0.13},
+  prism: {c:1.09, s:1.20, e:1.03, w:4,  sh:[5,0,12],     hi:[12,5,14],   lift:4,  vib:0.18, grain:1.0, vig:0.10},
+  noir:  {c:1.36, s:0.00, e:1.03, w:0,  sh:[0,0,0],      hi:[0,0,0],     lift:3,  vib:0.00, grain:4.2, vig:0.26},
+  cyber: {c:1.22, s:1.30, e:1.02, w:0,  sh:[-10,20,28],  hi:[16,-2,26],  lift:0,  vib:0.22, grain:0.8, vig:0.14}
  };
 
  const L=specs[mode]||specs.none;
- const maxShift=Math.max(2,Math.round(w*0.011));
+ const maxShift=Math.max(2,Math.round(w*0.012));
 
  for(let y=0;y<h;y++){
   const ny=(y/(h-1)-0.5)*2;
@@ -1624,7 +1611,7 @@ function applyPhotoFilter(canvas,mode){
    let r=src[i], g=src[i+1], b=src[i+2];
 
    if(mode==="prism"){
-    const shift=Math.round(Math.max(0,r2-0.12)*maxShift);
+    const shift=Math.round(Math.max(0,r2-0.1)*maxShift);
     if(shift>0){
      const rx=Math.min(w-1,x+shift);
      const bx=Math.max(0,x-shift);
@@ -1633,39 +1620,55 @@ function applyPhotoFilter(canvas,mode){
     }
    }
 
+   let flashBoost=1;
+   if(mode==="y2k"){
+    flashBoost=1.08-0.18*Math.min(1.4,r2);
+   }
+
    if(mode==="cyber"){
     const left=Math.max(0,x-1),right=Math.min(w-1,x+1);
     const up=Math.max(0,y-1),down=Math.min(h-1,y+1);
     const gx=Math.abs(src[(y*w+right)*4]-src[(y*w+left)*4]);
     const gy=Math.abs(src[(down*w+x)*4]-src[(up*w+x)*4]);
-    const edge=Math.min(1,(gx+gy)/160);
+    const edge=Math.min(1,(gx+gy)/150);
     const wave=Math.round(Math.sin(y*0.055+x*0.016)*2.5);
     const sx=Math.max(0,Math.min(w-1,x+wave));
-    r=src[(y*w+sx)*4]*0.9+edge*58;
-    g=g*0.82+edge*98;
-    b=b*1.12+edge*112;
+    r=src[(y*w+sx)*4]*0.88+edge*64;
+    g=g*0.8+edge*106;
+    b=b*1.14+edge*118;
     if((y%4)===0){r*=0.9;g*=0.92;b*=0.95;}
    }
 
    let lum=0.299*r+0.587*g+0.114*b;
    const sh=Math.pow(1-clamp(lum/255),1.45);
-   const hi=Math.pow(clamp((lum-70)/185),1.35);
+   const hi=Math.pow(clamp((lum-68)/187),1.35);
 
    r=(r-128)*L.c+128+L.lift;
    g=(g-128)*L.c+128+L.lift;
    b=(b-128)*L.c+128+L.lift;
 
+   if(L.vib>0){
+    const mx=Math.max(r,g,b), mn=Math.min(r,g,b);
+    const sat=mx>0?(mx-mn)/mx:0;
+    const vBoost=1+L.vib*(1-sat);
+    const avg=(r+g+b)/3;
+    r=avg+(r-avg)*vBoost;
+    g=avg+(g-avg)*vBoost;
+    b=avg+(b-avg)*vBoost;
+   }
+
    lum=0.299*r+0.587*g+0.114*b;
-   r=(lum+(r-lum)*L.s)*L.e+L.w+L.sh[0]*sh+L.hi[0]*hi;
-   g=(lum+(g-lum)*L.s)*L.e+L.w*0.24+L.sh[1]*sh+L.hi[1]*hi;
-   b=(lum+(b-lum)*L.s)*L.e-L.w*0.45+L.sh[2]*sh+L.hi[2]*hi;
+   r=(lum+(r-lum)*L.s)*L.e*flashBoost+L.w+L.sh[0]*sh+L.hi[0]*hi;
+   g=(lum+(g-lum)*L.s)*L.e*flashBoost+L.w*0.24+L.sh[1]*sh+L.hi[1]*hi;
+   b=(lum+(b-lum)*L.s)*L.e*flashBoost-L.w*0.46+L.sh[2]*sh+L.hi[2]*hi;
 
    if(mode==="noir"){
-    const mono=clamp((0.299*r+0.587*g+0.114*b-128)*1.12+130);
+    const bw=clamp(0.33*r+0.55*g+0.12*b);
+    const mono=clamp((bw-128)*1.12+130);
     r=g=b=mono;
    }
 
-   const shade=1-L.vig*Math.max(0,(r2-0.16)/1.55);
+   const shade=1-L.vig*Math.max(0,(r2-0.15)/1.55);
    let noise=0;
    if(L.grain>0){
     const hash=(Math.imul(x+1,73856093)^Math.imul(y+1,19349663))>>>0;
@@ -1683,9 +1686,9 @@ function applyPhotoFilter(canvas,mode){
  if(mode==="golden"){
   ctx.save();
   ctx.globalCompositeOperation="screen";
-  const flare=ctx.createRadialGradient(w*0.86,h*0.14,0,w*0.86,h*0.14,w*0.85);
-  flare.addColorStop(0,"rgba(255,220,136,0.44)");
-  flare.addColorStop(0.4,"rgba(255,168,94,0.16)");
+  const flare=ctx.createRadialGradient(w*0.86,h*0.14,0,w*0.86,h*0.14,w*0.9);
+  flare.addColorStop(0,"rgba(255,224,140,0.46)");
+  flare.addColorStop(0.35,"rgba(255,172,96,0.18)");
   flare.addColorStop(1,"rgba(255,140,80,0)");
   ctx.fillStyle=flare;
   ctx.fillRect(0,0,w,h);
@@ -1696,9 +1699,9 @@ function applyPhotoFilter(canvas,mode){
   ctx.save();
   ctx.globalCompositeOperation="screen";
   const leak=ctx.createLinearGradient(0,0,w,h);
-  leak.addColorStop(0,"rgba(255,95,180,0.22)");
-  leak.addColorStop(0.38,"rgba(110,235,255,0.14)");
-  leak.addColorStop(0.72,"rgba(255,225,115,0.14)");
+  leak.addColorStop(0,"rgba(255,95,180,0.24)");
+  leak.addColorStop(0.38,"rgba(110,235,255,0.16)");
+  leak.addColorStop(0.72,"rgba(255,225,115,0.15)");
   leak.addColorStop(1,"rgba(0,0,0,0)");
   ctx.fillStyle=leak;
   ctx.fillRect(0,0,w,h);
@@ -1730,19 +1733,19 @@ function drawFallbackPortrait(canvas){
  const ctx=canvas.getContext("2d");
  const w=canvas.width,h=canvas.height;
  const bg=ctx.createLinearGradient(0,0,w,h);
- bg.addColorStop(0,"#dfc5ae");
- bg.addColorStop(0.55,"#c4997d");
- bg.addColorStop(1,"#785c4e");
+ bg.addColorStop(0,"#3a3a44");
+ bg.addColorStop(0.55,"#26262e");
+ bg.addColorStop(1,"#16161b");
  ctx.fillStyle=bg;
  ctx.fillRect(0,0,w,h);
 
  const glow=ctx.createRadialGradient(w*0.35,h*0.28,4,w*0.45,h*0.35,w*0.7);
- glow.addColorStop(0,"rgba(255,244,225,0.6)");
- glow.addColorStop(1,"rgba(255,244,225,0)");
+ glow.addColorStop(0,"rgba(255,225,195,0.4)");
+ glow.addColorStop(1,"rgba(255,225,195,0)");
  ctx.fillStyle=glow;
  ctx.fillRect(0,0,w,h);
 
- ctx.fillStyle="#3c2b24";
+ ctx.fillStyle="#221d1b";
  ctx.beginPath();
  ctx.ellipse(w*0.5,h*0.44,w*0.26,h*0.3,0,0,Math.PI*2);
  ctx.fill();
@@ -1752,7 +1755,7 @@ function drawFallbackPortrait(canvas){
  ctx.ellipse(w*0.5,h*0.46,w*0.18,h*0.21,0,0,Math.PI*2);
  ctx.fill();
 
- ctx.fillStyle="#b87d63";
+ ctx.fillStyle="#8a6c5a";
  ctx.beginPath();
  ctx.ellipse(w*0.5,h*0.92,w*0.35,h*0.26,0,0,Math.PI*2);
  ctx.fill();
@@ -1810,12 +1813,28 @@ function roundedRect(ctx,x,y,w,h,r){
 
 async function generateStrip(){
  const t=themes[theme];
- const W=720,H=3700;
+ const loadedImgs=await Promise.all(photos.map(loadImage));
+
+ const W=720;
+ const x=20;
+ const frameW=680;
+ const yStart=250;
+ const gap=22;
+ const footerHeight=165;
+
+ const frameHeights=loadedImgs.map(img=>Math.round(frameW*(img.height/img.width)));
+ const totalPhotosH=frameHeights.reduce((sum,h)=>sum+h,0)+gap*(loadedImgs.length-1);
+ const H=yStart+totalPhotosH+footerHeight;
+
+ const maxCanvasH=4000;
+ const outScale=H>maxCanvasH?(maxCanvasH/H):1;
  const canvas=document.createElement("canvas");
- canvas.width=W;
- canvas.height=H;
+ canvas.width=Math.round(W*outScale);
+ canvas.height=Math.round(H*outScale);
 
  const ctx=canvas.getContext("2d");
+ if(outScale!==1)ctx.scale(outScale,outScale);
+
  ctx.fillStyle=t.bg;
  ctx.fillRect(0,0,W,H);
 
@@ -1842,35 +1861,29 @@ async function generateStrip(){
  ctx.fillStyle=t.accent;
  ctx.fillRect(245,226,230,3);
 
- const x=20;
- const yStart=250;
- const frameW=680;
- const frameH=790;
- const gap=20;
-
- for(let i=0;i<4;i++){
-  const img=await loadImage(photos[i]);
-  const y=yStart+i*(frameH+gap);
+ let curY=yStart;
+ for(let i=0;i<loadedImgs.length;i++){
+  const img=loadedImgs[i];
+  const fH=frameHeights[i];
 
   ctx.save();
-  roundedRect(ctx,x,y,frameW,frameH,7);
+  roundedRect(ctx,x,curY,frameW,fH,7);
   ctx.clip();
-  const scale=Math.max(frameW/img.width,frameH/img.height);
-  const drawW=img.width*scale;
-  const drawH=img.height*scale;
-  ctx.drawImage(img,x+(frameW-drawW)/2,y+(frameH-drawH)/2,drawW,drawH);
+  ctx.drawImage(img,x,curY,frameW,fH);
   ctx.restore();
 
   ctx.fillStyle="rgba(25,20,18,0.48)";
-  roundedRect(ctx,W-76,y+frameH-48,34,30,5);
+  roundedRect(ctx,W-76,curY+fH-48,34,30,5);
   ctx.fill();
   ctx.fillStyle="#ffffff";
   ctx.font="600 14px Arial";
   ctx.textAlign="center";
-  ctx.fillText("0"+(i+1),W-59,y+frameH-28);
+  ctx.fillText("0"+(i+1),W-59,curY+fH-28);
+
+  curY+=fH+gap;
  }
 
- const bottom=3555;
+ const bottom=curY+36;
  ctx.textAlign="center";
  ctx.fillStyle=t.ink;
 
@@ -1945,7 +1958,7 @@ async function shareStrip(){
   currentGuestLink=location.origin+location.pathname+"?guest="+encodeURIComponent(result.token);
   if(typeof QRCode==="undefined")throw new Error("QR generator did not load. Check internet and reload the booth page.");
   new QRCode(document.getElementById("qrCode"),{
-   text:currentGuestLink,width:190,height:190,colorDark:"#292a2d",colorLight:"#ffffff",
+   text:currentGuestLink,width:190,height:190,colorDark:"#09090b",colorLight:"#ffffff",
    correctLevel:QRCode.CorrectLevel.M
   });
   document.getElementById("copyLinkBtn").disabled=false;
