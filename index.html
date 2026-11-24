@@ -1351,16 +1351,15 @@ async function startCamera(){
  video.srcObject=stream;
  await video.play();
 
- // Use the browser's native camera preview: no rotation, mirroring,
- // canvas preview, or custom orientation handling.
- video.style.display="block";
- video.style.opacity="1";
- video.style.width="100%";
- video.style.height="100%";
- video.style.objectFit="cover";
- // Keep the live camera preview native and untouched.
- video.style.transform="none";
- video.style.transformOrigin="center center";
+ // The front-camera stream is mirrored on this device/browser.
+// Counter-flip the preview so it reads like a normal, non-mirrored camera.
+  video.style.display="block";
+  video.style.opacity="1";
+  video.style.width="100%";
+  video.style.height="100%";
+  video.style.objectFit="cover";
+  video.style.transform=facing==="user"?"scaleX(-1)":"none";
+  video.style.transformOrigin="center center";
 
  // Request true 0.5x only when this camera/browser explicitly supports it.
  // Many front cameras expose a minimum zoom of 1x, in which case leave native zoom.
@@ -1458,16 +1457,18 @@ async function startSession(){
  busy=false;
 }
 
-function getCameraOrientation(sourceW,sourceH){
- const portraitViewport=window.matchMedia
-  ?window.matchMedia("(orientation: portrait)").matches
-  :window.innerHeight>=window.innerWidth;
- const rotate=portraitViewport&&sourceW>sourceH;
- return {
-  rotate,
-  orientedW:rotate?sourceH:sourceW,
-  orientedH:rotate?sourceW:sourceH
- };
+function getCameraOrientation(sourceW,sourceH,targetW,targetH){
+  // Match the raw camera frame to the actual photo slot, not the browser
+  // viewport. iOS can show video upright while canvas drawing exposes
+  // landscape pixel dimensions.
+  const sourceIsLandscape=sourceW>sourceH;
+  const targetIsLandscape=targetW>targetH;
+  const rotate=sourceIsLandscape!==targetIsLandscape;
+  return {
+   rotate,
+   orientedW:rotate?sourceH:sourceW,
+   orientedH:rotate?sourceW:sourceH
+  };
 }
 
 // Draw without cropping. A soft, blurred edge-fill uses the same frame while
@@ -1494,7 +1495,7 @@ function drawCameraFrame(source,targetCanvas,mirror=false){
  const sourceW=source.videoWidth||source.naturalWidth||source.width;
  const sourceH=source.videoHeight||source.naturalHeight||source.height;
  if(!sourceW||!sourceH)return;
- const orientation=getCameraOrientation(sourceW,sourceH);
+ const orientation=getCameraOrientation(sourceW,sourceH,targetCanvas.width,targetCanvas.height);
  const w=targetCanvas.width,h=targetCanvas.height;
  ctx.clearRect(0,0,w,h);
  ctx.fillStyle="#e8ded0";
@@ -1522,9 +1523,9 @@ function takePhoto(){
  canvas.width=720;
  canvas.height=900;
 
- // Keep the complete phone portrait. Landscape sensor streams are rotated
- // automatically when the browser viewport is portrait.
- drawCameraFrame(video,canvas,false);
+ // Match the captured frame to the portrait photo slot. Apply the same
+  // front-camera counter-mirror as the corrected live preview.
+  drawCameraFrame(video,canvas,facing==="user");
  applyPhotoFilter(canvas,filter);
 
  const data=canvas.toDataURL("image/jpeg",.96);
