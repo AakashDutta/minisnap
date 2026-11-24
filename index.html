@@ -914,6 +914,86 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
  .screen:not(#home)::before,.screen:not(#home)::after{transition:none}
 }
 
+
+/* Professional look selector and consistent processed previews */
+#setup .filter-tile{
+ position:relative;
+ overflow:hidden;
+ isolation:isolate;
+ background:linear-gradient(145deg,#fffaf2 0%,#f4e9dc 100%);
+ border:1px solid rgba(135,103,77,.2);
+ box-shadow:inset 0 1px rgba(255,255,255,.82),0 3px 10px rgba(73,51,34,.035);
+ transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
+}
+#setup .filter-tile::after{
+ content:"";
+ position:absolute;
+ z-index:0;
+ inset:0;
+ pointer-events:none;
+ background:linear-gradient(112deg,transparent 18%,rgba(255,255,255,.48) 48%,transparent 76%);
+ opacity:0;
+ transform:translateX(-110%);
+ transition:transform .65s ease,opacity .25s ease;
+}
+#setup .filter-tile:hover{
+ transform:translateY(-2px);
+ border-color:rgba(166,119,82,.48);
+ box-shadow:inset 0 1px rgba(255,255,255,.9),0 9px 22px rgba(73,51,34,.09);
+}
+#setup .filter-tile:hover::after{opacity:1;transform:translateX(110%)}
+#setup .filter-tile.selected{
+ border:1.5px solid #986a4e;
+ background:linear-gradient(145deg,#805a42 0%,#654733 100%);
+ box-shadow:0 7px 18px rgba(93,62,42,.2),inset 0 1px rgba(255,255,255,.16);
+ transform:translateY(-1px);
+}
+#setup .filter-tile .filter-label{position:relative;z-index:1;letter-spacing:.1px}
+#setup .filter-tile .filter-label small{color:#867667;transition:color .2s ease}
+#setup .filter-tile.selected .filter-label,
+#setup .filter-tile.selected .filter-label small{color:#fff5e9}
+.filter-preview{
+ display:block;
+ flex:0 0 58px;
+ width:58px;
+ height:58px;
+ object-fit:cover;
+ border-radius:10px;
+ background:#e8ded0;
+ border:1px solid rgba(255,255,255,.78);
+ box-shadow:0 3px 9px rgba(55,40,29,.13);
+}
+#cameraScreen .camera-box{
+ position:relative;
+ overflow:hidden;
+ background:#e8ded0;
+}
+#cameraScreen #video{
+ position:absolute;
+ width:1px;
+ height:1px;
+ opacity:0!important;
+ pointer-events:none;
+}
+#cameraScreen #livePreview{
+ display:none;
+ position:absolute;
+ inset:0;
+ z-index:1;
+ width:100%;
+ height:100%;
+ object-fit:contain;
+}
+#cameraScreen .camera-placeholder{z-index:2}
+#cameraScreen .camera-overlay{z-index:3}
+#cameraScreen #countdown{z-index:4}
+#cameraScreen #flash{z-index:5}
+#cameraScreen .camera-box{box-shadow:0 20px 46px rgba(67,48,32,.2),0 0 0 5px rgba(251,246,237,.9)}
+#cameraScreen .status{color:#6f5c4d}
+@media(prefers-reduced-motion:reduce){
+ #setup .filter-tile,#setup .filter-tile::after{transition:none}
+}
+
 </style>
 </head>
 
@@ -963,12 +1043,12 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
   <div class="card-title filter-heading">01 / PICK YOUR PHOTO LOOK</div>
   <p class="filter-intro">Six carefully tuned looks, each with its own character. Choose one to preview it.</p>
   <div class="options filter-options">
-   <button class="option filter-tile selected" data-filter="none" aria-pressed="true"><img class="filter-preview preview-none" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=180&h=180&q=80" alt="Portrait shown with the Natural filter" loading="lazy"><span class="filter-label">Natural<small>True-to-life colour</small></span></button>
-   <button class="option filter-tile" data-filter="flash35" aria-pressed="false"><img class="filter-preview preview-flash35" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=180&h=180&q=80" alt="Same portrait shown with the 35mm Flash filter" loading="lazy"><span class="filter-label">35mm Flash<small>Bright analogue pop</small></span></button>
-   <button class="option filter-tile" data-filter="golden" aria-pressed="false"><img class="filter-preview preview-golden" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=180&h=180&q=80" alt="Same portrait shown with the Golden Hour filter" loading="lazy"><span class="filter-label">Golden Hour<small>Warm sunlit glow</small></span></button>
-   <button class="option filter-tile" data-filter="cool" aria-pressed="false"><img class="filter-preview preview-cool" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=180&h=180&q=80" alt="Same portrait shown with the Cool Blue filter" loading="lazy"><span class="filter-label">Cool Blue<small>Clean, crisp cool tones</small></span></button>
-   <button class="option filter-tile" data-filter="bw" aria-pressed="false"><img class="filter-preview preview-bw" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=180&h=180&q=80" alt="Same portrait shown in Black and White" loading="lazy"><span class="filter-label">Black &amp; White<small>Classic high contrast</small></span></button>
-   <button class="option filter-tile" data-filter="vintage" aria-pressed="false"><img class="filter-preview preview-vintage" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=180&h=180&q=80" alt="Same portrait shown with the Vintage Fade filter" loading="lazy"><span class="filter-label">Vintage Fade<small>Soft, nostalgic film</small></span></button>
+   <button class="option filter-tile selected" data-filter="none" aria-pressed="true"><canvas class="filter-preview" data-preview-filter="none" width="180" height="180" role="img" aria-label="Portrait shown with the Natural filter"></canvas><span class="filter-label">Natural<small>True-to-life colour</small></span></button>
+   <button class="option filter-tile" data-filter="flash35" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="flash35" width="180" height="180" role="img" aria-label="Same portrait shown with the 35mm Flash filter"></canvas><span class="filter-label">35mm Flash<small>Bright analogue pop</small></span></button>
+   <button class="option filter-tile" data-filter="golden" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="golden" width="180" height="180" role="img" aria-label="Same portrait shown with the Golden Hour filter"></canvas><span class="filter-label">Golden Hour<small>Warm sunlit glow</small></span></button>
+   <button class="option filter-tile" data-filter="cool" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="cool" width="180" height="180" role="img" aria-label="Same portrait shown with the Cool Blue filter"></canvas><span class="filter-label">Cool Blue<small>Clean, crisp cool tones</small></span></button>
+   <button class="option filter-tile" data-filter="bw" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="bw" width="180" height="180" role="img" aria-label="Same portrait shown in Black and White"></canvas><span class="filter-label">Black &amp; White<small>Classic high contrast</small></span></button>
+   <button class="option filter-tile" data-filter="vintage" aria-pressed="false"><canvas class="filter-preview" data-preview-filter="vintage" width="180" height="180" role="img" aria-label="Same portrait shown with the Vintage Fade filter"></canvas><span class="filter-label">Vintage Fade<small>Soft, nostalgic film</small></span></button>
   </div>
 
   <div class="card-title strip-heading">02 / CHOOSE YOUR STRIP STYLE</div>
@@ -1005,6 +1085,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
 
  <div class="camera-box">
   <video id="video" autoplay muted playsinline></video>
+  <canvas id="livePreview" aria-label="Live camera preview with selected filter"></canvas>
 
   <div class="camera-placeholder" id="placeholder">
    <span>◎</span>
@@ -1128,14 +1209,7 @@ let theme="pink";
 let busy=false;
 let stripData=null;
 
-const filters={
- none:"none",
- flash35:"contrast(1.22) saturate(1.16) sepia(.14) brightness(1.08)",
- golden:"sepia(.32) saturate(1.34) contrast(1.04) brightness(1.08)",
- cool:"saturate(.92) hue-rotate(12deg) contrast(1.08) brightness(1.03)",
- bw:"grayscale(1) contrast(1.18)",
- vintage:"sepia(.42) saturate(.78) contrast(.92) brightness(1.08)"
-};
+// All filter looks are rendered through applyPhotoFilter() for consistent previews and captures.
 
 const themes={
  pink:{bg:"#f8e9e9",ink:"#493437",accent:"#c77f8d"},
@@ -1160,7 +1234,6 @@ document.querySelectorAll("[data-filter]").forEach(btn=>{
   });
   btn.classList.add("selected");
   btn.setAttribute("aria-pressed","true");
-  video.style.filter=filters[filter]||"none";
  });
 });
 
@@ -1188,6 +1261,7 @@ async function openCamera(){
 }
 
 async function startCamera(){
+ stopLivePreview();
  if(!navigator.mediaDevices?.getUserMedia){
   throw new Error("Secure HTTPS connection required.");
  }
@@ -1201,8 +1275,9 @@ async function startCamera(){
   audio:false,
   video:{
    facingMode:{ideal:facing},
-   width:{ideal:1920},
-   height:{ideal:1080}
+   width:{ideal:1080},
+   height:{ideal:1920},
+   aspectRatio:{ideal:0.5625}
   }
  });
 
@@ -1210,11 +1285,11 @@ async function startCamera(){
  await video.play();
 
  // The preview and final front-camera image use the same orientation.
- video.classList.toggle("mirrored",facing==="user");
- video.style.filter=filters[filter];
  video.style.display="block";
+ video.style.opacity="0";
 
  document.getElementById("placeholder").style.display="none";
+ startLivePreview();
  document.getElementById("status").textContent="● CAMERA READY";
  document.getElementById("captureBtn").disabled=false;
  document.getElementById("switchBtn").disabled=false;
@@ -1298,50 +1373,104 @@ async function startSession(){
  busy=false;
 }
 
+function getCameraOrientation(sourceW,sourceH){
+ const portraitViewport=window.matchMedia
+  ?window.matchMedia("(orientation: portrait)").matches
+  :window.innerHeight>=window.innerWidth;
+ const rotate=portraitViewport&&sourceW>sourceH;
+ return {
+  rotate,
+  orientedW:rotate?sourceH:sourceW,
+  orientedH:rotate?sourceW:sourceH
+ };
+}
+
+// Draw without cropping. A soft, blurred edge-fill uses the same frame while
+// the complete sharp photograph is fitted over it.
+function drawSourceFit(ctx,source,targetW,targetH,mirror,fitMode,orientation){
+ const sourceW=source.videoWidth||source.naturalWidth||source.width;
+ const sourceH=source.videoHeight||source.naturalHeight||source.height;
+ if(!sourceW||!sourceH)return;
+ const fit=fitMode==="cover"
+  ?Math.max(targetW/orientation.orientedW,targetH/orientation.orientedH)
+  :Math.min(targetW/orientation.orientedW,targetH/orientation.orientedH);
+ const drawW=sourceW*fit;
+ const drawH=sourceH*fit;
+ ctx.save();
+ ctx.translate(targetW/2,targetH/2);
+ if(mirror)ctx.scale(-1,1);
+ if(orientation.rotate)ctx.rotate(Math.PI/2);
+ ctx.drawImage(source,-drawW/2,-drawH/2,drawW,drawH);
+ ctx.restore();
+}
+
+function drawCameraFrame(source,targetCanvas,mirror=false){
+ const ctx=targetCanvas.getContext("2d",{willReadFrequently:true});
+ const sourceW=source.videoWidth||source.naturalWidth||source.width;
+ const sourceH=source.videoHeight||source.naturalHeight||source.height;
+ if(!sourceW||!sourceH)return;
+ const orientation=getCameraOrientation(sourceW,sourceH);
+ const w=targetCanvas.width,h=targetCanvas.height;
+ ctx.clearRect(0,0,w,h);
+ ctx.fillStyle="#e8ded0";
+ ctx.fillRect(0,0,w,h);
+
+ // A restrained blurred extension fills the frame edges without cutting off
+ // the original portrait. Browsers without canvas filter support use the matte.
+ if(typeof ctx.filter==="string"){
+  ctx.save();
+  ctx.filter="blur(22px) saturate(.72) brightness(.78)";
+  drawSourceFit(ctx,source,w,h,mirror,"cover",orientation);
+  ctx.restore();
+  ctx.fillStyle="rgba(247,239,227,.20)";
+  ctx.fillRect(0,0,w,h);
+ }
+ drawSourceFit(ctx,source,w,h,mirror,"contain",orientation);
+}
+
+let livePreviewFrame=0;
+let lastLivePreviewPaint=0;
+
+function startLivePreview(){
+ const canvas=document.getElementById("livePreview");
+ if(!canvas)return;
+ stopLivePreview();
+ canvas.width=360;
+ canvas.height=450;
+ canvas.style.display="block";
+ const render=(timestamp)=>{
+  if(!stream)return;
+  if(video.readyState>=2&&timestamp-lastLivePreviewPaint>=100){
+   drawCameraFrame(video,canvas,facing==="user");
+   applyPhotoFilter(canvas,filter);
+   lastLivePreviewPaint=timestamp;
+  }
+  livePreviewFrame=requestAnimationFrame(render);
+ };
+ livePreviewFrame=requestAnimationFrame(render);
+}
+
+function stopLivePreview(){
+ if(livePreviewFrame){
+  cancelAnimationFrame(livePreviewFrame);
+  livePreviewFrame=0;
+ }
+ const canvas=document.getElementById("livePreview");
+ if(canvas)canvas.style.display="none";
+ lastLivePreviewPaint=0;
+}
+
 function takePhoto(){
  const canvas=document.createElement("canvas");
+ canvas.width=720;
+ canvas.height=900;
 
- // A portrait 4:5 photograph. Crop, never stretch.
- const targetW=720;
- const targetH=900;
- const targetRatio=targetW/targetH;
-
- const sourceW=video.videoWidth;
- const sourceH=video.videoHeight;
- const sourceRatio=sourceW/sourceH;
-
- let sx=0,sy=0,sw=sourceW,sh=sourceH;
-
- if(sourceRatio>targetRatio){
-  sw=sourceH*targetRatio;
-  sx=(sourceW-sw)/2;
- }else{
-  sh=sourceW/targetRatio;
-  sy=(sourceH-sh)/2;
- }
-
- canvas.width=targetW;
- canvas.height=targetH;
-
- const ctx=canvas.getContext("2d");
-
- // Match the mirrored front-camera preview in the final photograph.
- if(facing==="user"){
-  ctx.translate(targetW,0);
-  ctx.scale(-1,1);
- }
-
- // Do not rely on CanvasRenderingContext2D.filter here.
- // iPhone Safari has had incomplete support for canvas filters.
- ctx.drawImage(
-  video,
-  sx,sy,sw,sh,
-  0,0,targetW,targetH
- );
-
+ // Keep the complete phone portrait. Landscape sensor streams are rotated
+ // automatically when the browser viewport is portrait.
+ drawCameraFrame(video,canvas,facing==="user");
  applyPhotoFilter(canvas,filter);
 
- const data=canvas.toDataURL("image/jpeg",.94);
+ const data=canvas.toDataURL("image/jpeg",.96);
  photos.push(data);
 
  const img=document.createElement("img");
@@ -1354,73 +1483,116 @@ function takePhoto(){
  flash.classList.add("fire");
 }
 
-// Pixel-based photo looks are processed into the actual captured image.
-// This avoids relying on Safari's inconsistent canvas CSS-filter support.
+// Editorial film looks. This same pixel pipeline powers the live camera,
+// thumbnail previews and final captures, so the selected look stays consistent.
 function applyPhotoFilter(canvas,mode){
  if(!mode||mode==="none")return;
  const ctx=canvas.getContext("2d",{willReadFrequently:true});
  const w=canvas.width,h=canvas.height;
  const image=ctx.getImageData(0,0,w,h),p=image.data;
- const grain=mode==="flash35"?7:mode==="vintage"?4:0;
+ const profiles={
+  flash35:{contrast:1.15,saturation:1.10,exposure:1.035,warm:4,grain:2.1,vignette:.025,fade:0},
+  golden:{contrast:1.045,saturation:1.12,exposure:1.025,warm:15,grain:.45,vignette:.02,fade:0},
+  cool:{contrast:1.105,saturation:1.04,exposure:1.015,warm:-3,grain:.35,vignette:.015,fade:0},
+  bw:{contrast:1.22,saturation:0,exposure:1.025,warm:0,grain:1.25,vignette:.055,fade:0},
+  vintage:{contrast:.93,saturation:.76,exposure:1.025,warm:9,grain:2.8,vignette:.19,fade:13}
+ };
+ const look=profiles[mode];
+ if(!look)return;
+ const clamp=v=>Math.max(0,Math.min(255,v));
  for(let y=0;y<h;y++){
+  const ny=(y/(h-1)-.5)*2;
   for(let x=0;x<w;x++){
-   const i=(y*w+x)*4,r=p[i],g=p[i+1],b=p[i+2];
-   const lum=.299*r+.587*g+.114*b;
-   let nr=r,ng=g,nb=b;
-   switch(mode){
-    case "flash35":{
-     const c=(lum-118)*1.16+137;
-     nr=c+(r-lum)*1.12+17;ng=c+(g-lum)*1.02+8;nb=c+(b-lum)*.88-5;
-     break;
-    }
-    case "golden":{
-     const c=(lum-120)*.98+130;
-     nr=c+(r-lum)*.82+25;ng=c+(g-lum)*.72+12;nb=c+(b-lum)*.52-13;
-     break;
-    }
-    case "cool":{
-     nr=r*.91+2;ng=g*1.01+7;nb=b*1.13+17;
-     break;
-    }
-    case "bw":{
-     const v=Math.max(0,Math.min(255,(lum-128)*1.2+128));
-     nr=ng=nb=v;
-     break;
-    }
-    case "vintage":{
-     const c=(lum-120)*.88+151;
-     nr=c+(r-lum)*.66+17;ng=c+(g-lum)*.58+8;nb=c+(b-lum)*.42-5;
-     break;
-    }
+   const i=(y*w+x)*4;
+   let r=(p[i]-128)*look.contrast+128;
+   let g=(p[i+1]-128)*look.contrast+128;
+   let b=(p[i+2]-128)*look.contrast+128;
+   let lum=.2126*r+.7152*g+.0722*b;
+
+   r=lum+(r-lum)*look.saturation;
+   g=lum+(g-lum)*look.saturation;
+   b=lum+(b-lum)*look.saturation;
+
+   const highlight=clamp((lum-82)/173);
+   const shadow=clamp((145-lum)/145);
+   r=r*look.exposure+look.warm*(.34+highlight*.66);
+   g=g*look.exposure+look.warm*.17*highlight;
+   b=b*look.exposure-look.warm*(.22+highlight*.54);
+
+   if(mode==="flash35"){
+    r+=3+highlight*3;g+=1.5+highlight*1.2;b-=2.5;
+   }else if(mode==="golden"){
+    r+=highlight*8+shadow*1.5;
+    g+=highlight*3.5;
+    b-=highlight*5+shadow*1.5;
+   }else if(mode==="cool"){
+    r-=shadow*7;g+=shadow*1.5;b+=shadow*10+highlight*2;
+   }else if(mode==="bw"){
+    const mono=(.2126*r+.7152*g+.0722*b-128)*1.04+132;
+    r=mono;g=mono;b=mono;
+   }else if(mode==="vintage"){
+    r=r*(1-look.fade/255)+look.fade+2;
+    g=g*(1-look.fade/255)+look.fade-1;
+    b=b*(1-look.fade/255)+look.fade-4;
    }
-   if(grain){const n=(Math.random()-.5)*grain;nr+=n;ng+=n;nb+=n;}
-   if(mode==="vintage"){
-    const dx=(x-w/2)/(w/2),dy=(y-h/2)/(h/2);
-    const shade=1-Math.min(.22,Math.max(0,(dx*dx+dy*dy-.2)*.10));
-    nr*=shade;ng*=shade;nb*=shade;
+
+   if(look.vignette){
+    const nx=(x/(w-1)-.5)*2;
+    const edge=clamp((nx*nx+ny*ny-.22)/1.55);
+    const shade=1-look.vignette*edge;
+    r*=shade;g*=shade;b*=shade;
    }
-   p[i]=Math.max(0,Math.min(255,nr));
-   p[i+1]=Math.max(0,Math.min(255,ng));
-   p[i+2]=Math.max(0,Math.min(255,nb));
+
+   if(look.grain){
+    // A deterministic fine-grain pattern keeps thumbnail and capture results stable.
+    const hash=(Math.imul(x+1,73856093)^Math.imul(y+1,19349663))>>>0;
+    const noise=((hash&255)/255-.5)*look.grain;
+    r+=noise;g+=noise;b+=noise;
+   }
+
+   p[i]=clamp(r);p[i+1]=clamp(g);p[i+2]=clamp(b);
   }
  }
  ctx.putImageData(image,0,0);
- if(mode==="golden"||mode==="vintage"){
-  ctx.save();ctx.globalCompositeOperation="screen";
-  ctx.globalAlpha=mode==="golden"?.24:.08;
-  const glow=ctx.createRadialGradient(w*.72,h*.12,4,w*.72,h*.12,w*.82);
-  glow.addColorStop(0,mode==="golden"?"rgba(255,205,112,.9)":"rgba(255,232,196,.65)");
-  glow.addColorStop(1,"rgba(255,220,180,0)");
-  ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);ctx.restore();
- }
 }
+
+function renderFilterPreviews(){
+ const canvases=[...document.querySelectorAll("[data-preview-filter]")];
+ if(!canvases.length)return;
+ const source=new Image();
+ source.crossOrigin="anonymous";
+ source.onload=()=>{
+  canvases.forEach(canvas=>{
+   const ctx=canvas.getContext("2d",{willReadFrequently:true});
+   const w=canvas.width,h=canvas.height;
+   const scale=Math.max(w/source.naturalWidth,h/source.naturalHeight);
+   const sw=w/scale,sh=h/scale;
+   const sx=(source.naturalWidth-sw)/2,sy=(source.naturalHeight-sh)/2;
+   ctx.clearRect(0,0,w,h);
+   ctx.drawImage(source,sx,sy,sw,sh,0,0,w,h);
+   applyPhotoFilter(canvas,canvas.dataset.previewFilter);
+  });
+ };
+ source.onerror=()=>{
+  canvases.forEach(canvas=>{
+   const ctx=canvas.getContext("2d");
+   ctx.fillStyle="#e8ded0";ctx.fillRect(0,0,canvas.width,canvas.height);
+   ctx.fillStyle="#76523d";ctx.font="12px sans-serif";ctx.textAlign="center";
+   ctx.fillText("Preview",canvas.width/2,canvas.height/2);
+  });
+ };
+ source.src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=360&h=360&q=85";
+}
+
 function stopCamera(){
+ stopLivePreview();
  if(stream){
   stream.getTracks().forEach(t=>t.stop());
   stream=null;
  }
  video.srcObject=null;
  video.style.display="none";
+ video.style.opacity="0";
  document.getElementById("placeholder").style.display="flex";
 }
 
@@ -1531,7 +1703,7 @@ async function generateStrip(){
  ctx.fillText("BGKV × MINISNAP",360,bottom+73);
 
  // A slightly lighter JPEG keeps uploads quick on busy school mobile networks.
- stripData=canvas.toDataURL("image/jpeg",.88);
+ stripData=canvas.toDataURL("image/jpeg",.93);
  document.getElementById("resultImage").src=stripData;
 }
 
@@ -1724,6 +1896,7 @@ document.addEventListener("visibilitychange",()=>{
 window.addEventListener("pagehide",stopCamera);
 const guestToken=new URLSearchParams(location.search).get("guest");
 if(guestToken){openGuest(guestToken);}
+renderFilterPreviews();
 </script>
 
 </body>
