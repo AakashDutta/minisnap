@@ -1321,37 +1321,6 @@ async function openCamera(){
  }
 }
 
-function syncVideoOrientation(){
- const box=document.querySelector("#cameraScreen .camera-box");
- if(!box||!video.videoWidth||!video.videoHeight)return;
- const portrait=window.innerHeight>=window.innerWidth;
- const rotate=portrait&&video.videoWidth>video.videoHeight;
- if(rotate){
-  const rect=box.getBoundingClientRect();
-  video.style.position="absolute";
-  video.style.width=rect.height+"px";
-  video.style.height=rect.width+"px";
-  video.style.left="50%";
-  video.style.top="50%";
-  video.style.right="auto";
-  video.style.bottom="auto";
-  video.style.inset="auto";
-  video.style.objectFit="cover";
-  video.style.setProperty("transform","translate(-50%,-50%) rotate(90deg)","important");
- }else{
-  video.style.position="absolute";
-  video.style.inset="0";
-  video.style.left="0";
-  video.style.top="0";
-  video.style.right="0";
-  video.style.bottom="0";
-  video.style.width="100%";
-  video.style.height="100%";
-  video.style.objectFit="contain";
-  video.style.setProperty("transform","none","important");
- }
-}
-
 async function startCamera(){
  stopLivePreview();
  if(!navigator.mediaDevices?.getUserMedia){
@@ -1375,12 +1344,20 @@ async function startCamera(){
  video.srcObject=stream;
  await video.play();
 
- // iOS can expose a landscape sensor frame while the phone is held
- // upright. Rotate that frame clockwise and swap its display dimensions.
+ // Keep the live session completely native, like a normal camera.
+ // Orientation correction is applied only to the captured canvas in takePhoto().
  video.style.display="block";
  video.style.opacity="1";
+ video.style.inset="0";
+ video.style.left="0";
+ video.style.top="0";
+ video.style.right="0";
+ video.style.bottom="0";
+ video.style.width="100%";
+ video.style.height="100%";
+ video.style.setProperty("transform","none","important");
+ video.style.objectFit="contain";
  video.style.backgroundColor="#e8ded0";
- syncVideoOrientation();
 
  document.getElementById("placeholder").style.display="none";
  document.getElementById("status").textContent="● CAMERA READY";
@@ -1518,9 +1495,6 @@ function startLivePreview(){
  const canvas=document.getElementById("livePreview");
  if(canvas)canvas.style.display="none";
 }
-window.addEventListener("resize",syncVideoOrientation);
-window.addEventListener("orientationchange",()=>setTimeout(syncVideoOrientation,120));
-
 function stopLivePreview(){
  const canvas=document.getElementById("livePreview");
  if(canvas)canvas.style.display="none";
