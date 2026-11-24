@@ -1326,9 +1326,8 @@ function fitLiveVideo(){
  if(!box||!video.videoWidth||!video.videoHeight)return;
  const portrait=window.innerHeight>=window.innerWidth;
  const sideways=portrait&&video.videoWidth>video.videoHeight;
- // The iPhone selfie stream is arriving upside down in this booth.
- // Correct the live display only; captured-photo orientation stays separate.
- const selfieFlip=facing==="user"?" rotate(180deg)":"";
+ // Keep the live preview in the browser-native camera orientation.
+ // Rotation belongs to captured-photo processing, not the live video element.
  if(sideways){
   const rect=box.getBoundingClientRect();
   video.style.position="absolute";
@@ -1340,7 +1339,7 @@ function fitLiveVideo(){
   video.style.bottom="auto";
   video.style.inset="auto";
   video.style.objectFit="cover";
-  video.style.setProperty("transform","translate(-50%,-50%) rotate(90deg)"+selfieFlip,"important");
+  video.style.setProperty("transform","translate(-50%,-50%) rotate(90deg)","important");
  }else{
   video.style.position="absolute";
   video.style.inset="0";
@@ -1351,7 +1350,7 @@ function fitLiveVideo(){
   video.style.width="100%";
   video.style.height="100%";
   video.style.objectFit="contain";
-  video.style.setProperty("transform",selfieFlip.trim()||"none","important");
+  video.style.setProperty("transform","none","important");
  }
 }
 
