@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#eee4d5">
 <title>MINISNAP — Your moments, in four frames</title>
-<meta name="minisnap-build" content="2026-11-23-beige-ui-1">
+<meta name="minisnap-build" content="2026-11-24-pro-photo-effects-1">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
@@ -880,7 +880,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
 #setup .strip-style{
  background-color:rgba(248,240,229,.97);
 }
-#setup .filter-tile.selected{
+#setup .filter-options .filter-tile.selected{
  background-color:#76523d;
 }
 #setup .strip-style.selected{
@@ -916,7 +916,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
 
 
 /* Professional look selector and consistent processed previews */
-#setup .filter-tile{
+#setup .filter-options .filter-tile{
  position:relative;
  overflow:hidden;
  isolation:isolate;
@@ -925,7 +925,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
  box-shadow:inset 0 1px rgba(255,255,255,.82),0 3px 10px rgba(73,51,34,.035);
  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease;
 }
-#setup .filter-tile::after{
+#setup .filter-options .filter-tile::after{
  content:"";
  position:absolute;
  z-index:0;
@@ -936,22 +936,22 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
  transform:translateX(-110%);
  transition:transform .65s ease,opacity .25s ease;
 }
-#setup .filter-tile:hover{
+#setup .filter-options .filter-tile:hover{
  transform:translateY(-2px);
  border-color:rgba(166,119,82,.48);
  box-shadow:inset 0 1px rgba(255,255,255,.9),0 9px 22px rgba(73,51,34,.09);
 }
-#setup .filter-tile:hover::after{opacity:1;transform:translateX(110%)}
+#setup .filter-options .filter-tile:hover::after{opacity:1;transform:translateX(110%)}
 #setup .filter-tile.selected{
  border:1.5px solid #986a4e;
  background:linear-gradient(145deg,#805a42 0%,#654733 100%);
  box-shadow:0 7px 18px rgba(93,62,42,.2),inset 0 1px rgba(255,255,255,.16);
  transform:translateY(-1px);
 }
-#setup .filter-tile .filter-label{position:relative;z-index:1;letter-spacing:.1px}
-#setup .filter-tile .filter-label small{color:#867667;transition:color .2s ease}
-#setup .filter-tile.selected .filter-label,
-#setup .filter-tile.selected .filter-label small{color:#fff5e9}
+#setup .filter-options .filter-tile .filter-label{position:relative;z-index:1;letter-spacing:.1px}
+#setup .filter-options .filter-tile .filter-label small{color:#867667;transition:color .2s ease}
+#setup .filter-options .filter-tile.selected .filter-label,
+#setup .filter-options .filter-tile.selected .filter-label small{color:#fff5e9}
 .filter-preview{
  display:block;
  flex:0 0 58px;
@@ -991,7 +991,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline-color:#b87958}
 #cameraScreen .camera-box{box-shadow:0 20px 46px rgba(67,48,32,.2),0 0 0 5px rgba(251,246,237,.9)}
 #cameraScreen .status{color:#6f5c4d}
 @media(prefers-reduced-motion:reduce){
- #setup .filter-tile,#setup .filter-tile::after{transition:none}
+ #setup .filter-options .filter-tile,#setup .filter-options .filter-tile::after{transition:none}
 }
 
 </style>
