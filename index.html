@@ -1345,11 +1345,19 @@ async function startCamera(){
  video.srcObject=stream;
  await video.play();
 
- // Keep the live preview native and GPU-composited. Some iPhones expose
- // a landscape sensor stream even while the phone is held vertically.
+ // Let iOS/browser handle camera sensor orientation natively.
+ // Only mirror the front camera; never rotate the live video ourselves.
  video.style.display="block";
  video.style.opacity="1";
- syncCameraPreviewOrientation();
+ video.style.inset="0";
+ video.style.left="0";
+ video.style.top="0";
+ video.style.right="0";
+ video.style.bottom="0";
+ video.style.width="100%";
+ video.style.height="100%";
+ video.style.transform=facing==="user"?"scaleX(-1)":"none";
+ video.style.objectFit="cover";
 
  document.getElementById("placeholder").style.display="none";
  document.getElementById("status").textContent="● CAMERA READY";
@@ -1490,38 +1498,7 @@ function drawCameraFrame(source,targetCanvas,mirror=false){
  drawSourceFit(ctx,source,w,h,mirror,"contain",orientation);
 }
 
-function syncCameraPreviewOrientation(){
- const box=video.closest(".camera-box");
- if(!box||!video.videoWidth||!video.videoHeight)return;
- const rect=box.getBoundingClientRect();
- const orientation=getCameraOrientation(video.videoWidth,video.videoHeight);
- if(orientation.rotate){
-  // Rotate the video element itself, not a continuously repainted canvas.
-  // Swapping its dimensions before rotation preserves the portrait viewport.
-  video.style.inset="auto";
-  video.style.left="50%";
-  video.style.top="50%";
-  video.style.right="auto";
-  video.style.bottom="auto";
-  video.style.width=rect.height+"px";
-  video.style.height=rect.width+"px";
-  video.style.transform="translate(-50%,-50%) rotate(90deg)"+(facing==="user"?" scaleX(-1)":"");
-  video.style.objectFit="cover";
- }else{
-  video.style.inset="0";
-  video.style.left="0";
-  video.style.top="0";
-  video.style.right="0";
-  video.style.bottom="0";
-  video.style.width="100%";
-  video.style.height="100%";
-  video.style.transform=facing==="user"?"scaleX(-1)":"none";
-  video.style.objectFit="cover";
- }
-}
-window.addEventListener("resize",syncCameraPreviewOrientation,{passive:true});
-window.addEventListener("orientationchange",syncCameraPreviewOrientation,{passive:true});
-
+// Live video stays in the browser's native camera orientation.
 function startLivePreview(){
  const canvas=document.getElementById("livePreview");
  if(canvas)canvas.style.display="none";
@@ -1698,29 +1675,25 @@ async function generateStrip(){
   const img=await loadImage(photos[i]);
   const y=yStart+i*(frameH+gap);
 
-  // Soft shadow.
-  ctx.shadowColor="#00000018";
-  ctx.shadowBlur=12;
-  ctx.shadowOffsetY=4;
-
-  roundedRect(ctx,x,y,frameW,frameH,9);
-  ctx.fillStyle="#ffffff";
-  ctx.fill();
-
-  ctx.shadowColor="transparent";
-  ctx.shadowBlur=0;
-  ctx.shadowOffsetY=0;
-
+  // Edge-to-edge photo: the image itself reaches the photo-slot border.
+  // Use a cover fit so the frame is completely filled without stretching.
   ctx.save();
-  roundedRect(ctx,x+7,y+7,frameW-14,frameH-14,5);
+  roundedRect(ctx,x,y,frameW,frameH,7);
   ctx.clip();
-  ctx.drawImage(img,x+7,y+7,frameW-14,frameH-14);
+  const scale=Math.max(frameW/img.width,frameH/img.height);
+  const drawW=img.width*scale;
+  const drawH=img.height*scale;
+  ctx.drawImage(img,x+(frameW-drawW)/2,y+(frameH-drawH)/2,drawW,drawH);
   ctx.restore();
 
-  ctx.fillStyle=t.accent;
+  // Small, legible frame number over the image instead of creating a white gap.
+  ctx.fillStyle="rgba(25,20,18,.48)";
+  roundedRect(ctx,W-76,y+frameH-48,34,30,5);
+  ctx.fill();
+  ctx.fillStyle="#ffffff";
   ctx.font="600 14px Arial";
-  ctx.textAlign="right";
-  ctx.fillText("0"+(i+1),W-45,y+frameH-22);
+  ctx.textAlign="center";
+  ctx.fillText("0"+(i+1),W-59,y+frameH-28);
  }
 
  const bottom=3555;
