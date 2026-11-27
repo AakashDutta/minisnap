@@ -3,2101 +3,394 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#09090b">
+<meta name="referrer" content="no-referrer">
 <title>MINISNAP — Studio Edition</title>
-<meta name="minisnap-build" content="2026-11-24-monolith-v4">
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
-
-:root {
- --bg: #09090b;
- --surface: #111114;
- --surface-2: #18181c;
- --surface-3: #222228;
- --ink: #fafafa;
- --ink-2: #a1a1aa;
- --muted: #6e6e78;
- --line: rgba(255, 255, 255, 0.09);
- --line-strong: rgba(255, 255, 255, 0.18);
- --accent: #ffffff;
- --accent-ink: #09090b;
- --rec: #ff3b30;
- --ready: #32d74b;
- --radius-xl: 22px;
- --radius-lg: 16px;
- --radius-md: 12px;
- --radius-sm: 8px;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html {
- background: var(--bg);
- color-scheme: dark;
- -webkit-font-smoothing: antialiased;
- -moz-osx-font-smoothing: grayscale;
- text-rendering: optimizeLegibility;
-}
-
-body {
- min-height: 100vh;
- background:
-  radial-gradient(ellipse 80% 45% at 50% -10%, rgba(255, 255, 255, 0.055), transparent 65%),
-  var(--bg);
- color: var(--ink);
- font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
- padding: 18px 16px 64px;
- overflow-x: hidden;
-}
-
-button, a, input { font: inherit; }
-button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-button:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
-button:focus-visible, a:focus-visible, input:focus-visible {
- outline: 2px solid #ffffff;
- outline-offset: 3px;
-}
-
-.app {
- max-width: 820px;
- margin: 0 auto;
-}
-
-/* Header */
-header {
- display: flex;
- align-items: center;
- justify-content: space-between;
- padding: 10px 2px 18px;
- border-bottom: 1px solid var(--line);
-}
-
-.logo {
- display: inline-flex;
- align-items: center;
- gap: 10px;
- font-family: 'Space Grotesk', sans-serif;
- font-size: 18px;
- font-weight: 700;
- letter-spacing: 0.14em;
- color: var(--ink);
-}
-
-.logo-mark {
- width: 18px;
- height: 18px;
- border: 1.5px solid var(--ink);
- border-radius: 4px;
- display: grid;
- place-items: center;
-}
-
-.logo-mark::after {
- content: "";
- width: 6px;
- height: 6px;
- border-radius: 50%;
- background: var(--rec);
-}
-
-.logo span { color: var(--ink-2); font-weight: 500; }
-
-.header-tag {
- display: inline-flex;
- align-items: center;
- gap: 7px;
- font-family: 'JetBrains Mono', monospace;
- font-size: 10px;
- font-weight: 500;
- letter-spacing: 0.1em;
- color: var(--ink-2);
- background: var(--surface);
- border: 1px solid var(--line);
- border-radius: 999px;
- padding: 6px 12px;
-}
-
-.header-dot {
- width: 6px;
- height: 6px;
- border-radius: 50%;
- background: var(--ready);
- box-shadow: 0 0 8px rgba(50, 215, 75, 0.55);
-}
-
-/* Minimal Stepper */
-.stepper {
- display: flex;
- align-items: center;
- justify-content: center;
- gap: 6px;
- margin: 18px auto 6px;
-}
-
-.stepper.hidden { display: none; }
-
-.step-pill {
- font-family: 'JetBrains Mono', monospace;
- font-size: 10px;
- font-weight: 500;
- letter-spacing: 0.08em;
- text-transform: uppercase;
- color: var(--muted);
- padding: 6px 12px;
- border-radius: 999px;
- border: 1px solid transparent;
- transition: all 0.22s ease;
-}
-
-.step-pill.active {
- color: var(--accent-ink);
- background: var(--accent);
- font-weight: 600;
-}
-
-.step-pill.done {
- color: var(--ink);
- border-color: var(--line-strong);
- background: var(--surface-2);
-}
-
-/* Screens */
-.screen { display: none; }
-.screen.active {
- display: block;
- animation: enter 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-@keyframes enter {
- from { opacity: 0; transform: translateY(10px); }
- to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes countPop {
- 0% { opacity: 0; transform: scale(0.8); }
- 30% { opacity: 1; transform: scale(1.04); }
- 100% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes flashPulse {
- 0% { opacity: 0; }
- 14% { opacity: 0.96; }
- 100% { opacity: 0; }
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Typography */
-.eyebrow {
- font-family: 'JetBrains Mono', monospace;
- font-size: 10.5px;
- font-weight: 500;
- letter-spacing: 0.16em;
- text-transform: uppercase;
- color: var(--ink-2);
- margin-bottom: 12px;
-}
-
-h1 {
- font-family: 'Space Grotesk', sans-serif;
- font-weight: 600;
- letter-spacing: -0.04em;
- line-height: 1.02;
- color: var(--ink);
-}
-
-.subtitle {
- font-size: 15px;
- line-height: 1.65;
- color: var(--ink-2);
- margin-top: 14px;
- max-width: 440px;
-}
-
-/* Surfaces & Buttons */
-.card, .result-card, .share-panel, .admin-panel, .guest-panel {
- background: var(--surface);
- border: 1px solid var(--line);
- border-radius: var(--radius-xl);
-}
-
-.card {
- padding: clamp(18px, 3vw, 26px);
- margin: 20px 0;
-}
-
-.card-title {
- font-family: 'JetBrains Mono', monospace;
- font-size: 10px;
- font-weight: 600;
- letter-spacing: 0.14em;
- text-transform: uppercase;
- color: var(--ink-2);
- margin-bottom: 8px;
-}
-
-.card-copy {
- font-size: 14px;
- line-height: 1.65;
- color: var(--ink-2);
-}
-
-.primary {
- width: 100%;
- border: 0;
- border-radius: var(--radius-md);
- padding: 17px 22px;
- font-family: 'Space Grotesk', sans-serif;
- font-size: 13px;
- font-weight: 700;
- letter-spacing: 0.08em;
- text-transform: uppercase;
- color: var(--accent-ink);
- background: var(--accent);
- transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-}
-
-.primary:hover:not(:disabled) {
- background: #e4e4e7;
- transform: translateY(-1px);
- box-shadow: 0 10px 26px rgba(255, 255, 255, 0.12);
-}
-
-.primary:active:not(:disabled) { transform: scale(0.985); }
-
-.secondary {
- width: 100%;
- border: 1px solid var(--line-strong);
- border-radius: var(--radius-md);
- padding: 14px 16px;
- font-family: 'Space Grotesk', sans-serif;
- font-size: 12px;
- font-weight: 600;
- letter-spacing: 0.07em;
- text-transform: uppercase;
- color: var(--ink);
- background: var(--surface-2);
- transition: all 0.18s ease;
-}
-
-.secondary:hover:not(:disabled) {
- background: var(--surface-3);
- border-color: rgba(255, 255, 255, 0.34);
-}
-
-.actions { display: grid; gap: 10px; margin-top: 14px; }
-.actions-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-/* Home Screen */
-.home-hero {
- padding: 48px 4px 18px;
- display: grid;
- gap: 28px;
-}
-
-.viewfinder-emblem {
- width: 92px;
- height: 118px;
- border: 1px solid var(--line-strong);
- border-radius: 10px;
- padding: 8px;
- display: grid;
- grid-template-rows: repeat(4, 1fr);
- gap: 5px;
- background: var(--surface);
- position: relative;
-}
-
-.viewfinder-emblem::before {
- content: "REC";
- position: absolute;
- top: -9px;
- right: 8px;
- font-family: 'JetBrains Mono', monospace;
- font-size: 8px;
- letter-spacing: 0.12em;
- padding: 2px 6px;
- border-radius: 999px;
- background: var(--rec);
- color: #fff;
- font-weight: 600;
-}
-
-.viewfinder-emblem span {
- border-radius: 3px;
- background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.14));
-}
-
-.home-hero h1 {
- font-size: clamp(42px, 8.5vw, 66px);
-}
-
-.home-specs {
- display: grid;
- grid-template-columns: repeat(3, 1fr);
- border-top: 1px solid var(--line);
- margin-top: 18px;
- padding-top: 18px;
-}
-
-.spec-item {
- padding: 0 10px;
- border-right: 1px solid var(--line);
-}
-.spec-item:first-child { padding-left: 0; }
-.spec-item:last-child { border-right: 0; }
-
-.spec-item strong {
- display: block;
- font-family: 'Space Grotesk', sans-serif;
- font-size: 16px;
- font-weight: 600;
- color: var(--ink);
-}
-.spec-item span {
- font-family: 'JetBrains Mono', monospace;
- font-size: 10px;
- color: var(--muted);
- letter-spacing: 0.04em;
-}
-
-.note {
- font-family: 'JetBrains Mono', monospace;
- font-size: 10px;
- letter-spacing: 0.14em;
- color: var(--muted);
- text-align: center;
- line-height: 1.8;
- margin-top: 18px;
-}
-
-/* Setup Screen */
-.section-heading { padding: 22px 2px 6px; }
-.section-heading h1 { font-size: clamp(30px, 6vw, 42px); }
-.section-heading p {
- font-size: 14px;
- color: var(--ink-2);
- margin-top: 8px;
- line-height: 1.6;
-}
-
-.filter-intro {
- font-size: 12.5px;
- color: var(--muted);
- margin-bottom: 16px;
- line-height: 1.55;
-}
-
-.filter-options {
- display: grid;
- grid-template-columns: repeat(2, minmax(0, 1fr));
- gap: 10px;
- margin-bottom: 26px;
-}
-
-.filter-tile {
- position: relative;
- display: flex;
- align-items: center;
- gap: 12px;
- width: 100%;
- min-width: 0;
- padding: 9px;
- text-align: left;
- border: 1px solid var(--line);
- border-radius: var(--radius-lg);
- background: var(--surface-2);
- color: var(--ink);
- transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
-}
-
-.filter-tile:hover {
- background: var(--surface-3);
- border-color: var(--line-strong);
- transform: translateY(-1px);
-}
-
-.filter-tile.selected {
- background: var(--ink);
- color: var(--accent-ink);
- border-color: var(--ink);
-}
-
-.filter-tile.selected::after {
- content: "";
- position: absolute;
- top: 10px;
- right: 10px;
- width: 7px;
- height: 7px;
- border-radius: 50%;
- background: var(--accent-ink);
-}
-
-.filter-preview {
- flex: 0 0 60px;
- width: 60px;
- height: 68px;
- border-radius: 10px;
- object-fit: cover;
- background: var(--surface-3);
-}
-
-.filter-meta { min-width: 0; flex: 1; padding-right: 10px; }
-
-.filter-badge {
- display: inline-block;
- font-family: 'JetBrains Mono', monospace;
- font-size: 8.5px;
- font-weight: 500;
- letter-spacing: 0.08em;
- text-transform: uppercase;
- color: var(--ink-2);
- margin-bottom: 4px;
-}
-
-.filter-tile.selected .filter-badge { color: #52525b; }
-
-.filter-label {
- display: block;
- font-family: 'Space Grotesk', sans-serif;
- font-size: 13.5px;
- font-weight: 600;
- line-height: 1.2;
-}
-
-.filter-label small {
- display: block;
- margin-top: 3px;
- font-family: 'Inter', sans-serif;
- font-size: 11px;
- font-weight: 400;
- color: var(--muted);
- line-height: 1.3;
-}
-
-.filter-tile.selected .filter-label small { color: #52525b; }
-
-.strip-heading {
- padding-top: 22px;
- border-top: 1px solid var(--line);
-}
-
-.strip-style-options {
- display: grid;
- grid-template-columns: repeat(3, minmax(0, 1fr));
- gap: 10px;
- margin-top: 12px;
-}
-
-.strip-style {
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 10px;
- padding: 14px 8px;
- border: 1px solid var(--line);
- border-radius: var(--radius-lg);
- background: var(--surface-2);
- color: var(--ink);
- transition: all 0.18s ease;
-}
-
-.strip-style:hover {
- background: var(--surface-3);
- border-color: var(--line-strong);
-}
-
-.strip-style.selected {
- background: var(--ink);
- color: var(--accent-ink);
- border-color: var(--ink);
-}
-
-.strip-preview {
- width: 76px;
- height: 176px;
- display: flex;
- flex-direction: column;
- align-items: center;
- gap: 5px;
- padding: 8px 7px;
- border: 1px solid var(--preview-accent);
- background: var(--preview-bg);
- border-radius: 3px;
- box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
- transition: transform 0.2s ease;
-}
-
-.strip-style:hover .strip-preview { transform: translateY(-2px); }
-
-.strip-preview-blush { --preview-bg: #f8e9e9; --preview-ink: #493437; --preview-accent: #c77f8d; }
-.strip-preview-vanilla { --preview-bg: #f2eadd; --preview-ink: #504334; --preview-accent: #b39468; }
-.strip-preview-midnight { --preview-bg: #1e1c21; --preview-ink: #fff6f1; --preview-accent: #8f7b83; }
-
-.strip-brand {
- font: 700 8px 'Space Grotesk', sans-serif;
- letter-spacing: 1.5px;
- color: var(--preview-ink);
- padding-bottom: 2px;
-}
-
-.strip-photo {
- width: 100%;
- flex: 1;
- border: 1px solid var(--preview-accent);
- border-radius: 1.5px;
- opacity: 0.72;
-}
-
-.strip-footer {
- font: 500 4.5px 'JetBrains Mono', monospace;
- letter-spacing: 0.6px;
- color: var(--preview-ink);
- padding-top: 2px;
-}
-
-.strip-style-label {
- font-family: 'Space Grotesk', sans-serif;
- font-size: 12.5px;
- font-weight: 600;
- text-align: center;
-}
-
-.strip-style-label small {
- display: block;
- margin-top: 2px;
- font-family: 'Inter', sans-serif;
- font-size: 10px;
- font-weight: 400;
- color: var(--muted);
-}
-
-.strip-style.selected .strip-style-label small { color: #52525b; }
-
-/* Camera Viewfinder */
-.camera-stage {
- max-width: 460px;
- margin: 14px auto 0;
-}
-
-.camera-bezel {
- border-radius: var(--radius-xl);
- border: 1px solid var(--line-strong);
- background: #000;
- padding: 4px;
- box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75);
-}
-
-.camera-box {
- width: 100%;
- aspect-ratio: 3 / 4;
- border-radius: 18px;
- background: #0d0d0f;
- overflow: hidden;
- position: relative;
- isolation: isolate;
-}
-
-/* Native <video>: upright, crisp, mirrored ONLY in selfie mode */
-#cameraScreen #video {
- position: absolute;
- inset: 0;
- width: 100%;
- height: 100%;
- object-fit: cover;
- display: block;
- transform: none;
- transform-origin: center center;
- transition: filter 0.25s ease;
- z-index: 1;
-}
-
-#cameraScreen #video.is-selfie {
- transform: scaleX(-1);
-}
-
-/* Live Snapchat-inspired CSS previews matching the 8 filters */
-.camera-box[data-look="none"] #video   { filter: contrast(1.04) saturate(1.04); }
-.camera-box[data-look="paris"] #video  { filter: brightness(1.08) contrast(0.95) saturate(1.06) sepia(0.06); }
-.camera-box[data-look="golden"] #video { filter: sepia(0.22) saturate(1.3) contrast(1.05) brightness(1.07); }
-.camera-box[data-look="y2k"] #video    { filter: contrast(1.24) saturate(1.16) brightness(1.04); }
-.camera-box[data-look="rio"] #video    { filter: saturate(1.36) contrast(1.14) hue-rotate(-7deg); }
-.camera-box[data-look="prism"] #video  { filter: contrast(1.12) saturate(1.22) brightness(1.05); }
-.camera-box[data-look="noir"] #video   { filter: grayscale(1) contrast(1.3) brightness(1.03); }
-.camera-box[data-look="cyber"] #video  { filter: contrast(1.26) saturate(1.38) hue-rotate(12deg); }
-
-.camera-look-overlay {
- position: absolute;
- inset: 0;
- pointer-events: none;
- z-index: 2;
- opacity: 0;
- transition: opacity 0.25s ease;
-}
-
-.camera-box[data-look="paris"] .camera-look-overlay {
- opacity: 1;
- background: radial-gradient(circle at 50% 42%, rgba(255, 224, 228, 0.24) 0%, transparent 72%);
- mix-blend-mode: screen;
-}
-
-.camera-box[data-look="golden"] .camera-look-overlay {
- opacity: 1;
- background: radial-gradient(circle at 86% 14%, rgba(255, 210, 122, 0.45) 0%, rgba(255, 162, 88, 0.16) 40%, transparent 72%);
- mix-blend-mode: screen;
-}
-
-.camera-box[data-look="prism"] .camera-look-overlay {
- opacity: 1;
- background: linear-gradient(125deg, rgba(255, 92, 178, 0.22) 0%, rgba(105, 232, 255, 0.16) 46%, rgba(255, 224, 118, 0.18) 100%);
- mix-blend-mode: screen;
-}
-
-.camera-box[data-look="cyber"] .camera-look-overlay {
- opacity: 1;
- background:
-  repeating-linear-gradient(to bottom, rgba(70, 240, 220, 0.08) 0 1px, transparent 1px 4px),
-  linear-gradient(135deg, rgba(50, 240, 215, 0.14), transparent 50%, rgba(255, 70, 170, 0.16));
-}
-
-.camera-hud {
- position: absolute;
- top: 12px;
- left: 12px;
- right: 12px;
- display: flex;
- justify-content: space-between;
- align-items: center;
- gap: 8px;
- z-index: 4;
- pointer-events: none;
-}
-
-.hud-pill {
- font-family: 'JetBrains Mono', monospace;
- font-size: 9.5px;
- font-weight: 500;
- letter-spacing: 0.1em;
- text-transform: uppercase;
- color: #fff;
- background: rgba(9, 9, 11, 0.62);
- border: 1px solid rgba(255, 255, 255, 0.16);
- padding: 5px 10px;
- border-radius: 999px;
- backdrop-filter: blur(10px);
-}
-
-.camera-placeholder {
- position: absolute;
- inset: 0;
- z-index: 3;
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
- gap: 10px;
- text-align: center;
- color: var(--ink-2);
- background: #0d0d0f;
- padding: 20px;
-}
-
-.camera-placeholder span { font-size: 30px; opacity: 0.7; }
-.camera-placeholder p { font-size: 12.5px; }
-
-.camera-overlay {
- position: absolute;
- inset: 14px;
- pointer-events: none;
- z-index: 3;
-}
-
-.camera-overlay::before,
-.camera-overlay::after {
- content: "";
- position: absolute;
- width: 16px;
- height: 16px;
- border-color: rgba(255, 255, 255, 0.55);
- border-style: solid;
-}
-.camera-overlay::before { top: 0; left: 0; border-width: 1.5px 0 0 1.5px; }
-.camera-overlay::after { bottom: 0; right: 0; border-width: 0 1.5px 1.5px 0; }
-
-#countdown {
- position: absolute;
- inset: 0;
- z-index: 5;
- display: none;
- align-items: center;
- justify-content: center;
- font-family: 'Space Grotesk', sans-serif;
- font-size: 112px;
- font-weight: 700;
- font-variant-numeric: tabular-nums;
- color: #fff;
- background: rgba(9, 9, 11, 0.35);
- backdrop-filter: blur(2px);
- animation: countPop 0.32s ease;
-}
-
-#flash {
- position: absolute;
- inset: 0;
- z-index: 6;
- background: #fff;
- opacity: 0;
- pointer-events: none;
-}
-#flash.fire { animation: flashPulse 0.4s ease-out; }
-
-.status-row {
- display: flex;
- align-items: center;
- justify-content: space-between;
- margin: 14px 2px 8px;
-}
-
-.status {
- font-family: 'JetBrains Mono', monospace;
- font-size: 10px;
- letter-spacing: 0.1em;
- color: var(--ink-2);
-}
-
-.progress {
- height: 3px;
- background: var(--surface-3);
- border-radius: 999px;
- overflow: hidden;
- margin-bottom: 12px;
-}
-
-#progressBar {
- height: 100%;
- width: 0;
- background: #ffffff;
- transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.preview-grid {
- display: grid;
- grid-template-columns: repeat(4, 1fr);
- gap: 8px;
- margin: 12px 0 4px;
-}
-
-.preview-grid img {
- width: 100%;
- aspect-ratio: 3 / 4;
- object-fit: contain;
- border-radius: 8px;
- border: 1px solid var(--line-strong);
- background: #000;
-}
-
-/* Result & Guest & Admin */
-.result-heading {
- padding: 22px 2px 18px;
-}
-.result-heading h1 { font-size: clamp(30px, 6vw, 42px); }
-.result-heading p { font-size: 14px; color: var(--ink-2); margin-top: 8px; }
-
-.result-layout {
- display: grid;
- grid-template-columns: 1fr;
- gap: 16px;
- align-items: start;
-}
-
-.result-card, .share-panel, .admin-panel, .guest-panel { padding: 18px; }
-
-.result-card {
- background: #141418;
- display: grid;
- place-items: center;
-}
-
-.result-image {
- display: block;
- width: 100%;
- max-width: 320px;
- height: auto;
- margin: 0 auto;
- border-radius: 6px;
- box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
-}
-
-.qr-wrap {
- display: grid;
- place-items: center;
- min-height: 210px;
- background: #ffffff;
- border-radius: 14px;
- margin: 14px 0;
- padding: 14px;
-}
-
-#qrCode img, #qrCode canvas { max-width: 100%; height: auto !important; }
-#qrCode .small-copy { color: #52525b; }
-
-.small-copy {
- font-size: 12.5px;
- line-height: 1.6;
- color: var(--ink-2);
-}
-
-#shareStatus { min-height: 36px; }
-#shareStatus.uploading {
- display: flex;
- align-items: center;
- gap: 10px;
- color: var(--ink);
-}
-#shareStatus.uploading::before {
- content: "";
- width: 13px;
- height: 13px;
- flex: 0 0 13px;
- border: 2px solid rgba(255, 255, 255, 0.2);
- border-top-color: #ffffff;
- border-radius: 50%;
- animation: spin 0.8s linear infinite;
-}
-
-.field {
- width: 100%;
- border: 1px solid var(--line-strong);
- background: var(--surface-2);
- color: var(--ink);
- border-radius: var(--radius-md);
- padding: 14px;
- font-size: 13.5px;
- margin: 8px 0 4px;
-}
-
-.session-row {
- padding: 14px 2px;
- border-bottom: 1px solid var(--line);
- font-size: 12px;
- line-height: 1.7;
- color: var(--ink-2);
-}
-.session-row strong { color: var(--ink); }
-.session-row:last-child { border-bottom: 0; }
-
-footer {
- text-align: center;
- font-family: 'JetBrains Mono', monospace;
- color: var(--muted);
- font-size: 9.5px;
- letter-spacing: 0.16em;
- margin-top: 42px;
-}
-
-.admin-link {
- background: none;
- border: 0;
- color: var(--muted);
- font-size: 9px;
- letter-spacing: 0.16em;
- text-decoration: underline;
- margin-top: 10px;
-}
-.admin-link:hover { color: var(--ink); }
-
-@media (min-width: 740px) {
- body { padding: 26px 24px 64px; }
- .result-layout { grid-template-columns: 340px 1fr; }
-}
-
-@media (max-width: 520px) {
- body { padding: 14px 12px 44px; }
- .logo { font-size: 16px; }
- .header-tag { font-size: 9px; padding: 5px 10px; }
- .filter-options { gap: 8px; }
- .filter-tile { padding: 8px; gap: 10px; }
- .filter-preview { flex-basis: 52px; width: 52px; height: 60px; }
- .filter-label { font-size: 12px; }
- .filter-label small { font-size: 10px; }
- .strip-preview { width: 66px; height: 152px; }
- .actions-row { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 360px) {
- .filter-options { grid-template-columns: 1fr; }
-}
-
-@media (prefers-reduced-motion: reduce) {
- *, *::before, *::after {
-  animation-duration: 0.01ms !important;
-  transition-duration: 0.01ms !important;
- }
-}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./css/tokens.css">
+<link rel="stylesheet" href="./css/studio.css">
+<link rel="stylesheet" href="./css/admin.css">
 </head>
-
 <body>
-<main class="app">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div class="app">
 
-<header>
- <div class="logo">
-  <span class="logo-mark" aria-hidden="true"></span>
-  MINI<span>SNAP</span>
- </div>
- <div class="header-tag"><span class="header-dot" aria-hidden="true"></span>BGKV · STUDIO</div>
+<header class="site-header">
+  <button class="logo" id="logoHomeBtn" type="button" aria-label="MiniSnap Home">
+    <span class="logo-mark" aria-hidden="true"></span>
+    MINI<span>SNAP</span>
+  </button>
+  <div class="header-actions">
+    <span class="header-pill" id="headerSubtitle">BGKV · STUDIO</span>
+    <button class="header-pill is-synced" id="syncStatusPill" type="button" disabled>
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="syncStatusText">CLOUD READY</span>
+    </button>
+  </div>
 </header>
 
-<nav class="stepper hidden" id="stepper" aria-label="Photobooth steps">
- <span class="step-pill" data-step="setup">01 Style</span>
- <span class="step-pill" data-step="cameraScreen">02 Shoot</span>
- <span class="step-pill" data-step="resultScreen">03 Strip</span>
-</nav>
+<main id="main-content" tabindex="-1">
+<ol class="stepper hidden" id="stepper" aria-label="Photobooth steps">
+  <li class="step-pill" data-step="setup">01 Style</li>
+  <li class="step-pill" data-step="cameraScreen">02 Shoot</li>
+  <li class="step-pill" data-step="resultScreen">03 Strip</li>
+</ol>
 
 <!-- HOME -->
 <section class="screen active" id="home">
- <div class="home-hero">
-  <div class="viewfinder-emblem" aria-hidden="true">
-   <span></span><span></span><span></span><span></span>
-  </div>
-  <div>
-   <div class="eyebrow">BGKV SCHOOL PHOTOBOOTH</div>
-   <h1>Four frames.<br>Pure memory.</h1>
-   <p class="subtitle">
-    Step in, pick a lens, and capture four clean frames assembled into a keepsake strip—ready to scan in seconds.
-   </p>
-  </div>
- </div>
+  <div class="hero-stage">
+    <div class="hero-copy">
+      <div class="hero-badge"><span class="rec-dot" aria-hidden="true"></span>Personal Phone Booth · Private Cloud Sync</div>
+      <h1>Four frames.<br>Pure memory.</h1>
+      <p class="subtitle">
+        Pick a lens, shoot four frames on your phone, and get an instant private keepsake strip plus all four originals stored safely in Supabase.
+      </p>
 
- <div class="card">
-  <div class="card-title">STUDIO OVERVIEW</div>
-  <p class="card-copy">
-   Select one of eight custom color lenses and a strip finish, pose with the 5-second viewfinder timer, and scan your private QR code to save directly to your phone.
-  </p>
-  <div class="home-specs">
-   <div class="spec-item"><strong>08</strong><span>SNAP LENSES</span></div>
-   <div class="spec-item"><strong>04</strong><span>FRAMES / STRIP</span></div>
-   <div class="spec-item"><strong>24H</strong><span>PRIVATE QR</span></div>
+      <div class="hero-actions">
+        <button class="primary" id="startHomeBtn" type="button">Start Photo Session →</button>
+      </div>
+
+      <div class="hero-meta-strip">
+        <div class="hero-meta-item"><strong>08</strong><span>Studio Lenses</span></div>
+        <div class="hero-meta-item"><strong>Strip + 4</strong><span>Originals Saved</span></div>
+        <div class="hero-meta-item"><strong id="heroRetentionStat">24H</strong><span>Auto-Expiring QR</span></div>
+      </div>
+    </div>
+
+    <div class="kinetic-stage" id="kineticStage" role="region" aria-label="Animated photo strip preview">
+      <div class="aperture-ring" aria-hidden="true"></div>
+      <div class="kinetic-rig" id="kineticRig">
+        <div class="demo-strip" id="demoStrip">
+          <div class="demo-strip-head">
+            <span>BGKV</span>
+            <span id="kineticFrameTag">01 / 04</span>
+          </div>
+          <div class="demo-frames">
+            <div class="demo-frame is-active"><div class="demo-frame-art"></div><span class="demo-frame-tag">01</span></div>
+            <div class="demo-frame"><div class="demo-frame-art"></div><span class="demo-frame-tag">02</span></div>
+            <div class="demo-frame"><div class="demo-frame-art"></div><span class="demo-frame-tag">03</span></div>
+            <div class="demo-frame"><div class="demo-frame-art"></div><span class="demo-frame-tag">04</span></div>
+          </div>
+        </div>
+        <div class="kinetic-hud">
+          <div class="kinetic-pill is-lit">Active Lens<strong id="kineticLensName">Studio Clean</strong></div>
+          <div class="kinetic-pill">Offline Queue<strong>IndexedDB Safe</strong></div>
+          <div class="kinetic-pill">Delivery<strong>Private 256-bit QR</strong></div>
+        </div>
+      </div>
+    </div>
   </div>
- </div>
 
- <button class="primary" onclick="showScreen('setup')">
-  START SESSION &nbsp; →
- </button>
-
- <p class="note">BGKV EDITION · INSTANT DIGITAL STRIP</p>
+  <div class="home-flow-grid">
+    <div class="flow-step">
+      <div class="flow-step-num">01 / LENS &amp; FINISH</div>
+      <h2>Eight real-time grades</h2>
+      <p>Switch lenses before or after shooting. Swap Blush, Vanilla, Midnight, or 2×2 grid layouts anytime.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-num">02 / AUTO-UPLOAD QUEUE</div>
+      <h2>Built for venue Wi-Fi</h2>
+      <p>Strips and all four individual frames sync automatically to Supabase, or queue offline until signal returns.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-num">03 / STRICTLY PRIVATE</div>
+      <h2>Your photos, your control</h2>
+      <p>Private ephemeral links expire automatically, with optional consent if you want to join the event collage.</p>
+    </div>
+  </div>
 </section>
 
 <!-- SETUP -->
 <section class="screen" id="setup">
- <div class="section-heading">
-  <div class="eyebrow">01 / CONFIGURE</div>
-  <h1>Pick your look.</h1>
-  <p>Select a camera lens and paper strip finish.</p>
- </div>
-
- <div class="card">
-  <div class="card-title">01 / CAMERA LENS</div>
-  <p class="filter-intro">Real-time viewfinder grading paired with studio post-processing.</p>
-
-  <div class="filter-options">
-   <button class="filter-tile selected" data-filter="none" data-label="Studio Clean" aria-pressed="true">
-    <canvas class="filter-preview" data-preview-filter="none" width="180" height="196" role="img" aria-label="Studio Clean filter preview"></canvas>
-    <span class="filter-meta">
-     <span class="filter-badge">Natural</span>
-     <span class="filter-label">Studio Clean<small>Crisp skin &amp; clarity</small></span>
-    </span>
-   </button>
-
-   <button class="filter-tile" data-filter="paris" data-label="Paris Glow" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="paris" width="180" height="196" role="img" aria-label="Paris Glow filter preview"></canvas>
-    <span class="filter-meta">
-     <span class="filter-badge">Snap Glow</span>
-     <span class="filter-label">Paris Glow<small>Soft skin &amp; halo</small></span>
-    </span>
-   </button>
-
-   <button class="filter-tile" data-filter="golden" data-label="Golden Hour" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="golden" width="180" height="196" role="img" aria-label="Golden Hour filter preview"></canvas>
-    <span class="filter-meta">
-     <span class="filter-badge">Sunlit</span>
-     <span class="filter-label">Golden Hour<small>Amber warmth &amp; flare</small></span>
-    </span>
-   </button>
-
-   <button class="filter-tile" data-filter="y2k" data-label="Y2K Digicam" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="y2k" width="180" height="196" role="img" aria-label="Y2K Digicam filter preview"></canvas>
-    <span class="filter-meta">
-     <span class="filter-badge">Digicam</span>
-     <span class="filter-label">Y2K Digicam<small>Flash pop &amp; grain</small></span>
-    </span>
-   </button>
-
-   <button class="filter-tile" data-filter="rio" data-label="Rio Sunset" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="rio" width="180" height="196" role="img" aria-label="Rio Sunset filter preview"></canvas>
-    <span class="filter-meta">
-     <span class="filter-badge">Snap Pop</span>
-     <span class="filter-label">Rio Sunset<small>Coral &amp; teal grade</small></span>
-    </span>
-   </button>
-
-   <button class="filter-tile" data-filter="prism" data-label="Prism Dream" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="prism" width="180" height="196" role="img" aria-label="Prism Dream filter preview"></canvas>
-    <span class="filter-meta">
-     <span class="filter-badge">Prism</span>
-     <span class="filter-label">Prism Dream<small>RGB split &amp; leak</small></span>
-    </span>
-   </button>
-
-   <button class="filter-tile" data-filter="noir" data-label="Velvet Noir" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="noir" width="180" height="196" role="img" aria-label="Velvet Noir filter preview"></canvas>
-    <span class="filter-meta">
-     <span class="filter-badge">Mono</span>
-     <span class="filter-label">Velvet Noir<small>High-contrast B&amp;W</small></span>
-    </span>
-   </button>
-
-   <button class="filter-tile" data-filter="cyber" data-label="Neon Signal" aria-pressed="false">
-    <canvas class="filter-preview" data-preview-filter="cyber" width="180" height="196" role="img" aria-label="Neon Signal filter preview"></canvas>
-    <span class="filter-meta">
-     <span class="filter-badge">AR Neon</span>
-     <span class="filter-label">Neon Signal<small>Edge glow &amp; HUD</small></span>
-    </span>
-   </button>
+  <div class="section-heading">
+    <div class="kicker">01 / Configure Booth</div>
+    <h1>Pick your look.</h1>
+    <p>Choose a lens, strip finish, layout, and optional caption.</p>
   </div>
 
-  <div class="card-title strip-heading">02 / STRIP FINISH</div>
-  <p class="filter-intro">Choose the border paper tone for your final 4-frame strip.</p>
-  <div class="strip-style-options">
-   <button class="strip-style selected" data-theme="pink" aria-pressed="true">
-    <span class="strip-preview strip-preview-blush" aria-hidden="true">
-     <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span>
-    </span>
-    <span class="strip-style-label">Blush<small>Soft rose</small></span>
-   </button>
+  <div class="card">
+    <h2 class="card-title">01 / CAMERA LENS</h2>
+    <div class="filter-options" id="filterOptions"></div>
 
-   <button class="strip-style" data-theme="cream" aria-pressed="false">
-    <span class="strip-preview strip-preview-vanilla" aria-hidden="true">
-     <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span>
-    </span>
-    <span class="strip-style-label">Vanilla<small>Warm paper</small></span>
-   </button>
+    <h2 class="card-title strip-heading">02 / STRIP FINISH</h2>
+    <div class="strip-style-options" id="stripThemeOptions">
+      <button class="strip-style selected" type="button" data-theme="pink" aria-pressed="true">
+        <span class="strip-preview strip-preview-blush" aria-hidden="true">
+          <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP</span>
+        </span>
+        <span class="strip-style-label">Blush<small>Soft rose</small></span>
+      </button>
+      <button class="strip-style" type="button" data-theme="cream" aria-pressed="false">
+        <span class="strip-preview strip-preview-vanilla" aria-hidden="true">
+          <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP</span>
+        </span>
+        <span class="strip-style-label">Vanilla<small>Warm paper</small></span>
+      </button>
+      <button class="strip-style" type="button" data-theme="dark" aria-pressed="false">
+        <span class="strip-preview strip-preview-midnight" aria-hidden="true">
+          <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP</span>
+        </span>
+        <span class="strip-style-label">Midnight<small>Matte dark</small></span>
+      </button>
+    </div>
 
-   <button class="strip-style" data-theme="dark" aria-pressed="false">
-    <span class="strip-preview strip-preview-midnight" aria-hidden="true">
-     <span class="strip-brand">BGKV</span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-photo"></span><span class="strip-footer">MINISNAP · 2026</span>
-    </span>
-    <span class="strip-style-label">Midnight<small>Matte dark</small></span>
-   </button>
+    <h2 class="card-title strip-heading" style="margin-top:20px">03 / STRIP LAYOUT &amp; CAPTION</h2>
+    <div class="option-pills" id="layoutOptions"></div>
+    <label class="form-field-label" for="captionInput">Optional strip caption</label>
+    <input class="field" id="captionInput" type="text" maxlength="60" placeholder="Optional caption on strip (e.g. Farewell '26)" style="margin-top:6px">
+
+    <div class="waiver-box">
+      <label class="waiver-check-row" for="waiverConsentCheck">
+        <input type="checkbox" id="waiverConsentCheck">
+        <span class="waiver-summary">
+          Include my photos in the official event collage (optional)
+          <small>Your guest link stays strictly private either way. Opting in grants event collage permission under our all-inclusive waiver.</small>
+        </span>
+      </label>
+      <button class="text-link-btn" id="openWaiverModalBtn" type="button">Read All-Inclusive Privacy Waiver →</button>
+    </div>
   </div>
- </div>
 
- <button class="primary" onclick="openCamera()">OPEN CAMERA &nbsp; →</button>
- <div style="margin-top:10px">
-  <button class="secondary" onclick="showScreen('home')">BACK</button>
- </div>
+  <button class="primary" id="openCamBtn" type="button">Open Camera →</button>
+  <div style="margin-top:10px">
+    <button class="secondary" id="setupBackBtn" type="button">Back</button>
+  </div>
 </section>
 
 <!-- CAMERA -->
 <section class="screen" id="cameraScreen">
- <div class="section-heading">
-  <div class="eyebrow">02 / VIEWFINDER</div>
-  <h1>Frame your shot.</h1>
-  <p id="instruction">Find your pose. First frame up next.</p>
- </div>
+  <div class="section-heading">
+    <div class="kicker">02 / Viewfinder</div>
+    <h1>Frame your shot.</h1>
+    <p id="instruction" aria-live="polite">Find your pose. Tap Capture when ready.</p>
+  </div>
 
- <div class="camera-stage">
-  <div class="camera-bezel">
-   <div class="camera-box" id="cameraBox" data-look="none">
-    <video id="video" autoplay muted playsinline></video>
-    <div class="camera-look-overlay" aria-hidden="true"></div>
+  <div class="camera-workspace">
+    <div class="camera-stage">
+      <div class="camera-bezel">
+        <div class="camera-box" id="cameraBox" data-look="none">
+          <video id="video" autoplay muted playsinline aria-label="Live camera viewfinder"></video>
+          <div class="camera-look-overlay" aria-hidden="true"></div>
 
-    <div class="camera-hud">
-     <span class="hud-pill" id="hudFilterLabel">STUDIO CLEAN</span>
-     <span class="hud-pill" id="hudCameraLabel">SELFIE · MIRROR</span>
+          <div class="camera-hud">
+            <span class="hud-pill" id="hudFilterLabel">STUDIO CLEAN</span>
+            <span class="hud-pill" id="hudCameraLabel">SELFIE · MIRROR</span>
+            <button class="hud-pill" id="soundToggleBtn" type="button">SOUND ON</button>
+          </div>
+
+          <div class="camera-placeholder" id="placeholder">
+            <p id="placeholderMsg">Requesting camera access…</p>
+            <button class="secondary" id="resumeCamBtn" type="button" style="max-width:200px">Resume Camera</button>
+          </div>
+
+          <div class="camera-overlay"></div>
+          <div id="countdown" aria-live="assertive"></div>
+          <div id="flash"></div>
+        </div>
+      </div>
+
+      <div class="live-lens-rail" id="liveLensRail" aria-label="Switch live camera lens"></div>
     </div>
 
-    <div class="camera-placeholder" id="placeholder">
-     <span>◎</span>
-     <p>Requesting camera access...</p>
+    <div>
+      <div class="card" style="margin:0 0 12px">
+        <h2 class="card-title">TIMER &amp; CAPTURE</h2>
+        <div class="option-pills" style="margin-bottom:12px">
+          <button class="option-pill" type="button" data-timer="3" aria-pressed="false">3s Fast</button>
+          <button class="option-pill selected" type="button" data-timer="5" aria-pressed="true">5s Standard</button>
+          <button class="option-pill" type="button" data-timer="8" aria-pressed="false">8s Group</button>
+        </div>
+
+        <div class="status-row">
+          <span class="status" id="status">CONNECTING</span>
+          <span class="status" id="captureCount">0 OF 4 PHOTOGRAPHS</span>
+        </div>
+        <div class="progress"><div id="progressBar"></div></div>
+        <div class="preview-grid" id="miniGrid"></div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="captureBtn" type="button" disabled>Capture 4 Frames</button>
+        <div class="actions-row">
+          <button class="secondary" id="switchBtn" type="button" disabled>↻ Switch Camera</button>
+          <button class="secondary" id="cancelCamBtn" type="button">Cancel</button>
+        </div>
+      </div>
     </div>
-
-    <div class="camera-overlay"></div>
-    <div id="countdown"></div>
-    <div id="flash"></div>
-   </div>
   </div>
-
-  <div class="status-row">
-   <span class="status" id="status">CONNECTING</span>
-   <span class="status" id="captureCount">0 OF 4 PHOTOGRAPHS</span>
-  </div>
-
-  <div class="progress">
-   <div id="progressBar"></div>
-  </div>
-
-  <div class="preview-grid" id="miniGrid" style="display:none"></div>
-
-  <div class="actions">
-   <button class="primary" id="captureBtn" onclick="startSession()" disabled>
-    CAPTURE 4 FRAMES
-   </button>
-   <div class="actions-row">
-    <button class="secondary" id="switchBtn" onclick="switchCamera()" disabled>
-     ↻ &nbsp; SWITCH CAMERA
-    </button>
-    <button class="secondary" onclick="goHome()">CANCEL</button>
-   </div>
-  </div>
- </div>
 </section>
 
 <!-- RESULTS -->
 <section class="screen" id="resultScreen">
- <div class="result-heading">
-  <div class="eyebrow">03 / KEEPSAKE</div>
-  <h1>Ready to keep.</h1>
-  <p>Download directly or generate a private QR code for mobile save.</p>
- </div>
-
- <div class="result-layout">
-  <div class="result-card">
-   <img id="resultImage" class="result-image" alt="Your MiniSnap photo strip">
+  <div class="result-heading">
+    <div class="kicker">03 / Keepsake Ready</div>
+    <h1>Your strip.</h1>
+    <p>Customize lens or layout below, tap any frame to retake it, or scan your private QR.</p>
   </div>
 
-  <div class="actions" style="margin-top:0">
-   <div class="card" style="margin:0; padding:18px">
-    <div class="card-title">EXPORT &amp; ORIENTATION</div>
-    <div class="actions" style="margin-top:10px">
-     <button class="primary" onclick="downloadStrip()">DOWNLOAD STRIP &nbsp; ↓</button>
-     <button class="secondary" onclick="shareStrip()" id="shareBtn">CREATE QR CODE &nbsp; ↗</button>
-     <div class="actions-row">
-      <button class="secondary" onclick="rotateStrip(90)" id="rotateBtn">↻ ROTATE +90°</button>
-      <button class="secondary" onclick="rotateStrip(-90)" id="rotateBackBtn">↺ ROTATE -90°</button>
-     </div>
-     <div class="actions-row">
-      <button class="secondary" onclick="retake()">↻ RETAKE</button>
-      <button class="secondary" onclick="goHome()">DONE</button>
-     </div>
+  <div class="result-layout">
+    <div class="result-card">
+      <img id="resultImage" class="result-image" alt="Your MiniSnap photo strip">
+      <div class="retake-strip-bar" id="resultRetakeBar"></div>
     </div>
-   </div>
 
-   <div class="share-panel" id="sharePanel">
-    <div class="card-title">PRIVATE QR DELIVERY</div>
-    <p class="small-copy" id="shareStatus">Generate a private QR code so guests can scan and download onto their phone.</p>
-    <div class="qr-wrap"><div id="qrCode"><span class="small-copy">QR code appears here.</span></div></div>
-    <p class="small-copy" id="shareExpiry">Links expire automatically after 24 hours.</p>
-    <div class="actions">
-     <button class="secondary" id="copyLinkBtn" onclick="copyGuestLink()" disabled>COPY GUEST LINK</button>
-     <button class="secondary" onclick="shareStrip()" id="retryShareBtn">RETRY / NEW QR</button>
+    <div class="actions" style="margin-top:0">
+      <div class="share-panel">
+        <h2 class="card-title">PRIVATE CLOUD DELIVERY</h2>
+        <div class="sync-banner" id="syncBanner" role="status" aria-live="polite">Ready to sync to Supabase.</div>
+        <div class="qr-wrap"><div id="qrCode"><span class="small-copy" style="color:#52525b">QR appears once synced.</span></div></div>
+        <p class="small-copy" id="shareExpiry">Links expire automatically after retention window.</p>
+        <div class="actions">
+          <button class="primary" id="downloadStripBtn" type="button">Download Strip ↓</button>
+          <div class="actions-row">
+            <button class="secondary" id="shareBtn" type="button">Sync / New QR ↗</button>
+            <button class="secondary" id="copyLinkBtn" type="button" disabled>Copy Private Link</button>
+          </div>
+          <button class="secondary danger-btn" id="deleteCloudBtn" type="button" disabled>Delete From Cloud</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin:0">
+        <h2 class="card-title">POST-CAPTURE STUDIO</h2>
+        <p class="small-copy">Switch lens, paper finish, layout, or orientation without retaking.</p>
+        <div class="live-lens-rail" id="resultLensRail" style="margin-top:8px"></div>
+        <div class="option-pills" id="resultThemeOptions" style="margin-top:10px">
+          <button class="option-pill" type="button" data-theme="pink">Blush</button>
+          <button class="option-pill" type="button" data-theme="cream">Vanilla</button>
+          <button class="option-pill" type="button" data-theme="dark">Midnight</button>
+        </div>
+        <div class="option-pills" id="resultLayoutOptions"></div>
+        <div class="actions-row" style="margin-top:12px">
+          <button class="secondary" id="rotatePlusBtn" type="button">↻ Rotate +90°</button>
+          <button class="secondary" id="rotateMinusBtn" type="button">↺ Rotate -90°</button>
+        </div>
+        <div class="actions-row" style="margin-top:10px">
+          <button class="secondary" id="retakeAllBtn" type="button">↻ Retake All</button>
+          <button class="secondary" id="doneResultBtn" type="button">Done</button>
+        </div>
+      </div>
     </div>
-   </div>
   </div>
- </div>
- <p class="note">PHOTOS UPLOAD ONLY WHEN GENERATING A QR CODE</p>
 </section>
 
-<!-- GUEST -->
+<!-- GUEST DELIVERY -->
 <section class="screen" id="guestScreen">
- <div class="result-heading">
-  <div class="eyebrow">MINISNAP DELIVERY</div>
-  <h1>Your strip.</h1>
-  <p>Save your high-resolution photo strip below.</p>
- </div>
- <div class="guest-panel">
-  <img id="guestImage" class="result-image" alt="Your MiniSnap photo strip">
-  <div class="actions">
-   <a id="guestDownload" class="primary" style="display:block;text-align:center;text-decoration:none" download="MiniSnap-Memory.jpg">DOWNLOAD STRIP &nbsp; ↓</a>
-   <button class="secondary" onclick="guestShare()">SHARE PHOTO</button>
+  <div class="result-heading">
+    <div class="kicker">Private MiniSnap Delivery</div>
+    <h1>Your keepsake.</h1>
+    <p>Download your compiled strip and all four high-resolution originals below.</p>
   </div>
-  <p class="note" id="guestExpiry">Private link expires soon.</p>
- </div>
+  <div class="guest-panel">
+    <img id="guestImage" class="result-image" alt="Your MiniSnap photo strip">
+    <div class="actions">
+      <a id="guestDownload" class="primary" style="display:none;text-align:center;text-decoration:none" download="MiniSnap-Memory.jpg">Download Strip ↓</a>
+      <div class="actions-row">
+        <button class="secondary" id="guestShareBtn" type="button">Share to Phone</button>
+        <button class="secondary danger-btn" id="guestSelfDeleteBtn" type="button">Delete My Photos</button>
+      </div>
+    </div>
+    <div class="guest-frames-grid" id="guestFramesGrid"></div>
+    <p class="small-copy" id="guestExpiry" role="status" aria-live="polite" style="margin-top:14px;text-align:center">Loading…</p>
+  </div>
 </section>
 
-<!-- ADMIN -->
+<!-- ADMIN CONTROL ROOM -->
 <section class="screen" id="adminScreen">
- <div class="section-heading">
-  <div class="eyebrow">CONTROL ROOM</div>
-  <h1>Session desk.</h1>
-  <p>Operator access only.</p>
- </div>
- <div class="admin-panel">
-  <label class="small-copy" for="adminKey">ADMIN ACCESS KEY</label>
-  <input class="field" id="adminKey" type="password" autocomplete="off" placeholder="Enter admin key">
-  <div class="actions">
-   <button class="primary" onclick="loadAdmin()">OPEN DASHBOARD</button>
-   <button class="secondary" onclick="cleanupExpired()">DELETE EXPIRED PHOTOS</button>
+  <div class="section-heading">
+    <div class="kicker">Control Room</div>
+    <h1>Admin Board</h1>
+    <p id="adminStatus" role="status" aria-live="polite">Operator access only.</p>
   </div>
-  <p class="small-copy" id="adminStatus" style="margin-top:12px">Operator panel.</p>
-  <div id="adminSessions"></div>
- </div>
- <button class="secondary" style="margin-top:12px" onclick="showScreen('home')">BACK TO BOOTH</button>
-</section>
 
-<footer>MINISNAP STUDIO · BGKV<br><button class="admin-link" onclick="openAdmin()">ADMIN ACCESS</button></footer>
+  <div class="card" id="adminAuthCard">
+    <label class="card-title" for="adminKey">OPERATOR ADMIN KEY</label>
+    <input class="field" id="adminKey" type="password" autocomplete="off" placeholder="Enter 32+ char admin key">
+    <div class="actions">
+      <button class="primary" id="adminLoginBtn" type="button">Unlock Control Room</button>
+    </div>
+  </div>
+
+  <div class="admin-shell" id="adminWorkspace" style="display:none">
+    <div class="admin-topbar">
+      <div class="admin-tabs" role="tablist" aria-label="Control room sections">
+        <button class="admin-tab active" type="button" data-admin-tab="sessions" role="tab" aria-selected="true">Sessions Ledger</button>
+        <button class="admin-tab" type="button" data-admin-tab="collage" role="tab" aria-selected="false">Collage Vault</button>
+        <button class="admin-tab" type="button" data-admin-tab="settings" role="tab" aria-selected="false">Event &amp; Retention</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="option-pill" id="adminRefreshBtn" type="button">Refresh</button>
+        <button class="option-pill" id="adminSignOutBtn" type="button">Lock</button>
+      </div>
+    </div>
+
+    <div class="stats-grid" id="adminStats"></div>
+    <div id="adminContent"></div>
+  </div>
+
+  <div style="margin-top:16px">
+    <button class="secondary" id="backFromAdminBtn" type="button">Back to Booth</button>
+  </div>
+</section>
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-const SUPABASE_URL="https://zbxcdiugunkyfvbxiecy.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_K-rsUdRw_4gEFx9uJxdbeQ_WBlC7WiZ";
-const EDGE_URL=SUPABASE_URL+"/functions/v1/minisnap";
-let currentGuestLink="";
-let currentGuestImage="";
-let boothToken="";
-
-const video=document.getElementById("video");
-const cameraBox=document.getElementById("cameraBox");
-const countdown=document.getElementById("countdown");
-const flash=document.getElementById("flash");
-
-let stream=null;
-let facing="user";
-let rawCaptures=[];
-let photos=[];
-let extraRotation=0;
-let filter="none";
-let filterLabel="Studio Clean";
-let theme="pink";
-let busy=false;
-let stripData=null;
-
-const themes={
- pink:{bg:"#f8e9e9",ink:"#493437",accent:"#c77f8d"},
- cream:{bg:"#f2eadd",ink:"#504334",accent:"#b39468"},
- dark:{bg:"#29252a",ink:"#fff6f1",accent:"#d5a2ac"}
-};
-
-function updateStepper(id){
- const stepper=document.getElementById("stepper");
- const order=["setup","cameraScreen","resultScreen"];
- const idx=order.indexOf(id);
- if(idx===-1){
-  stepper.classList.add("hidden");
-  return;
- }
- stepper.classList.remove("hidden");
- stepper.querySelectorAll(".step-pill").forEach((pill,i)=>{
-  pill.classList.toggle("active",i===idx);
-  pill.classList.toggle("done",i<idx);
- });
-}
-
-function showScreen(id){
- document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
- document.getElementById(id).classList.add("active");
- updateStepper(id);
- window.scrollTo({top:0,behavior:"smooth"});
-}
-
-document.querySelectorAll("[data-filter]").forEach(btn=>{
- btn.addEventListener("click",()=>{
-  filter=btn.dataset.filter;
-  filterLabel=btn.dataset.label||"Studio Clean";
-  document.querySelectorAll("[data-filter]").forEach(b=>{
-   b.classList.remove("selected");
-   b.setAttribute("aria-pressed","false");
-  });
-  btn.classList.add("selected");
-  btn.setAttribute("aria-pressed","true");
-  cameraBox.dataset.look=filter;
-  document.getElementById("hudFilterLabel").textContent=filterLabel.toUpperCase();
- });
-});
-
-document.querySelectorAll("[data-theme]").forEach(btn=>{
- btn.addEventListener("click",()=>{
-  theme=btn.dataset.theme;
-  document.querySelectorAll("[data-theme]").forEach(b=>{
-   b.classList.remove("selected");
-   b.setAttribute("aria-pressed","false");
-  });
-  btn.classList.add("selected");
-  btn.setAttribute("aria-pressed","true");
- });
-});
-
-async function openCamera(){
- showScreen("cameraScreen");
- cameraBox.dataset.look=filter;
- document.getElementById("hudFilterLabel").textContent=filterLabel.toUpperCase();
- document.getElementById("status").textContent="REQUESTING CAMERA";
- document.getElementById("captureBtn").disabled=true;
- document.getElementById("switchBtn").disabled=true;
-
- try{
-  await startCamera();
- }catch(e){
-  console.error(e);
-  document.getElementById("status").textContent="CAMERA UNAVAILABLE";
- }
-}
-
-async function startCamera(){
- if(!navigator.mediaDevices?.getUserMedia){
-  throw new Error("Secure HTTPS connection required.");
- }
-
- if(stream){
-  stream.getTracks().forEach(t=>t.stop());
-  stream=null;
- }
-
- stream=await navigator.mediaDevices.getUserMedia({
-  audio:false,
-  video:{facingMode:{ideal:facing}}
- });
-
- video.srcObject=stream;
- await video.play();
-
- // Selfie mirrors horizontally like a phone camera; rear camera stays untouched.
- const isSelfie=(facing==="user");
- video.classList.toggle("is-selfie",isSelfie);
- document.getElementById("hudCameraLabel").textContent=isSelfie?"SELFIE · MIRROR":"REAR CAMERA";
-
- const track=stream.getVideoTracks()[0];
- try{
-  const capabilities=track.getCapabilities?.();
-  if(capabilities?.zoom && capabilities.zoom.min<=0.5 && capabilities.zoom.max>=0.5){
-   await track.applyConstraints({advanced:[{zoom:0.5}]});
-  }
- }catch(e){
-  console.info("Native camera zoom remains at its default setting.",e);
- }
-
- document.getElementById("placeholder").style.display="none";
- document.getElementById("status").textContent="● READY";
- document.getElementById("captureBtn").disabled=false;
- document.getElementById("switchBtn").disabled=false;
-}
-
-async function switchCamera(){
- if(busy)return;
- const previous=facing;
- facing=previous==="user"?"environment":"user";
- try{
-  await startCamera();
- }catch(e){
-  facing=previous;
-  document.getElementById("status").textContent="SWITCH FAILED";
- }
-}
-
-function delay(ms){
- return new Promise(resolve=>setTimeout(resolve,ms));
-}
-
-async function startSession(){
- if(busy||!stream||!video.videoWidth)return;
-
- busy=true;
- rawCaptures=[];
- photos=[];
- extraRotation=0;
-
- const btn=document.getElementById("captureBtn");
- btn.disabled=true;
- document.getElementById("switchBtn").disabled=true;
-
- const grid=document.getElementById("miniGrid");
- grid.innerHTML="";
- grid.style.display="grid";
-
- document.getElementById("progressBar").style.width="0%";
- document.getElementById("captureCount").textContent="0 OF 4 PHOTOGRAPHS";
-
- try{
-  for(let i=0;i<4;i++){
-   document.getElementById("instruction").textContent="Frame "+(i+1)+" of 4 — hold your pose.";
-
-   for(let n=5;n>=1;n--){
-    countdown.style.display="flex";
-    countdown.textContent=n;
-    countdown.style.animation="none";
-    void countdown.offsetWidth;
-    countdown.style.animation="";
-    await delay(1000);
-   }
-
-   countdown.style.display="none";
-   await delay(350);
-   takePhoto();
-   await delay(550);
-
-   document.getElementById("captureCount").textContent=photos.length+" OF 4 PHOTOGRAPHS";
-   document.getElementById("progressBar").style.width=(photos.length*25)+"%";
-  }
-
-  document.getElementById("instruction").textContent="Rendering final strip...";
-  await delay(300);
-  await generateStrip();
-
-  stopCamera();
-  showScreen("resultScreen");
- }catch(e){
-  console.error(e);
-  document.getElementById("status").textContent="CAPTURE ERROR";
-  busy=false;
-  btn.disabled=false;
-  document.getElementById("switchBtn").disabled=false;
-  return;
- }
-
- busy=false;
-}
-
-// Preserves 100% of the centered frame at its true rotated aspect ratio — zero cropping or off-center drift.
-function renderCapturedFrame(rawCapture,extraDeg,look){
- const src=rawCapture.canvas;
- const deg=(rawCapture.baseRotate+extraDeg+3600)%360;
- const quarterTurn=(deg===90||deg===270);
- const orientedW=quarterTurn?src.height:src.width;
- const orientedH=quarterTurn?src.width:src.height;
-
- const maxDim=1040;
- const fitScale=maxDim/Math.max(orientedW,orientedH);
- const outW=Math.max(1,Math.round(orientedW*fitScale));
- const outH=Math.max(1,Math.round(orientedH*fitScale));
- const drawW=src.width*fitScale;
- const drawH=src.height*fitScale;
-
- const out=document.createElement("canvas");
- out.width=outW;
- out.height=outH;
- const ctx=out.getContext("2d",{willReadFrequently:true});
-
- ctx.save();
- ctx.translate(outW/2,outH/2);
- if(rawCapture.mirror)ctx.scale(-1,1);
- if(deg!==0)ctx.rotate((deg*Math.PI)/180);
- ctx.drawImage(src,-drawW/2,-drawH/2,drawW,drawH);
- ctx.restore();
-
- applyPhotoFilter(out,look);
- return out.toDataURL("image/jpeg",0.95);
-}
-
-function takePhoto(){
- const vw=video.videoWidth;
- const vh=video.videoHeight;
-
- const boxRatio=3/4;
- const videoRatio=vw/vh;
- let sx=0, sy=0, sw=vw, sh=vh;
-
- const isPortraitScreen=window.innerHeight>=window.innerWidth;
- const baseRotate=(isPortraitScreen && vw>vh)?90:0;
-
- if(baseRotate===0){
-  if(videoRatio>boxRatio){
-   sw=Math.round(vh*boxRatio);
-   sx=Math.round((vw-sw)/2);
-  }else if(videoRatio<boxRatio){
-   sh=Math.round(vw/boxRatio);
-   sy=Math.round((vh-sh)/2);
-  }
- }
-
- const rawCanvas=document.createElement("canvas");
- rawCanvas.width=sw;
- rawCanvas.height=sh;
- rawCanvas.getContext("2d").drawImage(video,sx,sy,sw,sh,0,0,sw,sh);
-
- const rawCapture={
-  canvas:rawCanvas,
-  mirror:(facing==="user"),
-  baseRotate
- };
- rawCaptures.push(rawCapture);
-
- const data=renderCapturedFrame(rawCapture,extraRotation,filter);
- photos.push(data);
-
- const img=document.createElement("img");
- img.src=data;
- img.alt="Captured photograph";
- document.getElementById("miniGrid").appendChild(img);
-
- flash.classList.remove("fire");
- void flash.offsetWidth;
- flash.classList.add("fire");
-}
-
-function resetShareUI(){
- currentGuestLink="";
- document.getElementById("qrCode").innerHTML='<span class="small-copy">QR code appears here.</span>';
- document.getElementById("copyLinkBtn").disabled=true;
- document.getElementById("shareBtn").textContent="CREATE QR CODE \u00A0 ↗";
- document.getElementById("shareStatus").textContent="Generate a private QR code so guests can scan and download onto their phone.";
- document.getElementById("shareExpiry").textContent="Links expire automatically after 24 hours.";
-}
-
-async function rotateStrip(deltaDeg){
- if(!rawCaptures.length)return;
- extraRotation=(extraRotation+deltaDeg+3600)%360;
- photos=rawCaptures.map(raw=>renderCapturedFrame(raw,extraRotation,filter));
- const gridImgs=document.getElementById("miniGrid").querySelectorAll("img");
- photos.forEach((src,i)=>{if(gridImgs[i])gridImgs[i].src=src;});
- await generateStrip();
- resetShareUI();
-}
-
-// High-end Snapchat-inspired multi-stage computational photo filters
-function applySoftBloom(canvas,strength,tintColor,blendMode="screen"){
- const w=canvas.width,h=canvas.height;
- const small=document.createElement("canvas");
- small.width=Math.max(24,Math.round(w/14));
- small.height=Math.max(24,Math.round(h/14));
- const sctx=small.getContext("2d");
- sctx.imageSmoothingEnabled=true;
- sctx.drawImage(canvas,0,0,small.width,small.height);
-
- const ctx=canvas.getContext("2d",{willReadFrequently:true});
- ctx.save();
- ctx.globalAlpha=strength;
- ctx.globalCompositeOperation=blendMode;
- ctx.imageSmoothingEnabled=true;
- ctx.drawImage(small,0,0,w,h);
- if(tintColor){
-  ctx.globalCompositeOperation="soft-light";
-  ctx.fillStyle=tintColor;
-  ctx.fillRect(0,0,w,h);
- }
- ctx.restore();
-}
-
-function applyPhotoFilter(canvas,mode){
- const ctx=canvas.getContext("2d",{willReadFrequently:true});
- const w=canvas.width,h=canvas.height;
-
- if(mode==="paris"){
-  applySoftBloom(canvas,0.22,"rgba(255,218,224,0.28)","soft-light");
-  applySoftBloom(canvas,0.18,null,"screen");
- }
-
- const image=ctx.getImageData(0,0,w,h);
- const p=image.data;
- const src=new Uint8ClampedArray(p);
- const clamp=v=>v<0?0:v>255?255:v;
-
- const specs={
-  none:  {c:1.05, s:1.06, e:1.01, w:3,  sh:[2,1,-1],     hi:[4,2,0],     lift:0,  vib:0.06, grain:0,   vig:0.05},
-  paris: {c:0.95, s:1.07, e:1.05, w:11, sh:[12,7,10],    hi:[14,7,6],    lift:11, vib:0.10, grain:1.2, vig:0.07},
-  golden:{c:1.08, s:1.24, e:1.05, w:24, sh:[12,5,-9],    hi:[24,13,-14], lift:5,  vib:0.16, grain:1.4, vig:0.11},
-  y2k:   {c:1.30, s:1.18, e:1.05, w:-3, sh:[-8,4,12],    hi:[16,11,4],   lift:0,  vib:0.12, grain:6.2, vig:0.28},
-  rio:   {c:1.14, s:1.24, e:1.03, w:7,  sh:[-14,12,22],  hi:[24,-2,12],  lift:3,  vib:0.28, grain:1.4, vig:0.13},
-  prism: {c:1.09, s:1.20, e:1.03, w:4,  sh:[5,0,12],     hi:[12,5,14],   lift:4,  vib:0.18, grain:1.0, vig:0.10},
-  noir:  {c:1.36, s:0.00, e:1.03, w:0,  sh:[0,0,0],      hi:[0,0,0],     lift:3,  vib:0.00, grain:4.2, vig:0.26},
-  cyber: {c:1.22, s:1.30, e:1.02, w:0,  sh:[-10,20,28],  hi:[16,-2,26],  lift:0,  vib:0.22, grain:0.8, vig:0.14}
- };
-
- const L=specs[mode]||specs.none;
- const maxShift=Math.max(2,Math.round(w*0.012));
-
- for(let y=0;y<h;y++){
-  const ny=(y/(h-1)-0.5)*2;
-  for(let x=0;x<w;x++){
-   const nx=(x/(w-1)-0.5)*2;
-   const r2=nx*nx+ny*ny;
-   const i=(y*w+x)*4;
-
-   let r=src[i], g=src[i+1], b=src[i+2];
-
-   if(mode==="prism"){
-    const shift=Math.round(Math.max(0,r2-0.1)*maxShift);
-    if(shift>0){
-     const rx=Math.min(w-1,x+shift);
-     const bx=Math.max(0,x-shift);
-     r=src[(y*w+rx)*4];
-     b=src[(y*w+bx)*4+2];
-    }
-   }
-
-   let flashBoost=1;
-   if(mode==="y2k"){
-    flashBoost=1.08-0.18*Math.min(1.4,r2);
-   }
-
-   if(mode==="cyber"){
-    const left=Math.max(0,x-1),right=Math.min(w-1,x+1);
-    const up=Math.max(0,y-1),down=Math.min(h-1,y+1);
-    const gx=Math.abs(src[(y*w+right)*4]-src[(y*w+left)*4]);
-    const gy=Math.abs(src[(down*w+x)*4]-src[(up*w+x)*4]);
-    const edge=Math.min(1,(gx+gy)/150);
-    const wave=Math.round(Math.sin(y*0.055+x*0.016)*2.5);
-    const sx=Math.max(0,Math.min(w-1,x+wave));
-    r=src[(y*w+sx)*4]*0.88+edge*64;
-    g=g*0.8+edge*106;
-    b=b*1.14+edge*118;
-    if((y%4)===0){r*=0.9;g*=0.92;b*=0.95;}
-   }
-
-   let lum=0.299*r+0.587*g+0.114*b;
-   const sh=Math.pow(1-clamp(lum/255),1.45);
-   const hi=Math.pow(clamp((lum-68)/187),1.35);
-
-   r=(r-128)*L.c+128+L.lift;
-   g=(g-128)*L.c+128+L.lift;
-   b=(b-128)*L.c+128+L.lift;
-
-   if(L.vib>0){
-    const mx=Math.max(r,g,b), mn=Math.min(r,g,b);
-    const sat=mx>0?(mx-mn)/mx:0;
-    const vBoost=1+L.vib*(1-sat);
-    const avg=(r+g+b)/3;
-    r=avg+(r-avg)*vBoost;
-    g=avg+(g-avg)*vBoost;
-    b=avg+(b-avg)*vBoost;
-   }
-
-   lum=0.299*r+0.587*g+0.114*b;
-   r=(lum+(r-lum)*L.s)*L.e*flashBoost+L.w+L.sh[0]*sh+L.hi[0]*hi;
-   g=(lum+(g-lum)*L.s)*L.e*flashBoost+L.w*0.24+L.sh[1]*sh+L.hi[1]*hi;
-   b=(lum+(b-lum)*L.s)*L.e*flashBoost-L.w*0.46+L.sh[2]*sh+L.hi[2]*hi;
-
-   if(mode==="noir"){
-    const bw=clamp(0.33*r+0.55*g+0.12*b);
-    const mono=clamp((bw-128)*1.12+130);
-    r=g=b=mono;
-   }
-
-   const shade=1-L.vig*Math.max(0,(r2-0.15)/1.55);
-   let noise=0;
-   if(L.grain>0){
-    const hash=(Math.imul(x+1,73856093)^Math.imul(y+1,19349663))>>>0;
-    noise=((hash&1023)/1023-0.5)*L.grain*2.2;
-   }
-
-   p[i]=clamp(r*shade+noise);
-   p[i+1]=clamp(g*shade+noise);
-   p[i+2]=clamp(b*shade+noise);
-  }
- }
-
- ctx.putImageData(image,0,0);
-
- if(mode==="golden"){
-  ctx.save();
-  ctx.globalCompositeOperation="screen";
-  const flare=ctx.createRadialGradient(w*0.86,h*0.14,0,w*0.86,h*0.14,w*0.9);
-  flare.addColorStop(0,"rgba(255,224,140,0.46)");
-  flare.addColorStop(0.35,"rgba(255,172,96,0.18)");
-  flare.addColorStop(1,"rgba(255,140,80,0)");
-  ctx.fillStyle=flare;
-  ctx.fillRect(0,0,w,h);
-  ctx.restore();
- }
-
- if(mode==="prism"){
-  ctx.save();
-  ctx.globalCompositeOperation="screen";
-  const leak=ctx.createLinearGradient(0,0,w,h);
-  leak.addColorStop(0,"rgba(255,95,180,0.24)");
-  leak.addColorStop(0.38,"rgba(110,235,255,0.16)");
-  leak.addColorStop(0.72,"rgba(255,225,115,0.15)");
-  leak.addColorStop(1,"rgba(0,0,0,0)");
-  ctx.fillStyle=leak;
-  ctx.fillRect(0,0,w,h);
-  ctx.restore();
- }
-
- if(mode==="cyber"){
-  ctx.save();
-  ctx.globalCompositeOperation="screen";
-  ctx.strokeStyle="rgba(65,235,210,0.45)";
-  ctx.lineWidth=Math.max(1,w/360);
-  ctx.beginPath();
-  for(let k=1;k<7;k++){const yy=h*k/7;ctx.moveTo(w*0.05,yy);ctx.lineTo(w*0.95,yy);}
-  ctx.stroke();
-
-  ctx.strokeStyle="rgba(255,80,174,0.82)";
-  const m=w*0.055,c=w*0.07;
-  ctx.beginPath();
-  ctx.moveTo(m+c,m);ctx.lineTo(m,m);ctx.lineTo(m,m+c);
-  ctx.moveTo(w-m-c,m);ctx.lineTo(w-m,m);ctx.lineTo(w-m,m+c);
-  ctx.moveTo(m,h-m-c);ctx.lineTo(m,h-m);ctx.lineTo(m+c,h-m);
-  ctx.moveTo(w-m-c,h-m);ctx.lineTo(w-m,h-m);ctx.lineTo(w-m,h-m-c);
-  ctx.stroke();
-  ctx.restore();
- }
-}
-
-function drawFallbackPortrait(canvas){
- const ctx=canvas.getContext("2d");
- const w=canvas.width,h=canvas.height;
- const bg=ctx.createLinearGradient(0,0,w,h);
- bg.addColorStop(0,"#3a3a44");
- bg.addColorStop(0.55,"#26262e");
- bg.addColorStop(1,"#16161b");
- ctx.fillStyle=bg;
- ctx.fillRect(0,0,w,h);
-
- const glow=ctx.createRadialGradient(w*0.35,h*0.28,4,w*0.45,h*0.35,w*0.7);
- glow.addColorStop(0,"rgba(255,225,195,0.4)");
- glow.addColorStop(1,"rgba(255,225,195,0)");
- ctx.fillStyle=glow;
- ctx.fillRect(0,0,w,h);
-
- ctx.fillStyle="#221d1b";
- ctx.beginPath();
- ctx.ellipse(w*0.5,h*0.44,w*0.26,h*0.3,0,0,Math.PI*2);
- ctx.fill();
-
- ctx.fillStyle="#d8a88c";
- ctx.beginPath();
- ctx.ellipse(w*0.5,h*0.46,w*0.18,h*0.21,0,0,Math.PI*2);
- ctx.fill();
-
- ctx.fillStyle="#8a6c5a";
- ctx.beginPath();
- ctx.ellipse(w*0.5,h*0.92,w*0.35,h*0.26,0,0,Math.PI*2);
- ctx.fill();
-}
-
-function renderFilterPreviews(){
- const canvases=[...document.querySelectorAll("[data-preview-filter]")];
- if(!canvases.length)return;
-
- canvases.forEach(canvas=>{
-  drawFallbackPortrait(canvas);
-  applyPhotoFilter(canvas,canvas.dataset.previewFilter);
- });
-
- const source=new Image();
- source.crossOrigin="anonymous";
- source.onload=()=>{
-  canvases.forEach(canvas=>{
-   const ctx=canvas.getContext("2d",{willReadFrequently:true});
-   const w=canvas.width,h=canvas.height;
-   const scale=Math.max(w/source.naturalWidth,h/source.naturalHeight);
-   const sw=w/scale,sh=h/scale;
-   const sx=(source.naturalWidth-sw)/2,sy=(source.naturalHeight-sh)/2;
-   ctx.clearRect(0,0,w,h);
-   ctx.drawImage(source,sx,sy,sw,sh,0,0,w,h);
-   applyPhotoFilter(canvas,canvas.dataset.previewFilter);
-  });
- };
- source.src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=360&h=392&q=85";
-}
-
-function stopCamera(){
- if(stream){
-  stream.getTracks().forEach(t=>t.stop());
-  stream=null;
- }
- video.srcObject=null;
- video.classList.remove("is-selfie");
- document.getElementById("placeholder").style.display="flex";
-}
-
-function loadImage(src){
- return new Promise((resolve,reject)=>{
-  const img=new Image();
-  img.onload=()=>resolve(img);
-  img.onerror=reject;
-  img.src=src;
- });
-}
-
-function roundedRect(ctx,x,y,w,h,r){
- ctx.beginPath();
- ctx.roundRect(x,y,w,h,r);
-}
-
-async function generateStrip(){
- const t=themes[theme];
- const loadedImgs=await Promise.all(photos.map(loadImage));
-
- const W=720;
- const x=20;
- const frameW=680;
- const yStart=250;
- const gap=22;
- const footerHeight=165;
-
- const frameHeights=loadedImgs.map(img=>Math.round(frameW*(img.height/img.width)));
- const totalPhotosH=frameHeights.reduce((sum,h)=>sum+h,0)+gap*(loadedImgs.length-1);
- const H=yStart+totalPhotosH+footerHeight;
-
- const maxCanvasH=4000;
- const outScale=H>maxCanvasH?(maxCanvasH/H):1;
- const canvas=document.createElement("canvas");
- canvas.width=Math.round(W*outScale);
- canvas.height=Math.round(H*outScale);
-
- const ctx=canvas.getContext("2d");
- if(outScale!==1)ctx.scale(outScale,outScale);
-
- ctx.fillStyle=t.bg;
- ctx.fillRect(0,0,W,H);
-
- ctx.strokeStyle=t.accent;
- ctx.lineWidth=2;
- ctx.strokeRect(19,19,W-38,H-38);
-
- ctx.textAlign="center";
- ctx.fillStyle=t.ink;
-
- ctx.font="600 17px Arial";
- ctx.fillText("A LITTLE MEMORY FROM",360,72);
-
- ctx.font="bold 57px Arial";
- ctx.fillText("BGKV",360,137);
-
- ctx.font="700 23px Arial";
- ctx.fillText("MINISNAP PHOTOBOOTH",360,178);
-
- ctx.font="500 13px Arial";
- ctx.fillStyle=t.accent;
- ctx.fillText("BHAVAN'S GANGABUX KANORIA VIDYAMANDIR",360,207);
-
- ctx.fillStyle=t.accent;
- ctx.fillRect(245,226,230,3);
-
- let curY=yStart;
- for(let i=0;i<loadedImgs.length;i++){
-  const img=loadedImgs[i];
-  const fH=frameHeights[i];
-
-  ctx.save();
-  roundedRect(ctx,x,curY,frameW,fH,7);
-  ctx.clip();
-  ctx.drawImage(img,x,curY,frameW,fH);
-  ctx.restore();
-
-  ctx.fillStyle="rgba(25,20,18,0.48)";
-  roundedRect(ctx,W-76,curY+fH-48,34,30,5);
-  ctx.fill();
-  ctx.fillStyle="#ffffff";
-  ctx.font="600 14px Arial";
-  ctx.textAlign="center";
-  ctx.fillText("0"+(i+1),W-59,curY+fH-28);
-
-  curY+=fH+gap;
- }
-
- const bottom=curY+36;
- ctx.textAlign="center";
- ctx.fillStyle=t.ink;
-
- ctx.font="600 19px Arial";
- ctx.fillText(
-  new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"long",year:"numeric"}),
-  360,bottom
- );
-
- ctx.font="14px Arial";
- ctx.fillStyle=t.accent;
- ctx.fillText("A SCHOOL MEMORY · KOLKATA",360,bottom+36);
-
- ctx.font="bold 16px Arial";
- ctx.fillStyle=t.ink;
- ctx.fillText("BGKV × MINISNAP",360,bottom+73);
-
- stripData=canvas.toDataURL("image/jpeg",0.93);
- document.getElementById("resultImage").src=stripData;
-}
-
-function downloadStrip(){
- if(!stripData)return;
- const a=document.createElement("a");
- a.href=stripData;
- a.download="MiniSnap-Memory.jpg";
- a.click();
-}
-
-async function edgeRequest(action,{method="GET",body=null,adminKey="",boothToken:token=""}={}){
- const headers={"apikey":SUPABASE_PUBLISHABLE_KEY,"Content-Type":"application/json"};
- if(adminKey)headers["x-minisnap-admin"]=adminKey;
- if(token)headers["x-minisnap-booth"]=token;
- const controller=new AbortController();
- const timeout=setTimeout(()=>controller.abort(),60000);
- try{
-  const response=await fetch(EDGE_URL+"?action="+encodeURIComponent(action),{
-   method,headers,body:body?JSON.stringify(body):undefined,signal:controller.signal
-  });
-  const result=await response.json().catch(()=>({error:"The server returned an unreadable response."}));
-  if(!response.ok)throw new Error(result.error||"Request failed ("+response.status+").");
-  return result;
- }catch(e){
-  if(e.name==="AbortError")throw new Error("The upload timed out after 60 seconds. Check the booth internet connection and tap RETRY.");
-  throw e;
- }finally{clearTimeout(timeout);}
-}
-
-async function shareStrip(){
- if(!stripData)return;
- const btn=document.getElementById("shareBtn");
- const status=document.getElementById("shareStatus");
- btn.disabled=true;
- btn.textContent="UPLOADING…";
- status.classList.add("uploading");
- status.textContent="Preparing your private photo link. Keep this screen open…";
- document.getElementById("qrCode").innerHTML="";
- document.getElementById("copyLinkBtn").disabled=true;
- try{
-  if(!boothToken){
-   const pin=prompt("Enter the 8-digit MiniSnap booth PIN:");
-   if(!pin)throw new Error("Upload cancelled. Your photo is still saved on this booth screen.");
-   status.textContent="Verifying booth PIN…";
-   const auth=await edgeRequest("booth-auth",{method:"POST",body:{pin}});
-   boothToken=auth.boothToken;
-  }
-  status.textContent="Uploading your photo securely… This usually takes a few seconds.";
-  const result=await edgeRequest("create",{
-   method:"POST",boothToken,
-   body:{image:stripData}
-  });
-  currentGuestLink=location.origin+location.pathname+"?guest="+encodeURIComponent(result.token);
-  if(typeof QRCode==="undefined")throw new Error("QR generator did not load. Check internet and reload the booth page.");
-  new QRCode(document.getElementById("qrCode"),{
-   text:currentGuestLink,width:190,height:190,colorDark:"#09090b",colorLight:"#ffffff",
-   correctLevel:QRCode.CorrectLevel.M
-  });
-  document.getElementById("copyLinkBtn").disabled=false;
-  document.getElementById("shareExpiry").textContent="Link expires: "+new Date(result.expiresAt).toLocaleString();
-  status.textContent="Ready! Ask the guest to scan this QR code with their phone camera.";
-  btn.textContent="CREATE ANOTHER QR";
- }catch(e){
-  if(e.message==="Booth session expired. Enter the booth PIN again.")boothToken="";
-  status.textContent=e.message+" Your photo remains on this device. You can safely retry.";
-  btn.textContent="RETRY UPLOAD";
- }finally{
-  status.classList.remove("uploading");
-  btn.disabled=false;
- }
-}
-
-async function copyGuestLink(){
- if(!currentGuestLink)return;
- try{
-  await navigator.clipboard.writeText(currentGuestLink);
-  document.getElementById("shareStatus").textContent="Guest link copied.";
- }catch(e){
-  document.getElementById("shareStatus").textContent="Copy was blocked by this browser. Guests can scan the QR code instead.";
- }
-}
-
-async function openGuest(token){
- showScreen("guestScreen");
- document.getElementById("guestImage").style.display="none";
- document.getElementById("guestExpiry").textContent="Loading your private photo…";
- try{
-  const response=await fetch(EDGE_URL+"?action=guest&token="+encodeURIComponent(token),{
-   headers:{"apikey":SUPABASE_PUBLISHABLE_KEY}
-  });
-  const result=await response.json();
-  if(!response.ok)throw new Error(result.error||"This photo link is unavailable.");
-  currentGuestImage=result.imageUrl;
-  const img=document.getElementById("guestImage");
-  img.src=result.imageUrl;
-  img.style.display="block";
-  document.getElementById("guestDownload").href=result.downloadUrl;
-  document.getElementById("guestExpiry").textContent="Private link expires: "+new Date(result.expiresAt).toLocaleString();
- }catch(e){
-  document.getElementById("guestExpiry").textContent=e.message;
-  document.getElementById("guestDownload").style.display="none";
- }
-}
-
-async function guestShare(){
- if(!currentGuestImage)return;
- try{
-  const response=await fetch(currentGuestImage);
-  const blob=await response.blob();
-  const file=new File([blob],"MiniSnap-Memory.jpg",{type:"image/jpeg"});
-  if(navigator.canShare?.({files:[file]})){
-   await navigator.share({files:[file],title:"My MiniSnap memory"});
-  }else{
-   document.getElementById("guestExpiry").textContent="Use Download your strip, then share the saved image from your gallery.";
-  }
- }catch(e){
-  document.getElementById("guestExpiry").textContent="Download the image first, then share it from your gallery.";
- }
-}
-
-function openAdmin(){
- showScreen("adminScreen");
- document.getElementById("adminKey").value="";
- document.getElementById("adminSessions").innerHTML="";
-}
-
-async function loadAdmin(){
- const key=document.getElementById("adminKey").value.trim();
- const status=document.getElementById("adminStatus");
- status.textContent="Loading sessions…";
- try{
-  const data=await edgeRequest("admin",{adminKey:key});
-  status.textContent=data.sessions.length+" recent sessions";
-  const host=document.getElementById("adminSessions");
-  host.innerHTML="";
-  data.sessions.forEach(session=>{
-   const row=document.createElement("div");
-   row.className="session-row";
-   const accessed=session.last_accessed_at?"Guest opened link: "+new Date(session.last_accessed_at).toLocaleString():"Not opened yet";
-   row.innerHTML="<strong>"+new Date(session.created_at).toLocaleString()+"</strong><br>"+accessed+
-    "<br>Guest opens: "+session.guest_access_count+
-    " · Expires: "+new Date(session.expires_at).toLocaleString();
-   host.appendChild(row);
-  });
- }catch(e){status.textContent=e.message;}
-}
-
-async function cleanupExpired(){
- const key=document.getElementById("adminKey").value.trim();
- const status=document.getElementById("adminStatus");
- status.textContent="Deleting expired sessions…";
- try{
-  const result=await edgeRequest("delete-expired",{method:"POST",adminKey:key,body:{}});
-  status.textContent=result.deleted+" expired photo(s) deleted.";
-  await loadAdmin();
- }catch(e){status.textContent=e.message;}
-}
-
-function retake(){
- rawCaptures=[];
- photos=[];
- stripData=null;
- extraRotation=0;
- busy=false;
- facing="user";
-
- document.getElementById("miniGrid").innerHTML="";
- document.getElementById("miniGrid").style.display="none";
- document.getElementById("captureCount").textContent="0 OF 4 PHOTOGRAPHS";
- document.getElementById("progressBar").style.width="0%";
-
- resetShareUI();
- openCamera();
-}
-
-function goHome(){
- busy=false;
- stopCamera();
- rawCaptures=[];
- photos=[];
- stripData=null;
- extraRotation=0;
- resetShareUI();
- showScreen("home");
-}
-
-document.addEventListener("visibilitychange",()=>{
- if(document.hidden&&stream)stopCamera();
-});
-
-window.addEventListener("pagehide",stopCamera);
-const guestToken=new URLSearchParams(location.search).get("guest");
-if(guestToken){openGuest(guestToken);}
-renderFilterPreviews();
-</script>
-
+<footer class="site-footer">
+  <span id="footerBrand">MINISNAP STUDIO · BGKV</span>
+  <button class="admin-link" id="openAdminBtn" type="button">Operator Control Room</button>
+</footer>
+</div>
+
+<!-- NUMERIC BOOTH PIN MODAL -->
+<div class="modal-backdrop" id="pinModal" role="dialog" aria-modal="true" aria-labelledby="pinModalTitle">
+  <div class="modal-card">
+    <h2 class="card-title" id="pinModalTitle">BOOTH AUTHORIZATION</h2>
+    <p class="small-copy">Enter the 8-digit booth PIN to sync photos.</p>
+    <div class="pin-dots" id="pinDots" aria-hidden="true">
+      <span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span>
+      <span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span>
+    </div>
+    <span class="sr-only" id="pinLiveStatus" role="status" aria-live="polite">0 of 8 digits entered</span>
+    <p class="small-copy" id="pinErrorMsg" role="alert" style="color:var(--rec);text-align:center"></p>
+    <div class="keypad">
+      <button class="key-btn" type="button" data-pin-digit="1">1</button>
+      <button class="key-btn" type="button" data-pin-digit="2">2</button>
+      <button class="key-btn" type="button" data-pin-digit="3">3</button>
+      <button class="key-btn" type="button" data-pin-digit="4">4</button>
+      <button class="key-btn" type="button" data-pin-digit="5">5</button>
+      <button class="key-btn" type="button" data-pin-digit="6">6</button>
+      <button class="key-btn" type="button" data-pin-digit="7">7</button>
+      <button class="key-btn" type="button" data-pin-digit="8">8</button>
+      <button class="key-btn" type="button" data-pin-digit="9">9</button>
+      <button class="key-btn" type="button" id="pinCancelBtn">Cancel</button>
+      <button class="key-btn" type="button" data-pin-digit="0">0</button>
+      <button class="key-btn" type="button" id="pinBackBtn" aria-label="Delete last digit">⌫</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRIVACY WAIVER MODAL -->
+<div class="modal-backdrop" id="waiverModal" role="dialog" aria-modal="true" aria-labelledby="waiverModalTitle">
+  <div class="modal-card">
+    <h2 class="card-title" id="waiverModalTitle">ALL-INCLUSIVE EVENT COLLAGE WAIVER</h2>
+    <p class="small-copy" id="waiverModalMeta"></p>
+    <p class="card-copy" id="waiverModalBody"></p>
+    <button class="primary" id="closeWaiverModalBtn" type="button">Close</button>
+  </div>
+</div>
+
+<!-- ADMIN SESSION INSPECTOR MODAL -->
+<div class="modal-backdrop" id="inspectorModal" role="dialog" aria-modal="true" aria-labelledby="inspectorTitle">
+  <div class="modal-card" style="max-width:560px">
+    <div class="session-meta-top">
+      <h2 class="card-title" id="inspectorTitle" style="margin:0">SESSION INSPECTOR</h2>
+      <button class="option-pill" id="closeInspectorBtn" type="button">Close</button>
+    </div>
+    <div id="inspectorBody" style="display:grid;gap:12px"></div>
+  </div>
+</div>
+
+<script src="./js/vendor/qrcode.min.js"></script>
+<script type="module" src="./js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,41 @@
+:root {
+  /* Palette — Obsidian Darkroom Studio */
+  --bg: #09090b;
+  --surface: #111114;
+  --surface-2: #18181c;
+  --surface-3: #222228;
+  --ink: #fafafa;
+  --ink-2: #b4b4bd;
+  --muted: #9494a0;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.19);
+  --accent: #ffffff;
+  --accent-ink: #09090b;
+  --rec: #ff3b30;
+  --rec-soft: rgba(255, 59, 48, 0.14);
+  --ready: #32d74b;
+  --ready-soft: rgba(50, 215, 75, 0.14);
+  --warn: #ffb340;
+  --warn-soft: rgba(255, 179, 64, 0.14);
+
+  /* Typography */
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Radii & Spacing */
+  --radius-xl: 22px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+
+  /* Motion Choreography (GPU-only transform/opacity) */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.22, 1.28, 0.36, 1);
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-micro: 140ms;
+  --dur-ui: 240ms;
+  --dur-enter: 480ms;
+  --dur-kinetic: 720ms;
+}
